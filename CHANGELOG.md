@@ -13,6 +13,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.0.1] - 2024.3.17
+
+### Add
+
+- 颜色选择器
+
 ## [1.0.0] - 2024.3.17
 
 ### Add

@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-17 15:44:18
+ * @LastEditTime: 2024-03-17 19:33:00
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -17,13 +17,17 @@
 <h4 align="center">WebGal 工具</h4>
 
 
-**Hover提示**  
+## Hover提示
 
-![alt text](https://github.com/xiaoxustudio/webgal-for-vscode/blob/master/images/test/hover.png)
+![Hover提示](https://github.com/xiaoxustudio/webgal-for-vscode/blob/master/images/test/hover.png)
 
-**关键字补全**  
+## 关键字补全
 
-![alt text](https://github.com/xiaoxustudio/webgal-for-vscode/blob/master/images/test/kw.png)
+![关键字补全](https://github.com/xiaoxustudio/webgal-for-vscode/blob/master/images/test/kw.png)
+
+## 颜色选择器  
+
+![颜色选择器](https://github.com/xiaoxustudio/webgal-for-vscode/blob/master/images/test/color.png)
 
 # WebGal官方链接
 

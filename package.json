@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
   },
@@ -37,6 +37,9 @@
       }
     ],
     "commands": []
+  },
+  "capabilities": {
+    "colorProvider": "true"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
