@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-17 15:37:29
+ * @LastEditTime: 2024-03-17 15:42:44
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -27,7 +27,8 @@
 
 # WebGal官方链接
 
-官方仓库：[仓库](https://github.com/MakinoharaShoko/WebGAL)
+官方仓库：[仓库](https://github.com/MakinoharaShoko/WebGAL)  
+
 官方文档：[文档](https://docs.openwebgal.com/)
 
 # 关于
