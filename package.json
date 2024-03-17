@@ -3,6 +3,9 @@
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
   "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
+  },
   "engines": {
     "vscode": "^1.87.0"
   },
