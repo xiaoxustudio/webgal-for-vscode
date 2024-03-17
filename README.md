@@ -1,3 +1,10 @@
+<!--
+ * @Author: xuranXYS
+ * @LastEditTime: 2024-03-17 15:37:29
+ * @GitHub: www.github.com/xiaoxustudio
+ * @WebSite: www.xiaoxustudio.top
+ * @Description: By xuranXYS
+-->
 <h1 align="center">
   <br>
     <img src="./images/icon.png" alt="logo" width="200">
@@ -17,6 +24,11 @@
 **关键字补全**  
 
 ![alt text](./images/test/kw.png)
+
+# WebGal官方链接
+
+官方仓库：[仓库](https://github.com/MakinoharaShoko/WebGAL)
+官方文档：[文档](https://docs.openwebgal.com/)
 
 # 关于
 
