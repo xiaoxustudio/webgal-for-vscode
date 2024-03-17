@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.87.0"
   },
