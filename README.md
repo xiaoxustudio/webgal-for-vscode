@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-17 15:42:44
+ * @LastEditTime: 2024-03-17 15:44:18
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -19,11 +19,11 @@
 
 **Hover提示**  
 
-![alt text](./images/test/hover.png)
+![alt text](https://github.com/xiaoxustudio/webgal-for-vscode/blob/master/images/test/hover.png)
 
 **关键字补全**  
 
-![alt text](./images/test/kw.png)
+![alt text](https://github.com/xiaoxustudio/webgal-for-vscode/blob/master/images/test/kw.png)
 
 # WebGal官方链接
 
