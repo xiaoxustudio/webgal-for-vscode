@@ -7,7 +7,7 @@
 -->
 <h1 align="center">
   <br>
-    <img src="./images/icon.png" alt="logo" width="200">
+    <img src="https://github.com/xiaoxustudio/webgal-for-vscode/blob/master/images/icon.png" alt="logo" width="200">
   <br>
   webgal for VScode
   <br>
