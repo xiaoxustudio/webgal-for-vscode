@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 10:32:43
+ * @LastEditTime: 2024-03-19 18:23:29
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -18,7 +18,7 @@ export const Warning: { [key: string]: WarningToken } = {
 			return `${args[0]} 前面包含一个以上的空格或换行`;
 		},
 		DiagnosticInformation: "指令格式不规范（%id%）",
-		pattern: /\s{2,}-([A-Za-z]+)\b/g,
+		pattern: /(\s{2,}-[A-Za-z]+)\b/g,
 		is_line: false,
 	},
 	"0002": {
