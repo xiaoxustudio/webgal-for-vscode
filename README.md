@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 18:05:54
+ * @LastEditTime: 2024-03-19 18:15:29
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -67,7 +67,8 @@
 
 # 关于
 
-作者：[徐然](https://github.com/xiaoxustudio)
+作者：[徐然](https://github.com/xiaoxustudio)  
+
 联系方式：[xugame@qq.com](emailto://xugame@qq.com)
 
 欢迎提您提出**issue**
