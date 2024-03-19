@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-17 15:30:48
+ * @LastEditTime: 2024-03-19 09:28:08
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -12,6 +12,13 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
+
+## [1.2.0] - 2024.3.19
+
+### Add
+
+- 警告提示
+- 插值变量提示
 
 ## [1.0.1] - 2024.3.17
 
