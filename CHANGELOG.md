@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 18:24:32
+ * @LastEditTime: 2024-03-19 20:30:35
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -13,6 +13,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.2.5] - 2024.3.19
+
+- 增加部分提示
+- 修复random不能提示的bug
 
 ## [1.2.4] - 2024.3.19
 

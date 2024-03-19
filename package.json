@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -26,6 +26,9 @@
         "id": "webgal",
         "extensions": [
           ".txt"
+        ],
+        "filenamePatterns": [
+          "**/game/scene/*.txt"
         ],
         "aliases": [
           "webgal",

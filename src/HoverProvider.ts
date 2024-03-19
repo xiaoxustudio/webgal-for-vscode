@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 18:02:14
+ * @LastEditTime: 2024-03-19 20:26:47
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -80,6 +80,9 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		}
 		// 获取上下文全部变量
 		const word = document.getText(pos);
+		const _new_pos = document.positionAt(document.offsetAt(position) + 1);
+		const pos_func = document.getWordRangeAtPosition(_new_pos, /:\S+\(\)/g);
+		const _text = document.getText(pos_func).replace(/^:/, "");
 		const _var_test = document.getWordRangeAtPosition(position, /{(\w+)}/);
 		const _var_test_text = document.getText(_var_test);
 		if (`{${word}}` === _var_test_text) {
@@ -96,6 +99,26 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			}
 			const hover = new vscode.Hover(hoverContent, _var_test);
 			return hover;
+		} else if (
+			Object.keys(dictionary.func).indexOf(_text) !== -1 &&
+			_text === word + "()"
+		) {
+			for (let i in dictionary.func) {
+				const func_val = dictionary.func[i];
+				if (i.indexOf(_text) !== -1 && _text === word + "()") {
+					const hoverContent = new vscode.MarkdownString(`**${word}**`);
+					hoverContent.isTrusted = true;
+					hoverContent.supportHtml = true;
+					hoverContent.appendMarkdown(`\n\n${func_val.desc}`);
+					if (func_val.APIL) {
+						const _t = func_val.APIL.split("|");
+						hoverContent.appendMarkdown(`\n\n`);
+						hoverContent.appendMarkdown(`**API** : [${_t[0]}](${_t[1]})`);
+					}
+					const hover = new vscode.Hover(hoverContent);
+					return hover;
+				}
+			}
 		} else if (pos?.start.character === 0) {
 			for (let i in dictionary.kw) {
 				const kw_val = dictionary.kw[i];
