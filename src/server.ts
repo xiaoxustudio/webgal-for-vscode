@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 09:03:25
+ * @LastEditTime: 2024-03-19 12:16:18
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -23,6 +23,7 @@ import {
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { Warning, message, getDiagnosticInformation } from "./config/Warnings";
+import { FormatBlacklist } from "./config/FormatBlackList";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -161,6 +162,14 @@ async function validateTextDocument(
 			(m = _pattern.exec(text)) &&
 			problems < settings.maxNumberOfProblems
 		) {
+			const _res = FormatBlacklist.every(
+				(val) => m?.input.startsWith(val) === true
+			);
+			// 格式化黑名单
+			if (_res) {
+				continue;
+			}
+			// 通过
 			problems++;
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Warning,
@@ -197,6 +206,14 @@ async function validateTextDocument(
 				(m = _pattern.exec(_line_text)) &&
 				problems < settings.maxNumberOfProblems
 			) {
+				const _res = FormatBlacklist.every(
+					(val) => m?.input.startsWith(val) === true
+				);
+				// 格式化黑名单
+				if (_res) {
+					continue;
+				}
+				// 通过
 				problems++;
 				const _newarr = _sp.slice(0, _line_index).join();
 				const diagnostic: Diagnostic = {

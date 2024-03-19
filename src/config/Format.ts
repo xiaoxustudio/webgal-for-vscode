@@ -1,10 +1,13 @@
 import * as vscode from "vscode";
+import { FormatBlacklist } from "./FormatBlackList";
+
 class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 	provideDocumentFormattingEdits(
 		document: vscode.TextDocument,
 		options: vscode.FormattingOptions,
 		token: vscode.CancellationToken
 	): vscode.ProviderResult<vscode.TextEdit[]> {
+		// webgal不支持加空格的设置变量，格式化暂时下线
 		const text = document.getText();
 		const formattedText = this.formatText(text);
 		const edit = new vscode.TextEdit(
@@ -25,15 +28,19 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 			const _end_formats = i.substring(_index);
 			if (_index === -1) {
 				i = _start_formats + _end_formats;
-                _out_sp.push(i);
+				_out_sp.push(i);
 				continue;
 			} else if (i.substring(_index + 1, _index + 2) === " ") {
 				i = _start_formats + _end_formats;
-                _out_sp.push(i);
+				_out_sp.push(i);
+				continue;
+			} else if (FormatBlacklist.includes(_start_formats)) {
+				i = _start_formats + _end_formats;
+				_out_sp.push(i);
 				continue;
 			} else {
 				i = _start_formats + ": " + i.substring(_index + 1);
-                _out_sp.push(i);
+				_out_sp.push(i);
 			}
 		}
 		return _out_sp.join("\n");
