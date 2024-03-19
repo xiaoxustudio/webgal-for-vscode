@@ -1,12 +1,21 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-17 18:25:17
+ * @LastEditTime: 2024-03-19 18:02:14
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
 import { dictionary } from "./config/HoverSnippet";
+import { _setvar_pattern } from "./CompletionProvider";
+import { version } from "process";
+
+interface _VToken {
+	word: string;
+	type?: string;
+	is_global?: boolean;
+}
+
 export default class DictionaryHoverProvider implements vscode.HoverProvider {
 	provideHover(
 		document: vscode.TextDocument,
@@ -15,8 +24,79 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 	): vscode.ProviderResult<vscode.Hover> {
 		const lineText = document.lineAt(position).text;
 		const pos = document.getWordRangeAtPosition(position);
+		const _arr: { [key: string]: _VToken } = {};
+		const _arrType = [];
+		let m;
+		const _find_variable_type = (sources: string, _w: string) => {
+			let _find = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(sources);
+			if (!_find || _find[1].trim() !== _w.trim()) {
+				_arr[_w].type = "未知";
+				return;
+			}
+			const _is_global = _find[2].indexOf("-global") !== -1 ? true : false;
+			let _val;
+			if (_is_global) {
+				_val = _find[2].substring(
+					_find[2].indexOf("="),
+					_find[2].lastIndexOf(" -")
+				);
+			} else {
+				_val = _find[2].substring(
+					_find[2].indexOf("="),
+					_find[2].lastIndexOf(";")
+				);
+			}
+			try {
+				const __val_real = new Function("return " + _val)();
+				switch (typeof __val_real) {
+					case "number":
+						_arr[_w].type = "数字";
+						break;
+					case "boolean":
+						_arr[_w].type = "布尔值";
+						break;
+					default:
+						_arr[_w].type = "字符串";
+						break;
+				}
+			} catch {
+				if (typeof new Function(`return '${_val}'`)() === "string") {
+					_arr[_w].type = "字符串";
+				} else {
+					_arr[_w].type = "未知";
+				}
+			}
+			return;
+		};
+		const ALL_ARR = document.getText().split("\n");
+		for (let _data of ALL_ARR) {
+			let m = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(_data);
+			if (m) {
+				_arr[m[1]] = {
+					word: m[1],
+				} as _VToken;
+				_arrType.push(_find_variable_type(m.input, m[1]));
+			}
+		}
+		// 获取上下文全部变量
 		const word = document.getText(pos);
-		if (pos?.start.character === 0) {
+		const _var_test = document.getWordRangeAtPosition(position, /{(\w+)}/);
+		const _var_test_text = document.getText(_var_test);
+		if (`{${word}}` === _var_test_text) {
+			const hoverContent = new vscode.MarkdownString(`变量 **${word}** `);
+			hoverContent.isTrusted = true;
+			hoverContent.supportHtml = true;
+			if (word in _arr) {
+				hoverContent.appendMarkdown(
+					`\n\n Type : <span style="color:#f00;">**${_arr[word].type}**</span>`
+				);
+				hoverContent.appendMarkdown(`\n\n position : 位于第${position.line}行`);
+			} else {
+				hoverContent.appendMarkdown(`\n\n 未定义变量`);
+			}
+			const hover = new vscode.Hover(hoverContent, _var_test);
+			return hover;
+		} else if (pos?.start.character === 0) {
 			for (let i in dictionary.kw) {
 				const kw_val = dictionary.kw[i];
 				if (lineText.startsWith(i)) {

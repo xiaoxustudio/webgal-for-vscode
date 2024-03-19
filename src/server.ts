@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 12:16:18
+ * @LastEditTime: 2024-03-19 15:55:37
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -19,11 +19,19 @@ import {
 	InitializeResult,
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
+	Position,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { Warning, message, getDiagnosticInformation } from "./config/Warnings";
 import { FormatBlacklist } from "./config/FormatBlackList";
+import {
+	abbrKeys,
+	commandSuggestions,
+	figureKeys,
+	keyNames,
+	setAnimationKeys,
+} from "./config/completionServerProvider";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -249,6 +257,26 @@ connection.onDidChangeWatchedFiles((_change) => {
 
 connection.onCompletion(
 	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+		const document = documents.get(_textDocumentPosition.textDocument.uri);
+		if (document) {
+			const _offset = document.offsetAt(_textDocumentPosition.position);
+			const _offset_line = document.offsetAt(
+				Position.create(_textDocumentPosition.position.line, 0)
+			);
+			const _text = document.getText().substring(_offset_line, _offset);
+			const _regex = /.*-\S+$/;
+			if (_text.match(_regex) && _text.startsWith("setAnimation:")) {
+				return [...abbrKeys, ...keyNames, ...setAnimationKeys];
+			}
+			if (_text.match(_regex) && _text.startsWith("changeFigure:")) {
+				return [...abbrKeys, ...keyNames, ...figureKeys];
+			}
+			if (_text.match(_regex) && _text.includes(":")) {
+				return [...abbrKeys, ...keyNames];
+			} else {
+				return commandSuggestions;
+			}
+		}
 		return [];
 	}
 );

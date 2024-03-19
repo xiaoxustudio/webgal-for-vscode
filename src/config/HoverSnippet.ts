@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-17 14:02:03
+ * @LastEditTime: 2024-03-19 16:19:04
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -11,13 +11,13 @@ export interface DIC {
 export interface DToken {
 	desc: string; // 描述
 	APIL?: string; // api链接
-	Equal?: true | false;
+	Equal?: boolean;
 }
 export const dictionary: { [key: string]: DIC } = {
 	cmd: {
 		next: <DToken>{
 			desc: "在执行完本条语句后立刻跳转到下一条语句",
-			Equal : false,
+			Equal: false,
 			APIL: "将立绘放在不同的位置|https://docs.openwebgal.com/webgal-script/bg-and-figure.html#%E5%B0%86%E7%AB%8B%E7%BB%98%E6%94%BE%E5%9C%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BD%8D%E7%BD%AE",
 		},
 		none: <DToken>{
@@ -31,12 +31,12 @@ export const dictionary: { [key: string]: DIC } = {
 		},
 		left: <DToken>{
 			desc: "左边显示",
-			Equal : false,
+			Equal: false,
 			APIL: "将立绘放在不同的位置|https://docs.openwebgal.com/webgal-script/bg-and-figure.html#%E5%B0%86%E7%AB%8B%E7%BB%98%E6%94%BE%E5%9C%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BD%8D%E7%BD%AE",
 		},
 		right: <DToken>{
 			desc: "右边显示",
-			Equal : false,
+			Equal: false,
 			APIL: "将立绘放在不同的位置|https://docs.openwebgal.com/webgal-script/bg-and-figure.html#%E5%B0%86%E7%AB%8B%E7%BB%98%E6%94%BE%E5%9C%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BD%8D%E7%BD%AE",
 		},
 		id: <DToken>{
@@ -53,12 +53,12 @@ export const dictionary: { [key: string]: DIC } = {
 		},
 		enter: <DToken>{
 			desc: "淡入播放，默认值 0",
-			Equal : true,
+			Equal: true,
 			APIL: "播放背景音乐（BGM）|https://docs.openwebgal.com/webgal-script/audio.html#%E6%92%AD%E6%94%BE%E8%83%8C%E6%99%AF%E9%9F%B3%E4%B9%90-bgm",
 		},
 		volume: <DToken>{
 			desc: "调整它的音量，默认值 100",
-			Equal : true,
+			Equal: true,
 			APIL: "播放背景音乐（BGM）|https://docs.openwebgal.com/webgal-script/audio.html#%E6%92%AD%E6%94%BE%E8%83%8C%E6%99%AF%E9%9F%B3%E4%B9%90-bgm",
 		},
 		skipOff: <DToken>{
@@ -67,7 +67,7 @@ export const dictionary: { [key: string]: DIC } = {
 		},
 		when: <DToken>{
 			desc: "条件执行",
-			Equal : true,
+			Equal: true,
 			APIL: "条件执行|https://docs.openwebgal.com/webgal-script/variable.html#%E6%9D%A1%E4%BB%B6%E6%89%A7%E8%A1%8C",
 		},
 		global: <DToken>{
