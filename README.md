@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-17 20:52:15
+ * @LastEditTime: 2024-03-19 09:22:36
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -23,6 +23,14 @@
 ## 关键字补全
 
 ![关键字补全](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/kw.png)
+
+## 规范警告  
+
+![颜色选择器](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/warning.png)
+
+## 插值变量提示  
+
+![颜色选择器](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable.png)
 
 ## 颜色选择器  
 

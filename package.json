@@ -2,8 +2,9 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "repository": {
+    "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
   },
   "engines": {
@@ -11,11 +12,11 @@
   },
   "publisher": "Xuran1783558957",
   "categories": [
-    "Snippets"
+    "Snippets",
+    "Programming Languages"
   ],
   "activationEvents": [
-    "onFileSystem:game/scene/",
-    "onLanguage:webgal"
+    "onFileSystem:game/scene/"
   ],
   "main": "./out/extension.js",
   "icon": "./images/icon_file.png",
@@ -33,10 +34,34 @@
         "icon": {
           "dark": "./images/icon.png",
           "light": "./images/icon.png"
-        }
+        },
+        "configuration": "src/config/language-configuration.json"
       }
     ],
-    "commands": []
+    "commands": [],
+    "configuration": {
+      "type": "object",
+      "title": "Example configuration",
+      "properties": {
+        "XRWebGalLanguageServer.maxNumberOfProblems": {
+          "scope": "resource",
+          "type": "number",
+          "default": 500,
+          "description": "警告信息的最大数量"
+        },
+        "XRWebGalLanguageServer.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        }
+      }
+    }
   },
   "capabilities": {
     "colorProvider": "true"
@@ -50,14 +75,19 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.87.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.87.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
+    "@vscode/test-cli": "^0.0.6",
+    "@vscode/test-electron": "^2.3.9",
     "eslint": "^8.56.0",
     "typescript": "^5.3.3",
-    "@vscode/test-cli": "^0.0.6",
-    "@vscode/test-electron": "^2.3.9"
+    "vscode-languageclient": "^9.0.1"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.11"
   }
 }
