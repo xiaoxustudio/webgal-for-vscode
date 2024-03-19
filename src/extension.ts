@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-18 21:51:56
+ * @LastEditTime: 2024-03-19 10:40:49
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -17,6 +17,7 @@ import DictionaryCompletionItemProvider from "./CompletionProvider";
 import DictionaryHoverProvider from "./HoverProvider";
 import XColorProvider from "./ColorProvider";
 import path from "path";
+import GoDocumentFormatter from "./config/Format";
 
 const selector = { scheme: "file", language: "webgal" };
 let client: LanguageClient;
@@ -52,6 +53,12 @@ export function activate(context: ExtensionContext) {
 		vscode.languages.registerHoverProvider(
 			selector,
 			new DictionaryHoverProvider()
+		)
+	);
+	context.subscriptions.push(
+		vscode.languages.registerDocumentFormattingEditProvider(
+			selector,
+			new GoDocumentFormatter()
 		)
 	);
 	context.subscriptions.push(

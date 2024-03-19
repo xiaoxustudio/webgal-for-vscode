@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 09:24:42
+ * @LastEditTime: 2024-03-19 11:51:46
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -31,6 +31,10 @@
 ## 插值变量提示  
 
 ![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable.png)
+
+## 格式化
+
+![格式化](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/format.png)
 
 ## 颜色选择器  
 

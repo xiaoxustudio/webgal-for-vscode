@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 08:49:15
+ * @LastEditTime: 2024-03-19 10:32:43
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -34,7 +34,7 @@ export const Warning: { [key: string]: WarningToken } = {
 			return `${args[0]} 冒号后面需要添加一个空格`;
 		},
 		DiagnosticInformation: "指令不规范（%id%）",
-		pattern: /([^\n\t]*\S+\s*:([^\s\n\t]*\S+))/g,
+		pattern: /^([^\n\t:]*\S+:\S+){1}/g,
 		is_line: true,
 	},
 };

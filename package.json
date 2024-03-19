@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -12,7 +12,6 @@
   },
   "publisher": "Xuran1783558957",
   "categories": [
-    "Snippets",
     "Programming Languages"
   ],
   "activationEvents": [
@@ -58,13 +57,14 @@
             "verbose"
           ],
           "default": "off",
-          "description": "Traces the communication between VS Code and the language server."
+          "description": "跟踪VS Code和语言服务器之间的通信。"
         }
       }
     }
   },
   "capabilities": {
-    "colorProvider": "true"
+    "colorProvider": "true",
+    "documentFormattingProvider" : "true"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
