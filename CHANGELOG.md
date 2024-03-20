@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 20:30:35
+ * @LastEditTime: 2024-03-20 23:02:26
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -13,7 +13,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-## [1.2.6] - 2024.3.19
+## [1.2.7] - 2024.3.20
+
+- 修复0003警告
+- 优化警告信息截取
+- 增加示例
+- 格式化优化
+- 增加跳转定义功能
+
+## [1.2.6] - 2024.3.20
 
 - 修复工作区lsp不启用的bug
 - 优化操作

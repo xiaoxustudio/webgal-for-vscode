@@ -5,6 +5,7 @@
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
+export const selector = { scheme: "file", language: "webgal" };
 export function rgba01To255(rgba: string): string {
 	const matches = rgba.match(/rgba?\((.+?)\)/);
 	if (!matches) {

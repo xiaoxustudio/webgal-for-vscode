@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "repository": {
     "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -41,10 +41,15 @@
         "configuration": "src/config/language-configuration.json"
       }
     ],
-    "commands": [],
+    "commands": [
+      {
+        "title": "跳转到插值变量",
+        "command": "extension.goToDefinition"
+      }
+    ],
     "configuration": {
       "type": "object",
-      "title": "Example configuration",
+      "title": "wabgal configuration",
       "properties": {
         "XRWebGalLanguageServer.maxNumberOfProblems": {
           "scope": "resource",

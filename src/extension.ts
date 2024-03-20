@@ -1,47 +1,24 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-20 12:11:24
+ * @LastEditTime: 2024-03-20 22:51:18
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
-import { workspace, ExtensionContext, languages } from "vscode";
-import {
-	LanguageClient,
-	LanguageClientOptions,
-	ServerOptions,
-	TransportKind,
-} from "vscode-languageclient/node";
+import { commands, ExtensionContext, languages } from "vscode";
 import DictionaryCompletionItemProvider from "./CompletionProvider";
 import DictionaryHoverProvider from "./HoverProvider";
 import XColorProvider from "./ColorProvider";
-import path from "path";
 import GoDocumentFormatter from "./config/Format";
+import { selector } from "./utils";
+import { create_client } from "./client";
+import { LanguageClient } from "vscode-languageclient/node";
+import { XRDefinitionProvider } from "./XRDefinitionProvider";
 
-const selector = { scheme: "file", language: "webgal" };
 let client: LanguageClient;
 export function activate(context: ExtensionContext) {
-	const serverModule = context.asAbsolutePath(path.join("out", "server.js"));
-	const serverOptions: ServerOptions = {
-		run: { module: serverModule, transport: TransportKind.ipc },
-		debug: {
-			module: serverModule,
-			transport: TransportKind.ipc,
-		},
-	};
-	const clientOptions: LanguageClientOptions = {
-		documentSelector: [selector],
-		synchronize: {
-			fileEvents: workspace.createFileSystemWatcher("**/.clientrc"),
-		},
-	};
-
-	client = new LanguageClient(
-		"XRWEBGALlanguageServer",
-		"XR WEBGAL Language Server",
-		serverOptions,
-		clientOptions
-	);
+	client = create_client(context);
+	client.start();
 	context.subscriptions.push(
 		languages.registerCompletionItemProvider(
 			selector,
@@ -58,9 +35,14 @@ export function activate(context: ExtensionContext) {
 		)
 	);
 	context.subscriptions.push(
+		languages.registerDefinitionProvider(selector, new XRDefinitionProvider())
+	);
+	commands.registerCommand("extension.goToDefinition", () => {
+		languages.registerDefinitionProvider(selector, new XRDefinitionProvider());
+	});
+	context.subscriptions.push(
 		languages.registerColorProvider(selector, new XColorProvider())
 	);
-	client.start();
 }
 
 export function deactivate(): Thenable<void> | undefined {

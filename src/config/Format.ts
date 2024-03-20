@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { FormatBlacklist } from "./FormatBlackList";
+const _format_p = /(\s{2,}\-\S+)/;
 
 class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 	provideDocumentFormattingEdits(
@@ -20,12 +21,19 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 		return [edit];
 	}
 	private formatText(text: string): string {
+		// 参数格式化
+		while (_format_p.test(text)) {
+			text = text.replace(_format_p, (val, match: string) => {
+				return val.replace(/^[\s]+/, " ");
+			});
+		}
 		const _text_sp = text.split("\n");
 		const _out_sp = [];
 		for (let i of _text_sp) {
 			const _index = i.indexOf(":");
 			const _start_formats = i.substring(0, _index);
 			const _end_formats = i.substring(_index);
+			// 冒号格式化
 			if (_index === -1) {
 				i = _start_formats + _end_formats;
 				_out_sp.push(i);

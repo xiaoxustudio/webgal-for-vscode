@@ -38,6 +38,14 @@
                 "comment"
             ]
         },
+        {
+            "open": ":",
+            "close": ";"
+        },
+        {
+            "open": ";area",
+            "close": ";endarea"
+        },
     ],
     "folding": {
         "markers": {

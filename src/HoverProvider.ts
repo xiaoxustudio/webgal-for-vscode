@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-20 12:17:27
+ * @LastEditTime: 2024-03-20 22:59:51
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -9,12 +9,51 @@ import * as vscode from "vscode";
 import { dictionary } from "./config/HoverSnippet";
 import { _setvar_pattern } from "./CompletionProvider";
 
-interface _VToken {
+export interface _VToken {
 	word: string;
 	type?: string;
 	is_global?: boolean;
+	position?: vscode.Position;
+	input?: string;
 }
-
+export function _find_variable_type(sources: string, _w: string, _arr: any) {
+	let _find = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(sources);
+	if (!_find || _find[1].trim() !== _w.trim()) {
+		_arr[_w].type = "未知";
+		return;
+	}
+	const _is_global = _find[2].indexOf("-global") !== -1 ? true : false;
+	let _val;
+	if (_is_global) {
+		_val = _find[2].substring(
+			_find[2].indexOf("="),
+			_find[2].lastIndexOf(" -")
+		);
+	} else {
+		_val = _find[2].substring(_find[2].indexOf("="), _find[2].lastIndexOf(";"));
+	}
+	try {
+		const __val_real = new Function("return " + _val)();
+		switch (typeof __val_real) {
+			case "number":
+				_arr[_w].type = "数字";
+				break;
+			case "boolean":
+				_arr[_w].type = "布尔值";
+				break;
+			default:
+				_arr[_w].type = "字符串";
+				break;
+		}
+	} catch {
+		if (typeof new Function(`return '${_val}'`)() === "string") {
+			_arr[_w].type = "字符串";
+		} else {
+			_arr[_w].type = "未知";
+		}
+	}
+	return;
+}
 export default class DictionaryHoverProvider implements vscode.HoverProvider {
 	provideHover(
 		document: vscode.TextDocument,
@@ -26,55 +65,17 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		const _arr: { [key: string]: _VToken } = {};
 		const _arrType = [];
 		let m;
-		const _find_variable_type = (sources: string, _w: string) => {
-			let _find = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(sources);
-			if (!_find || _find[1].trim() !== _w.trim()) {
-				_arr[_w].type = "未知";
-				return;
-			}
-			const _is_global = _find[2].indexOf("-global") !== -1 ? true : false;
-			let _val;
-			if (_is_global) {
-				_val = _find[2].substring(
-					_find[2].indexOf("="),
-					_find[2].lastIndexOf(" -")
-				);
-			} else {
-				_val = _find[2].substring(
-					_find[2].indexOf("="),
-					_find[2].lastIndexOf(";")
-				);
-			}
-			try {
-				const __val_real = new Function("return " + _val)();
-				switch (typeof __val_real) {
-					case "number":
-						_arr[_w].type = "数字";
-						break;
-					case "boolean":
-						_arr[_w].type = "布尔值";
-						break;
-					default:
-						_arr[_w].type = "字符串";
-						break;
-				}
-			} catch {
-				if (typeof new Function(`return '${_val}'`)() === "string") {
-					_arr[_w].type = "字符串";
-				} else {
-					_arr[_w].type = "未知";
-				}
-			}
-			return;
-		};
 		const ALL_ARR = document.getText().split("\n");
-		for (let _data of ALL_ARR) {
+		for (let _d_index = 0; _d_index < ALL_ARR.length; _d_index++) {
+			const _data = ALL_ARR[_d_index];
 			let m = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(_data);
 			if (m) {
 				_arr[m[1]] = {
 					word: m[1],
+					input: m.input,
+					position: position.with(_d_index + 1, 5),
 				} as _VToken;
-				_arrType.push(_find_variable_type(m.input, m[1]));
+				_arrType.push(_find_variable_type(m.input, m[1], _arr));
 			}
 		}
 		// 获取上下文全部变量
@@ -92,7 +93,9 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 				hoverContent.appendMarkdown(
 					`\n\n Type : <span style="color:#f00;">**${_arr[word].type}**</span>`
 				);
-				hoverContent.appendMarkdown(`\n\n position : 位于第${position.line}行`);
+				hoverContent.appendMarkdown(
+					`\n\n position : 位于第${_arr[word].position?.line}行`
+				);
 			} else {
 				hoverContent.appendMarkdown(`\n\n 未定义变量`);
 			}
@@ -135,13 +138,10 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					return hover;
 				}
 			}
-		} else {
+		} else if (pos) {
 			const beforepos = new vscode.Range(
-				new vscode.Position(
-					pos?.start.line || 0,
-					pos?.start.character! - 1 || 0
-				),
-				pos?.start! || 0
+				new vscode.Position(pos.start.line || 0, pos.start.character! - 1 || 0),
+				pos.start! || 0
 			);
 			let _s = document.getText(beforepos);
 			const _d_cmd = dictionary.cmd[word];

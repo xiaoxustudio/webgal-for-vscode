@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 15:55:37
+ * @LastEditTime: 2024-03-20 21:49:23
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -102,6 +102,7 @@ let globalSettings: ServerSettings = defaultSettings;
 const documentSettings: Map<string, Thenable<ServerSettings>> = new Map();
 
 connection.onDidChangeConfiguration((change) => {
+	// 这里
 	if (hasConfigurationCapability) {
 		documentSettings.clear();
 	} else {
@@ -111,6 +112,8 @@ connection.onDidChangeConfiguration((change) => {
 	}
 	connection.languages.diagnostics.refresh();
 });
+
+connection.onDidChangeTextDocument((change) => {});
 
 function getDocumentSettings(resource: string): Thenable<ServerSettings> {
 	if (!hasConfigurationCapability) {
@@ -166,6 +169,13 @@ async function validateTextDocument(
 		if (_token.is_line) {
 			continue;
 		}
+		if (_token.customCheck && _token.customCheck instanceof Function) {
+			const _custom_res = _token.customCheck(textDocument, text);
+			if (typeof _custom_res === "object" && _custom_res !== null) {
+				diagnostics.push(_custom_res);
+			}
+			continue;
+		}
 		while (
 			(m = _pattern.exec(text)) &&
 			problems < settings.maxNumberOfProblems
@@ -210,6 +220,18 @@ async function validateTextDocument(
 			if (!_token.is_line) {
 				continue;
 			}
+			const _newarr = _sp.slice(0, _line_index).join();
+			if (_token.customCheck && _token.customCheck instanceof Function) {
+				const _custom_res = _token.customCheck(
+					textDocument,
+					_line_text,
+					_newarr.length
+				);
+				if (typeof _custom_res === "object" && _custom_res !== null) {
+					diagnostics.push(_custom_res);
+				}
+				continue;
+			}
 			while (
 				(m = _pattern.exec(_line_text)) &&
 				problems < settings.maxNumberOfProblems
@@ -223,14 +245,13 @@ async function validateTextDocument(
 				}
 				// 通过
 				problems++;
-				const _newarr = _sp.slice(0, _line_index).join();
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Warning,
 					range: {
-						start: textDocument.positionAt(_newarr.length + 8),
+						start: textDocument.positionAt(_newarr.length + 1),
 						end: textDocument.positionAt(_newarr.length + m.input.length),
 					},
-					message: message(i, m[0].trim()),
+					message: message(i, m.input.trim()),
 					source: "WebGal Script",
 				};
 				if (hasDiagnosticRelatedInformationCapability) {
