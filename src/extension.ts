@@ -1,12 +1,11 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 15:55:49
+ * @LastEditTime: 2024-03-20 12:11:24
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
-import * as vscode from "vscode";
-import { workspace, ExtensionContext } from "vscode";
+import { workspace, ExtensionContext, languages } from "vscode";
 import {
 	LanguageClient,
 	LanguageClientOptions,
@@ -44,25 +43,22 @@ export function activate(context: ExtensionContext) {
 		clientOptions
 	);
 	context.subscriptions.push(
-		vscode.languages.registerCompletionItemProvider(
+		languages.registerCompletionItemProvider(
 			selector,
 			new DictionaryCompletionItemProvider()
 		)
 	);
 	context.subscriptions.push(
-		vscode.languages.registerHoverProvider(
-			selector,
-			new DictionaryHoverProvider()
-		)
+		languages.registerHoverProvider(selector, new DictionaryHoverProvider())
 	);
 	context.subscriptions.push(
-		vscode.languages.registerDocumentFormattingEditProvider(
+		languages.registerDocumentFormattingEditProvider(
 			selector,
 			new GoDocumentFormatter()
 		)
 	);
 	context.subscriptions.push(
-		vscode.languages.registerColorProvider(selector, new XColorProvider())
+		languages.registerColorProvider(selector, new XColorProvider())
 	);
 	client.start();
 }

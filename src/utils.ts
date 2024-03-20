@@ -1,3 +1,10 @@
+/*
+ * @Author: xuranXYS
+ * @LastEditTime: 2024-03-20 13:33:23
+ * @GitHub: www.github.com/xiaoxustudio
+ * @WebSite: www.xiaoxustudio.top
+ * @Description: By xuranXYS
+ */
 export function rgba01To255(rgba: string): string {
 	const matches = rgba.match(/rgba?\((.+?)\)/);
 	if (!matches) {
@@ -8,7 +15,7 @@ export function rgba01To255(rgba: string): string {
 		return rgba;
 	}
 	const rgba255 = `rgba(${values
-		.map((value) => Math.round(value * 255))
+		.map((value) => value <= 1 ? Math.round(value * 255) : value)
 		.join(",")})`;
 	return rgba255;
 }

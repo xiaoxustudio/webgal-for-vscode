@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "repository": {
     "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -15,8 +15,8 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onFileSystem:game/scene/",
-    "onFileSystem:game/"
+    "workspaceContains:config.txt",
+    "onDebugResolve:webgal"
   ],
   "main": "./out/extension.js",
   "icon": "./images/icon_file.png",
@@ -78,7 +78,7 @@
     "lint": "eslint src --ext ts",
     "test": "vscode-test"
   },
-  "devDependencies": {
+  "devdependencies": {
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.87.0",
@@ -91,6 +91,7 @@
     "vscode-languageclient": "^9.0.1"
   },
   "dependencies": {
+    "@types/vscode": "^1.87.0",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11"
   }

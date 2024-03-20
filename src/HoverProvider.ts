@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 20:26:47
+ * @LastEditTime: 2024-03-20 12:17:27
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -8,7 +8,6 @@
 import * as vscode from "vscode";
 import { dictionary } from "./config/HoverSnippet";
 import { _setvar_pattern } from "./CompletionProvider";
-import { version } from "process";
 
 interface _VToken {
 	word: string;

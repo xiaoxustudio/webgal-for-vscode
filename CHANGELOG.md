@@ -13,6 +13,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.2.6] - 2024.3.19
+
+- 修复工作区lsp不启用的bug
+- 优化操作
+
 ## [1.2.5] - 2024.3.19
 
 - 增加部分提示

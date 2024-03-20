@@ -1,3 +1,10 @@
+/*
+ * @Author: xuranXYS
+ * @LastEditTime: 2024-03-20 13:30:47
+ * @GitHub: www.github.com/xiaoxustudio
+ * @WebSite: www.xiaoxustudio.top
+ * @Description: By xuranXYS
+ */
 import * as vscode from "vscode";
 import { isRgba255, rgba255To01, rgba01To255 } from "./utils";
 
@@ -21,6 +28,7 @@ export default class XColorProvider implements vscode.DocumentColorProvider {
 			return [red, green, blue, alpha];
 		};
 		let match;
+		// 解析#xxx
 		while ((match = colorRegex.exec(document.getText())) !== null) {
 			const startPos = document.positionAt(match.index);
 			const endPos = document.positionAt(match.index + match[0].length);
@@ -34,6 +42,7 @@ export default class XColorProvider implements vscode.DocumentColorProvider {
 		}
 		const colorRegex_1 =
 			/rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*(?:,\s*[\d.]+(?:\.[\d.]+)?)?\)/g;
+		// 解析rgba
 		while ((match = colorRegex_1.exec(document.getText())) !== null) {
 			const startPos = document.positionAt(match.index);
 			const endPos = document.positionAt(match.index + match[0].length);
