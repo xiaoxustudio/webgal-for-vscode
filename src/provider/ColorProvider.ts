@@ -6,7 +6,7 @@
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { isRgba255, rgba255To01, rgba01To255 } from "./utils";
+import { isRgba255, rgba255To01, rgba01To255 } from "../utils/utils";
 
 export default class XColorProvider implements vscode.DocumentColorProvider {
 	provideDocumentColors(

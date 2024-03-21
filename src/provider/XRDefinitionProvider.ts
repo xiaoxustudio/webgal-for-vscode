@@ -6,7 +6,7 @@
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { selector } from "./utils";
+import { selector } from "../utils/utils";
 import {
 	CancellationToken,
 	Definition,

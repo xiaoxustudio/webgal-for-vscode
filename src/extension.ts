@@ -6,14 +6,14 @@
  * @Description: By xuranXYS
  */
 import { commands, ExtensionContext, languages } from "vscode";
-import DictionaryCompletionItemProvider from "./CompletionProvider";
-import DictionaryHoverProvider from "./HoverProvider";
-import XColorProvider from "./ColorProvider";
-import GoDocumentFormatter from "./config/Format";
-import { selector } from "./utils";
+import DictionaryCompletionItemProvider from "./provider/CompletionProvider";
+import DictionaryHoverProvider from "./provider/HoverProvider";
+import XColorProvider from "./provider/ColorProvider";
+import GoDocumentFormatter from "./utils/Format";
+import { selector } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
-import { XRDefinitionProvider } from "./XRDefinitionProvider";
+import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
 
 let client: LanguageClient;
 export function activate(context: ExtensionContext) {

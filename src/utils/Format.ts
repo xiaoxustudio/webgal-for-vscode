@@ -27,31 +27,32 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 				return val.replace(/^[\s]+/, " ");
 			});
 		}
-		const _text_sp = text.split("\n");
-		const _out_sp = [];
-		for (let i of _text_sp) {
-			const _index = i.indexOf(":");
-			const _start_formats = i.substring(0, _index);
-			const _end_formats = i.substring(_index);
-			// 冒号格式化
-			if (_index === -1) {
-				i = _start_formats + _end_formats;
-				_out_sp.push(i);
-				continue;
-			} else if (i.substring(_index + 1, _index + 2) === " ") {
-				i = _start_formats + _end_formats;
-				_out_sp.push(i);
-				continue;
-			} else if (FormatBlacklist.includes(_start_formats)) {
-				i = _start_formats + _end_formats;
-				_out_sp.push(i);
-				continue;
-			} else {
-				i = _start_formats + ": " + i.substring(_index + 1);
-				_out_sp.push(i);
-			}
-		}
-		return _out_sp.join("\n");
+		// const _text_sp = text.split("\n");
+		// const _out_sp = [];
+		// for (let i of _text_sp) {
+		// 	const _index = i.indexOf(":");
+		// 	const _start_formats = i.substring(0, _index);
+		// 	const _end_formats = i.substring(_index);
+		// 	// 冒号格式化
+		// 	if (_index === -1) {
+		// 		i = _start_formats + _end_formats;
+		// 		_out_sp.push(i);
+		// 		continue;
+		// 	} else if (i.substring(_index + 1, _index + 2) === " ") {
+		// 		i = _start_formats + _end_formats;
+		// 		_out_sp.push(i);
+		// 		continue;
+		// 	} else if (FormatBlacklist.includes(_start_formats)) {
+		// 		i = _start_formats + _end_formats;
+		// 		_out_sp.push(i);
+		// 		continue;
+		// 	} else {
+		// 		i = _start_formats + ": " + i.substring(_index + 1);
+		// 		_out_sp.push(i);
+		// 	}
+		// }
+		// return _out_sp.join("\n");
+		return text;
 	}
 }
 

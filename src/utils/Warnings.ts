@@ -3,7 +3,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-20 16:38:34
+ * @LastEditTime: 2024-03-21 10:28:47
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -15,6 +15,14 @@ interface WarningToken {
 	is_line: boolean; // 是否是行内警告
 	customCheck?: Function; // 自定义检测警告
 	id: string; // id
+	enable?: boolean;
+}
+function remove_space(_text: string) {
+	// 去除空白
+	_text = _text.replace(/^([\n\r\t]+)/, function (input, match) {
+		return input.slice(match.length);
+	});
+	return _text;
 }
 export const Warning: { [key: string]: WarningToken } = {
 	"0001": {
@@ -37,17 +45,29 @@ export const Warning: { [key: string]: WarningToken } = {
 		customCheck: function (
 			textDocument: TextDocument,
 			_text: string,
-			base_offset: number
+			base_offset: number,
+			_newarr: string[]
 		) {
+			const _ori_text = _text;
+			_text = remove_space(_text);
+			let _offset = 0;
+			for (let i = 0; i < _newarr.length; i++) {
+				const _data = _newarr[i];
+				if (/(\r\n)/.test(_data) || _data == "\\r\\n") {
+					_offset += 2;
+				} else {
+					_offset += _data.length;
+				}
+			}
 			const _res_match = this.pattern.exec(_text);
 			if (_res_match) {
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Warning,
 					range: {
-						start: textDocument.positionAt(base_offset + 8),
-						end: textDocument.positionAt(base_offset + _res_match.input.length),
+						start: textDocument.positionAt(_offset),
+						end: textDocument.positionAt(_offset + _text.length),
 					},
-					message: message(this.id, _res_match.input.trim()),
+					message: message(this.id, _ori_text.trim()),
 					source: "WebGal Script",
 				};
 				diagnostic.relatedInformation = [
@@ -72,6 +92,7 @@ export const Warning: { [key: string]: WarningToken } = {
 		DiagnosticInformation: "指令不规范（%id%）",
 		pattern: /(^[^;\n\t:]*?\S+:\S+){1,}/g,
 		is_line: true,
+		enable: false,
 	},
 	"0004": {
 		id: "0004",
@@ -81,6 +102,47 @@ export const Warning: { [key: string]: WarningToken } = {
 		DiagnosticInformation: "变量插值不规范（%id%）",
 		pattern: /{(\S+\s{1,}|\s{1,}\S+|\s{1,}\S+\s{1,})}/g,
 		is_line: false,
+	},
+	"0005": {
+		id: "0005",
+		message: (...args: any[]) => {
+			return `${args[0]} 语句缺少结束标识`;
+		},
+		DiagnosticInformation: "语句不规范（%id%）",
+		pattern: /none/g,
+		customCheck: function (
+			textDocument: TextDocument,
+			_text: string,
+			base_offset: number
+		) {
+			_text = remove_space(_text);
+			const _res_match_start = _text.endsWith(";") ? true : false;
+			const _res = _text.startsWith(";") || _res_match_start ? true : false;
+			const _condition = !_res && _text.length > 0;
+			if (_condition) {
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Warning,
+					range: {
+						start: textDocument.positionAt(base_offset + 8),
+						end: textDocument.positionAt(base_offset + _text.trim().length),
+					},
+					message: message(this.id, _text.trim()),
+					source: "WebGal Script",
+				};
+				diagnostic.relatedInformation = [
+					{
+						location: {
+							uri: textDocument.uri,
+							range: Object.assign({}, diagnostic.range),
+						},
+						message: getDiagnosticInformation(this.id),
+					},
+				];
+				return diagnostic;
+			}
+			return null;
+		},
+		is_line: true,
 	},
 };
 

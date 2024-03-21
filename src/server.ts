@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-20 21:49:23
+ * @LastEditTime: 2024-03-21 10:27:28
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -23,15 +23,15 @@ import {
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { Warning, message, getDiagnosticInformation } from "./config/Warnings";
-import { FormatBlacklist } from "./config/FormatBlackList";
+import { Warning, message, getDiagnosticInformation } from "./utils/Warnings";
+import { FormatBlacklist } from "./utils/FormatBlackList";
 import {
 	abbrKeys,
 	commandSuggestions,
 	figureKeys,
 	keyNames,
 	setAnimationKeys,
-} from "./config/completionServerProvider";
+} from "./provider/completionServerProvider";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -162,7 +162,7 @@ async function validateTextDocument(
 
 	let problems = 0;
 	const diagnostics: Diagnostic[] = [];
-	let _sp = text.split("\n");
+	let _sp = text.split(/(\n|\t\n|\r\n)/);
 	for (let i in Warning) {
 		const _token = Warning[i];
 		const _pattern = _token.pattern as RegExp;
@@ -183,8 +183,8 @@ async function validateTextDocument(
 			const _res = FormatBlacklist.every(
 				(val) => m?.input.startsWith(val) === true
 			);
-			// 格式化黑名单
-			if (_res) {
+			// 格式化黑名单和enable
+			if (_res || _token?.enable === false) {
 				continue;
 			}
 			// 通过
@@ -225,7 +225,8 @@ async function validateTextDocument(
 				const _custom_res = _token.customCheck(
 					textDocument,
 					_line_text,
-					_newarr.length
+					_newarr.length,
+					_sp.slice(0, _line_index)
 				);
 				if (typeof _custom_res === "object" && _custom_res !== null) {
 					diagnostics.push(_custom_res);
@@ -239,8 +240,8 @@ async function validateTextDocument(
 				const _res = FormatBlacklist.every(
 					(val) => m?.input.startsWith(val) === true
 				);
-				// 格式化黑名单
-				if (_res) {
+				// 格式化黑名单和enable
+				if (_res || _token?.enable === false) {
 					continue;
 				}
 				// 通过

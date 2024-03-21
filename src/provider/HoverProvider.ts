@@ -1,20 +1,21 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-20 22:59:51
+ * @LastEditTime: 2024-03-21 11:29:02
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { dictionary } from "./config/HoverSnippet";
+import { dictionary } from "../utils/HoverSnippet";
 import { _setvar_pattern } from "./CompletionProvider";
 
 export interface _VToken {
 	word: string;
-	type?: string;
+	type: string;
 	is_global?: boolean;
 	position?: vscode.Position;
 	input?: string;
+	desc: string;
 }
 export function _find_variable_type(sources: string, _w: string, _arr: any) {
 	let _find = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(sources);
@@ -63,9 +64,22 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		const lineText = document.lineAt(position).text;
 		const pos = document.getWordRangeAtPosition(position);
 		const _arr: { [key: string]: _VToken } = {};
-		const _arrType = [];
 		let m;
+		// editor.document.lineAt(prevLine).text.trim()
 		const ALL_ARR = document.getText().split("\n");
+		const _get_desc_variable = (_start_line: number) => {
+			for (let _d_index = _start_line - 2; _d_index > 0; _d_index--) {
+				const _data = ALL_ARR[_d_index];
+				if (_data.startsWith(";") && _data.length > 0) {
+					return _data.substring(1);
+				} else if (_data.length > 0) {
+					break;
+				} else {
+					continue;
+				}
+			}
+			return "";
+		};
 		for (let _d_index = 0; _d_index < ALL_ARR.length; _d_index++) {
 			const _data = ALL_ARR[_d_index];
 			let m = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(_data);
@@ -75,7 +89,16 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					input: m.input,
 					position: position.with(_d_index + 1, 5),
 				} as _VToken;
-				_arrType.push(_find_variable_type(m.input, m[1], _arr));
+				if (
+					_arr[m[1]] &&
+					_arr[m[1]]?.position &&
+					_arr[m[1]].position instanceof vscode.Position
+				) {
+					const _v_pos = _arr[m[1]].position;
+					const _v_line = _v_pos?.line ? _v_pos.line : -1;
+					_arr[m[1]].desc = _get_desc_variable(_v_line);
+				}
+				_find_variable_type(m.input, m[1], _arr);
 			}
 		}
 		// 获取上下文全部变量
@@ -86,9 +109,12 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		const _var_test = document.getWordRangeAtPosition(position, /{(\w+)}/);
 		const _var_test_text = document.getText(_var_test);
 		if (`{${word}}` === _var_test_text) {
-			const hoverContent = new vscode.MarkdownString(`变量 **${word}** `);
+			const hoverContent = new vscode.MarkdownString(`### 变量 **${word}** `);
 			hoverContent.isTrusted = true;
 			hoverContent.supportHtml = true;
+			if (_arr[word].desc.length > 0) {
+				hoverContent.appendMarkdown(`\n\n${_arr[word].desc}`);
+			}
 			if (word in _arr) {
 				hoverContent.appendMarkdown(
 					`\n\n Type : <span style="color:#f00;">**${_arr[word].type}**</span>`
