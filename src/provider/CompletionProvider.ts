@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:30:36
+ * @LastEditTime: 2024-03-22 13:32:04
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -62,7 +62,6 @@ export default class DictionaryCompletionItemProvider
 				(_w_dir == "game" && !currentDirectory.endsWith("game") ? "\\game" : "") +
 				"\\" +
 				B_BeforeText;
-			console.log(_need_find_dir);
 			try {
 				accessSync(_need_find_dir, constants.R_OK);
 				const _resources = get_files(
