@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-21 10:27:28
+ * @LastEditTime: 2024-03-22 11:42:49
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -20,6 +20,7 @@ import {
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
 	Position,
+	Range,
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -153,16 +154,17 @@ documents.onDidChangeContent((change) => {
 	validateTextDocument(change.document);
 });
 
+// 警告
 async function validateTextDocument(
 	textDocument: TextDocument
 ): Promise<Diagnostic[]> {
 	const settings = await getDocumentSettings(textDocument.uri);
 	const text = textDocument.getText();
 	let m: RegExpExecArray | null;
-
 	let problems = 0;
 	const diagnostics: Diagnostic[] = [];
 	let _sp = text.split(/(\n|\t\n|\r\n)/);
+
 	for (let i in Warning) {
 		const _token = Warning[i];
 		const _pattern = _token.pattern as RegExp;
@@ -280,7 +282,27 @@ connection.onDidChangeWatchedFiles((_change) => {
 connection.onCompletion(
 	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
+		const position = _textDocumentPosition.position;
+		const _start = {
+			line: position.line,
+			character:
+				position.character - 2 > 0
+					? position.character - 2
+					: position.character - 1,
+		} as Position;
+		const _end = {
+			line: position.line,
+			character:
+				position.character - 1 > 0
+					? position.character - 1
+					: position.character,
+		} as Position;
+		const _range = { start: _start, end: _end } as Range;
 		if (document) {
+			const BeforeText = document.getText(_range);
+			if (BeforeText == "$") {
+				return [];
+			}
 			const _offset = document.offsetAt(_textDocumentPosition.position);
 			const _offset_line = document.offsetAt(
 				Position.create(_textDocumentPosition.position.line, 0)

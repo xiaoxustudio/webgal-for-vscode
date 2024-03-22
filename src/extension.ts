@@ -1,22 +1,33 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-20 22:51:18
+ * @LastEditTime: 2024-03-22 12:43:11
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
-import { commands, ExtensionContext, languages } from "vscode";
+import {
+	commands,
+	ExtensionContext,
+	languages,
+	window,
+	workspace,
+} from "vscode";
 import DictionaryCompletionItemProvider from "./provider/CompletionProvider";
 import DictionaryHoverProvider from "./provider/HoverProvider";
 import XColorProvider from "./provider/ColorProvider";
 import GoDocumentFormatter from "./utils/Format";
-import { selector } from "./utils/utils";
+import { get_files, selector } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
-
 let client: LanguageClient;
-export function activate(context: ExtensionContext) {
+let run_Skip_Check = false;
+
+function InitPlugin(context: ExtensionContext) {
+	if (run_Skip_Check) {
+		window.showInformationMessage("WebGal For Vscode 已经启动了哦！");
+		return;
+	}
 	client = create_client(context);
 	client.start();
 	context.subscriptions.push(
@@ -43,6 +54,28 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(
 		languages.registerColorProvider(selector, new XColorProvider())
 	);
+}
+
+export function activate(context: ExtensionContext) {
+	const _res = workspace.workspaceFolders?.every((val) => {
+		const _Arr = get_files(val.uri.fsPath, [".txt"], false);
+		for (let i of _Arr) {
+			const _sub = i.split("/");
+			if (_sub[_sub.length - 1] == "config.txt") {
+				return true;
+			}
+		}
+		return false;
+	});
+	context.subscriptions.push(
+		commands.registerCommand("extension.XRStartWFV", () => {
+			InitPlugin(context);
+			run_Skip_Check = true;
+		})
+	);
+	if (_res) {
+		InitPlugin(context);
+	}
 }
 
 export function deactivate(): Thenable<void> | undefined {

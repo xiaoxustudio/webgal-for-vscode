@@ -9,6 +9,8 @@ callScene:test.txt
 ; 指令:前无空格 （暂时去除 - 2024.3.21）
 intro:测试;
 
+tex$
+
 ; 变量名称前导数字
 setVar:00test=123;
 

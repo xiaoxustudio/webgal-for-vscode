@@ -1,12 +1,11 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-20 23:01:22
+ * @LastEditTime: 2024-03-22 13:04:03
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { selector } from "../utils/utils";
 import {
 	CancellationToken,
 	Definition,
@@ -48,7 +47,9 @@ export class XRDefinitionProvider implements DefinitionProvider {
 				const _range = wordRange.with(
 					wordRange.start.with(
 						wordRange.start.line,
-						wordRange.start.character - 1
+						wordRange.start.character - 1 > 0
+							? wordRange.start.character - 1
+							: wordRange.start.character
 					),
 					wordRange.end.with(wordRange.end.line, wordRange.end.character + 1)
 				);

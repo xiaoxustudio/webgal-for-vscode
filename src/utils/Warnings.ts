@@ -3,7 +3,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-21 10:28:47
+ * @LastEditTime: 2024-03-22 11:24:29
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -113,18 +113,29 @@ export const Warning: { [key: string]: WarningToken } = {
 		customCheck: function (
 			textDocument: TextDocument,
 			_text: string,
-			base_offset: number
+			base_offset: number,
+			_newarr: string[]
 		) {
+			const _ori_text = _text;
 			_text = remove_space(_text);
+			let _offset = 0;
+			for (let i = 0; i < _newarr.length; i++) {
+				const _data = _newarr[i];
+				if (/(\r\n)/.test(_data) || _data == "\\r\\n") {
+					_offset += 2;
+				} else {
+					_offset += _data.length;
+				}
+			}
 			const _res_match_start = _text.endsWith(";") ? true : false;
 			const _res = _text.startsWith(";") || _res_match_start ? true : false;
-			const _condition = !_res && _text.length > 0;
+			const _condition = !_text.includes(";") && !_res && _text.length > 0;
 			if (_condition) {
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Warning,
 					range: {
-						start: textDocument.positionAt(base_offset + 8),
-						end: textDocument.positionAt(base_offset + _text.trim().length),
+						start: textDocument.positionAt(_offset),
+						end: textDocument.positionAt(_offset + _text.trim().length),
 					},
 					message: message(this.id, _text.trim()),
 					source: "WebGal Script",

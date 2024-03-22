@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-21 11:29:02
+ * @LastEditTime: 2024-03-22 13:07:33
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -17,6 +17,7 @@ export interface _VToken {
 	input?: string;
 	desc: string;
 }
+
 export function _find_variable_type(sources: string, _w: string, _arr: any) {
 	let _find = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(sources);
 	if (!_find || _find[1].trim() !== _w.trim()) {
@@ -55,6 +56,7 @@ export function _find_variable_type(sources: string, _w: string, _arr: any) {
 	}
 	return;
 }
+
 export default class DictionaryHoverProvider implements vscode.HoverProvider {
 	provideHover(
 		document: vscode.TextDocument,
@@ -68,17 +70,18 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		// editor.document.lineAt(prevLine).text.trim()
 		const ALL_ARR = document.getText().split("\n");
 		const _get_desc_variable = (_start_line: number) => {
+			let _desc_arr = [];
 			for (let _d_index = _start_line - 2; _d_index > 0; _d_index--) {
 				const _data = ALL_ARR[_d_index];
 				if (_data.startsWith(";") && _data.length > 0) {
-					return _data.substring(1);
+					_desc_arr.unshift(_data.substring(1));
 				} else if (_data.length > 0) {
 					break;
 				} else {
 					continue;
 				}
 			}
-			return "";
+			return _desc_arr.join("\n");
 		};
 		for (let _d_index = 0; _d_index < ALL_ARR.length; _d_index++) {
 			const _data = ALL_ARR[_d_index];
@@ -113,17 +116,18 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			hoverContent.isTrusted = true;
 			hoverContent.supportHtml = true;
 			if (_arr[word].desc.length > 0) {
-				hoverContent.appendMarkdown(`\n\n${_arr[word].desc}`);
+				const desc = ` \n ${_arr[word].desc} `;
+				hoverContent.appendMarkdown(desc);
 			}
 			if (word in _arr) {
 				hoverContent.appendMarkdown(
-					`\n\n Type : <span style="color:#f00;">**${_arr[word].type}**</span>`
+					` \n 类型 : <span style="color:#4db1e5;">${_arr[word].type}</span> `
 				);
 				hoverContent.appendMarkdown(
-					`\n\n position : 位于第${_arr[word].position?.line}行`
+					` \n 位置 : 位于第${_arr[word].position?.line}行 `
 				);
 			} else {
-				hoverContent.appendMarkdown(`\n\n 未定义变量`);
+				hoverContent.appendMarkdown(` \n 未定义变量`);
 			}
 			const hover = new vscode.Hover(hoverContent, _var_test);
 			return hover;
