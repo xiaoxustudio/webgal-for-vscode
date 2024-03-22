@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:10:30
+ * @LastEditTime: 2024-03-22 13:35:09
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -45,6 +45,12 @@
 
 ```
 
+# 使用
+
+当前工作目录只要包含**config.txt**时，插件就会自动启动
+
+获取使用启动命令自行启动插件
+
 ## 部分功能展示
 
 ### Hover提示
@@ -71,12 +77,6 @@
 ### 颜色选择器  
 
 ![颜色选择器](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/color.png)
-
-# 使用
-
-当前工作目录只要包含**config.txt**时，插件就会自动启动
-
-获取使用启动命令自行启动插件
 
 # WebGal官方链接
 

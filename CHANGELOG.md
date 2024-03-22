@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:33:14
+ * @LastEditTime: 2024-03-22 13:35:58
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -13,7 +13,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-## [1.3.0] - 2024.3.22
+## [1.3.1] - 2024.3.22
 
 - 修复资源补全的bug
 
