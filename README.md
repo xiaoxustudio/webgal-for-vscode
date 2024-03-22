@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:35:09
+ * @LastEditTime: 2024-03-22 13:42:21
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -49,7 +49,7 @@
 
 当前工作目录只要包含**config.txt**时，插件就会自动启动
 
-获取使用启动命令自行启动插件
+或者使用启动命令自行启动插件
 
 ## 部分功能展示
 
