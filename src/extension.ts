@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 12:43:11
+ * @LastEditTime: 2024-03-22 13:20:04
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -28,6 +28,7 @@ function InitPlugin(context: ExtensionContext) {
 		window.showInformationMessage("WebGal For Vscode 已经启动了哦！");
 		return;
 	}
+	run_Skip_Check = true;
 	client = create_client(context);
 	client.start();
 	context.subscriptions.push(
@@ -70,7 +71,6 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(
 		commands.registerCommand("extension.XRStartWFV", () => {
 			InitPlugin(context);
-			run_Skip_Check = true;
 		})
 	);
 	if (_res) {
