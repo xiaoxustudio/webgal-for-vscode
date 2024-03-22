@@ -30,7 +30,7 @@ export function create_client(context: ExtensionContext): LanguageClient {
 			fileEvents: workspace.createFileSystemWatcher("**/.clientrc"),
 		},
 	};
-
+	
 	return new LanguageClient(
 		"XRWEBGALlanguageServer",
 		"XR WEBGAL Language Server",

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:07:33
+ * @LastEditTime: 2024-03-22 22:23:04
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -169,13 +169,17 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 				}
 			}
 		} else if (pos) {
-			const beforepos = new vscode.Range(
-				new vscode.Position(pos.start.line || 0, pos.start.character! - 1 || 0),
+			const _base_pos = new vscode.Position(
+				pos.start.line || 0,
+				pos.start.character! - 1 || 0
+			);
+			const _before_pos = new vscode.Range(
+				_base_pos.with(_base_pos.line, _base_pos.character - 1),
 				pos.start! || 0
 			);
-			let _s = document.getText(beforepos);
+			let _s = document.getText(_before_pos);
 			const _d_cmd = dictionary.cmd[word];
-			if (_d_cmd && _s === "-") {
+			if (_d_cmd && _s === " -") {
 				const hoverContent = new vscode.MarkdownString(
 					`**${word}** \n\n ${_d_cmd.desc}`
 				);

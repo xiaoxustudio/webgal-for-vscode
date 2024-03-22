@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-19 16:19:04
+ * @LastEditTime: 2024-03-22 22:16:45
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -25,6 +25,9 @@ export const dictionary: { [key: string]: DIC } = {
 		},
 		concat: <DToken>{
 			desc: "本句对话连接在上一句对话之后",
+		},
+		duration: <DToken>{
+			desc: "持续时间（毫秒ms）",
 		},
 		notend: <DToken>{
 			desc: "本句对话没有结束，在后面可能连接演出或对话。",

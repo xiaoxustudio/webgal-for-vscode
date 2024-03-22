@@ -157,6 +157,13 @@ export const commandSuggestions: CompletionItem[] = [
 		detail: `command setVar:<expression>;`,
 		insertText: "setVar:",
 	},
+	{
+		label: "setTransform",
+		kind: CompletionItemKind.Function,
+		documentation: `设置效果`,
+		detail: `command setTransform:<expression>;`,
+		insertText: "setTransform:",
+	},
 ];
 export const abbrKeys: CompletionItem[] = [
 	{
@@ -301,5 +308,12 @@ export const setAnimationKeys: CompletionItem[] = [
 		documentation: `设置动画目标 ID`,
 		detail: `option -target=<targetId>`,
 		insertText: "target=",
+	},
+	{
+		label: "-duration",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置持续时间`,
+		detail: `option -duration=<number>`,
+		insertText: "duration=",
 	},
 ];

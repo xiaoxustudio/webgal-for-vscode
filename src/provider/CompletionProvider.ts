@@ -1,21 +1,24 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:32:04
+ * @LastEditTime: 2024-03-22 20:51:27
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { currentDirectory, get_files } from "../utils/utils";
+import { currentDirectory, get_files, selector } from "../utils/utils";
 import { resources_map } from "../utils/CompletionResources";
 import { accessSync, constants } from "node:fs";
+import { CancellationToken } from "vscode-languageclient";
 export const _setvar_pattern = /setVar:\s*(\w+)\s*=/g;
 export default class DictionaryCompletionItemProvider
 	implements vscode.CompletionItemProvider
 {
 	provideCompletionItems(
 		document: vscode.TextDocument,
-		position: vscode.Position
+		position: vscode.Position,
+		token: CancellationToken,
+		context: vscode.CompletionContext
 	) {
 		const _start = new vscode.Position(
 			position.line,
@@ -36,7 +39,6 @@ export default class DictionaryCompletionItemProvider
 		const AllText = document.getText();
 		const suggestions: vscode.CompletionItem[] = [];
 		const _arr = [];
-
 		let m;
 		while ((m = _setvar_pattern.exec(AllText))) {
 			_arr.push(m[1]);
@@ -59,7 +61,9 @@ export default class DictionaryCompletionItemProvider
 			const _w_dir = _sp[_sp.length - 3 > 0 ? _sp.length - 3 : _sp.length - 2];
 			const _need_find_dir =
 				currentDirectory +
-				(_w_dir == "game" && !currentDirectory.endsWith("game") ? "\\game" : "") +
+				(_w_dir == "game" && !currentDirectory.endsWith("game")
+					? "\\game"
+					: "") +
 				"\\" +
 				B_BeforeText;
 			try {
@@ -79,6 +83,7 @@ export default class DictionaryCompletionItemProvider
 							_base_name,
 							vscode.CompletionItemKind.File
 						);
+						item.insertText = _base_name;
 						const mk = new vscode.MarkdownString();
 						mk.value =
 							`**父级目录：${_base_sp[_base_sp.length - 2]}**\n\n` +
@@ -91,5 +96,42 @@ export default class DictionaryCompletionItemProvider
 			} catch {}
 		}
 		return suggestions;
+	}
+	resolveCompletionItem(item: vscode.CompletionItem, token: CancellationToken) {
+		const _activeEditor = vscode.window.activeTextEditor;
+		const docment = _activeEditor?.document;
+		const _select = _activeEditor?.selection;
+		if (docment && _select && _activeEditor) {
+			const _range = docment.getWordRangeAtPosition(
+				_select.start.with(
+					_select.start.line,
+					_select.start.character - 2 > 0
+						? _select.start.character - 2
+						: _select.start.character - 1
+				)
+			);
+			if (_range) {
+				const _r = _range.with(
+					_range.start,
+					_range.end.with(_range.end.line, _range.end.character + 1)
+				);
+				let command = {};
+				item.command = {
+					command: "extension.deletePreviousCharacter",
+					title: "Delete Previous Character",
+					arguments: [
+						() => {
+							_activeEditor.edit(
+								(_edit: vscode.TextEditorEdit) => {
+									return _edit.delete(_r);
+								},
+								{ undoStopAfter: false, undoStopBefore: false }
+							);
+						},
+					],
+				} as vscode.Command;
+			}
+		}
+		return item;
 	}
 }

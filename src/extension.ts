@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:20:04
+ * @LastEditTime: 2024-03-22 20:46:22
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -9,6 +9,9 @@ import {
 	commands,
 	ExtensionContext,
 	languages,
+	Position,
+	Selection,
+	TextEditorEdit,
 	window,
 	workspace,
 } from "vscode";
@@ -28,9 +31,18 @@ function InitPlugin(context: ExtensionContext) {
 		window.showInformationMessage("WebGal For Vscode 已经启动了哦！");
 		return;
 	}
+	context.subscriptions.push(
+		commands.registerCommand(
+			"extension.deletePreviousCharacter",
+			function (func) {
+				if (func instanceof Function) {
+					func();
+				}
+			}
+		)
+	);
 	run_Skip_Check = true;
 	client = create_client(context);
-	client.start();
 	context.subscriptions.push(
 		languages.registerCompletionItemProvider(
 			selector,
@@ -55,6 +67,7 @@ function InitPlugin(context: ExtensionContext) {
 	context.subscriptions.push(
 		languages.registerColorProvider(selector, new XColorProvider())
 	);
+	client.start();
 }
 
 export function activate(context: ExtensionContext) {
