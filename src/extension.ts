@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 11:18:13
+ * @LastEditTime: 2024-03-23 19:10:06
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -9,9 +9,6 @@ import {
 	commands,
 	ExtensionContext,
 	languages,
-	Position,
-	Selection,
-	TextEditorEdit,
 	window,
 	workspace,
 } from "vscode";
@@ -24,6 +21,7 @@ import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
 import { XRInlayHintsProvider } from "./provider/InlayHint";
+
 let client: LanguageClient;
 let run_Skip_Check = false;
 
@@ -32,16 +30,6 @@ function InitPlugin(context: ExtensionContext) {
 		window.showInformationMessage("WebGal For Vscode 已经启动了哦！");
 		return;
 	}
-	context.subscriptions.push(
-		commands.registerCommand(
-			"extension.deletePreviousCharacter",
-			function (func) {
-				if (func instanceof Function) {
-					func();
-				}
-			}
-		)
-	);
 	run_Skip_Check = true;
 	client = create_client(context);
 	context.subscriptions.push(

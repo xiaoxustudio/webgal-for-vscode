@@ -2,7 +2,7 @@
 intro:测试  -name=测试  -name=测试;
 callScene:start.txt   -name=测试;
 callScene:start.txt;
-callScene:start.txt;
+callScene:start.txt
 callScene:start.txt;
 callScene:start.txt;
 callScene:start.txt;

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 13:01:07
+ * @LastEditTime: 2024-03-23 19:16:58
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -72,6 +72,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		const _text = document.getText(pos_func).replace(/^:/, "");
 		const _var_test = document.getWordRangeAtPosition(position, /{(\w+)}/);
 		const _var_test_text = document.getText(_var_test);
+
 		if (`{${word}}` === _var_test_text) {
 			const hoverContent = new vscode.MarkdownString(`### 变量 **${word}** `);
 			hoverContent.isTrusted = true;
@@ -131,13 +132,13 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					return hover;
 				}
 			}
-		} else if (pos) {
+		}  else if (pos) {
 			const _base_pos = new vscode.Position(
 				pos.start.line || 0,
 				pos.start.character! - 1 || 0
 			);
 			const _before_pos = new vscode.Range(
-				_base_pos.with(_base_pos.line, _base_pos.character - 1),
+				_base_pos.with(_base_pos.line, _base_pos.character - 1  > 0? _base_pos.character - 1 : _base_pos.character),
 				pos.start! || 0
 			);
 			let _s = document.getText(_before_pos);

@@ -8,4 +8,6 @@ rgba(255,255,120,255);
 rgba(240,255,200);
 
 
+pixiPerform:rain;
+
 
