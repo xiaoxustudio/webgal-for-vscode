@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 20:47:58
+ * @LastEditTime: 2024-03-23 16:15:32
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -164,7 +164,6 @@ async function validateTextDocument(
 	let problems = 0;
 	const diagnostics: Diagnostic[] = [];
 	let _sp = text.split(/(\n|\t\n|\r\n)/);
-
 	for (let i in Warning) {
 		const _token = Warning[i];
 		const _pattern = _token.pattern as RegExp;
@@ -191,12 +190,13 @@ async function validateTextDocument(
 			}
 			// 通过
 			problems++;
+			const range = {
+				start: textDocument.positionAt(m.index),
+				end: textDocument.positionAt(m.index + m[0].length),
+			};
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Warning,
-				range: {
-					start: textDocument.positionAt(m.index),
-					end: textDocument.positionAt(m.index + m[0].length),
-				},
+				range,
 				message: message(i, m[0].trim()),
 				source: "WebGal Script",
 			};
@@ -248,12 +248,13 @@ async function validateTextDocument(
 				}
 				// 通过
 				problems++;
+				const range = {
+					start: textDocument.positionAt(_newarr.length + 1),
+					end: textDocument.positionAt(_newarr.length + m.input.length),
+				};
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Warning,
-					range: {
-						start: textDocument.positionAt(_newarr.length + 1),
-						end: textDocument.positionAt(_newarr.length + m.input.length),
-					},
+					range,
 					message: message(i, m.input.trim()),
 					source: "WebGal Script",
 				};

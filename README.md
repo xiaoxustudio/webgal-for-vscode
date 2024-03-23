@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 13:08:20
+ * @LastEditTime: 2024-03-23 13:30:54
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -18,6 +18,7 @@
 
 # 功能
 
+- 语言高亮
 - Hover提示
 - 关键字补全
 - 规范警告

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 13:20:54
+ * @LastEditTime: 2024-03-23 16:10:41
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -66,4 +66,10 @@ export function get_files(
 		}
 	}
 	return _arr;
+}
+export function getConfig(document: vscode.TextDocument) {
+	return vscode.workspace.getConfiguration(
+		"XRWebGalLanguageServer",
+		document.uri
+	);
 }

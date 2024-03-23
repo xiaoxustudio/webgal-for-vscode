@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 13:17:32
+ * @LastEditTime: 2024-03-23 16:00:49
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -41,8 +41,11 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 			const _index_m = i.indexOf(";");
 			const _start_formats = i.substring(0, _index);
 			const _end_formats = i.substring(_index);
-			if (_index_m === -1 && i.length > 0) {
+			if (_index_m === -1 && i.length > 0 && i !== "\r") {
 				i = _start_formats + _end_formats.trimEnd() + ";";
+				_out_sp.push(i);
+			} else {
+				i = _start_formats + _end_formats;
 				_out_sp.push(i);
 			}
 			// 冒号格式化

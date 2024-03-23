@@ -9,6 +9,6 @@ callScene:start.txt;
 callScene:  -name=测试;
 
 callScene:start.txt;
-callScene:start.txt;
+callScene:start.txt
 callScene:start.txt;
 

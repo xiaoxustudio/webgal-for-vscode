@@ -76,6 +76,12 @@
           "default": 500,
           "description": "警告信息的最大数量"
         },
+        "XRWebGalLanguageServer.isShowHint": {
+          "scope": "script",
+          "type": "boolean",
+          "default": true,
+          "description": "是否显示变量类型镶嵌"
+        },
         "XRWebGalLanguageServer.trace.server": {
           "scope": "window",
           "type": "string",

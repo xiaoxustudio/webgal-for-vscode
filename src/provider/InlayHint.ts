@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 12:07:55
+ * @LastEditTime: 2024-03-23 16:10:49
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -14,6 +14,8 @@ import {
 	InlayHintsProvider,
 } from "vscode";
 import acorn from "acorn";
+import * as vscode from "vscode";
+import { getConfig } from "../utils/utils";
 
 export function get_var_type(var_text: string): string {
 	let label;
@@ -41,12 +43,15 @@ export function get_var_type(var_text: string): string {
 							return false;
 						}
 					})();
-					if (_Res) {
-						label = "表达式";
-					} else if (
-						typeof new Function(`return '${var_text}'`)() === "string"
+					if (
+						var_text.indexOf("+") === -1 ||
+						var_text.indexOf("+") === -1 ||
+						var_text.indexOf("+") === -1 ||
+						var_text.indexOf("+") === -1
 					) {
 						label = "字符串";
+					} else if (_Res) {
+						label = "表达式";
 					} else {
 						label = "未知";
 					}
@@ -64,10 +69,15 @@ export function get_var_type(var_text: string): string {
 					return false;
 				}
 			})();
-			if (_Res) {
-				label = "表达式";
-			} else if (typeof new Function(`return '${var_text}'`)() === "string") {
+			if (
+				var_text.indexOf("+") === -1 ||
+				var_text.indexOf("+") === -1 ||
+				var_text.indexOf("+") === -1 ||
+				var_text.indexOf("+") === -15
+			) {
 				label = "字符串";
+			} else if (_Res) {
+				label = "表达式";
 			} else {
 				label = "未知";
 			}
@@ -82,6 +92,10 @@ export class XRInlayHintsProvider implements InlayHintsProvider {
 		token: CancellationToken
 	): Promise<InlayHint[]> {
 		const hints: InlayHint[] = [];
+		const _config = getConfig(document);
+		if (_config && !_config.get("isShowHint")) {
+			return hints;
+		}
 		const text = document.getText(range);
 		const regex = /(setVar):([\w\d_]+)=([\S]+);?/g;
 		for (const match of text.matchAll(regex)) {
