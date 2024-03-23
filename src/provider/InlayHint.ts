@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 19:24:21
+ * @LastEditTime: 2024-03-23 19:31:16
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -100,10 +100,11 @@ export class XRInlayHintsProvider implements InlayHintsProvider {
 		const regex = /(setVar):([\w\d_]+)=(\S+)(.*);?/g;
 		for (const match of text.matchAll(regex)) {
 			if (token.isCancellationRequested) break;
+			const _index = match.index || 0;
 			let _pos;
-			const p1 = match.index;
-			const p2 = match.index + match[1].length + 1 + match[2].length;
-			const p3 = match.index + match[0].length;
+			const p1 = _index;
+			const p2 = _index + match[1].length + 1 + match[2].length;
+			const p3 = _index + match[0].length;
 			switch (_config_isHint) {
 				case "最前面":
 					_pos = p1;
