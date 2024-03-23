@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 13:12:00
+ * @LastEditTime: 2024-03-23 13:18:44
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -15,6 +15,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [1.3.3] - 2024.3.22
 
+- 优化格式化
 - 增加语言高亮
 - 优化变量定义跳转
 - 为变量添加类型镶嵌提示

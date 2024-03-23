@@ -1,9 +1,10 @@
 import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { source } from "./utils_novsc";
 
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 11:24:29
+ * @LastEditTime: 2024-03-23 13:21:59
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -68,7 +69,7 @@ export const Warning: { [key: string]: WarningToken } = {
 						end: textDocument.positionAt(_offset + _text.length),
 					},
 					message: message(this.id, _ori_text.trim()),
-					source: "WebGal Script",
+					source,
 				};
 				diagnostic.relatedInformation = [
 					{
@@ -138,7 +139,7 @@ export const Warning: { [key: string]: WarningToken } = {
 						end: textDocument.positionAt(_offset + _text.trim().length),
 					},
 					message: message(this.id, _text.trim()),
-					source: "WebGal Script",
+					source,
 				};
 				diagnostic.relatedInformation = [
 					{

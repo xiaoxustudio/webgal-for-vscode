@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 11:52:29
+ * @LastEditTime: 2024-03-23 13:20:54
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -67,4 +67,3 @@ export function get_files(
 	}
 	return _arr;
 }
-
