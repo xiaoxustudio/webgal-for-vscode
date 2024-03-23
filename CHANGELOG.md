@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 16:18:34
+ * @LastEditTime: 2024-03-23 16:26:47
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -13,13 +13,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-## [1.3.4] - 2024.3.22
+## [1.3.4] - 2024.3.23
 
 - 修复格式化问题
 - 修复字符串类型镶嵌
 - 增加类型镶嵌启用配置
 
-## [1.3.3] - 2024.3.22
+## [1.3.3] - 2024.3.23
 
 - 优化格式化
 - 增加语言高亮
