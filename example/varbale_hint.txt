@@ -1,0 +1,16 @@
+
+
+setVar:a=123;
+
+setVar:b=测试 -global;
+
+setVar:c=true;
+
+setVar:d=a+1;
+
+
+
+intro:{a}是{b}是{c}是{d};
+
+
+

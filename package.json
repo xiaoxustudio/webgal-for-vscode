@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -32,13 +32,28 @@
         ],
         "aliases": [
           "webgal",
-          "webgalscript"
+          "webgalscript",
+          "webgalScript",
+          "webgal script",
+          "webgal Script"
         ],
         "icon": {
           "dark": "./images/icon.png",
           "light": "./images/icon.png"
         },
-        "configuration": "src/config/language-configuration.json"
+        "configuration": "./src/utils/language-configuration.json"
+      },
+      {
+        "id": "webgal-config",
+        "aliases": [
+          "webgalConfig",
+          "webgalconfig",
+          "webgal Config",
+          "webgal config"
+        ],
+        "filenamePatterns": [
+          "**/game/config.txt"
+        ]
       }
     ],
     "commands": [
@@ -73,7 +88,19 @@
           "description": "跟踪VS Code和语言服务器之间的通信。"
         }
       }
-    }
+    },
+    "grammars": [
+      {
+        "language": "webgal",
+        "scopeName": "source.webgal",
+        "path": "./syntaxes/webgal.tmLanguage.json"
+      },
+      {
+        "language": "webgal-config",
+        "scopeName": "source.webgal-config",
+        "path": "./syntaxes/webgal-config.tmLanguage.json"
+      }
+    ]
   },
   "capabilities": {
     "colorProvider": "true",
@@ -101,6 +128,7 @@
   },
   "dependencies": {
     "@types/vscode": "^1.87.0",
+    "acorn": "^8.11.3",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11"

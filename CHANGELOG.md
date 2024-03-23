@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 20:48:29
+ * @LastEditTime: 2024-03-23 13:12:00
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -12,6 +12,13 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
+
+## [1.3.3] - 2024.3.22
+
+- 增加语言高亮
+- 优化变量定义跳转
+- 为变量添加类型镶嵌提示
+- 变量类型识别增加**表达式**类型
 
 ## [1.3.2] - 2024.3.22
 

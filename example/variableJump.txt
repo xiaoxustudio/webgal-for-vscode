@@ -11,8 +11,7 @@ setVar:b=123;
 
 {b};
 
-{a};
-
+setVar:a=a+1;
 
 
 ; <span style="color:#FA0099;" >你猜猜</span>
@@ -26,3 +25,5 @@ setVar:b=123;
 
 
                         {b};
+
+intro:{a};

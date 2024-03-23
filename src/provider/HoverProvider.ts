@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 22:23:04
+ * @LastEditTime: 2024-03-23 13:01:07
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -8,6 +8,7 @@
 import * as vscode from "vscode";
 import { dictionary } from "../utils/HoverSnippet";
 import { _setvar_pattern } from "./CompletionProvider";
+import { get_var_type } from "./InlayHint";
 
 export interface _VToken {
 	word: string;
@@ -16,45 +17,6 @@ export interface _VToken {
 	position?: vscode.Position;
 	input?: string;
 	desc: string;
-}
-
-export function _find_variable_type(sources: string, _w: string, _arr: any) {
-	let _find = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(sources);
-	if (!_find || _find[1].trim() !== _w.trim()) {
-		_arr[_w].type = "未知";
-		return;
-	}
-	const _is_global = _find[2].indexOf("-global") !== -1 ? true : false;
-	let _val;
-	if (_is_global) {
-		_val = _find[2].substring(
-			_find[2].indexOf("="),
-			_find[2].lastIndexOf(" -")
-		);
-	} else {
-		_val = _find[2].substring(_find[2].indexOf("="), _find[2].lastIndexOf(";"));
-	}
-	try {
-		const __val_real = new Function("return " + _val)();
-		switch (typeof __val_real) {
-			case "number":
-				_arr[_w].type = "数字";
-				break;
-			case "boolean":
-				_arr[_w].type = "布尔值";
-				break;
-			default:
-				_arr[_w].type = "字符串";
-				break;
-		}
-	} catch {
-		if (typeof new Function(`return '${_val}'`)() === "string") {
-			_arr[_w].type = "字符串";
-		} else {
-			_arr[_w].type = "未知";
-		}
-	}
-	return;
 }
 
 export default class DictionaryHoverProvider implements vscode.HoverProvider {
@@ -67,7 +29,6 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		const pos = document.getWordRangeAtPosition(position);
 		const _arr: { [key: string]: _VToken } = {};
 		let m;
-		// editor.document.lineAt(prevLine).text.trim()
 		const ALL_ARR = document.getText().split("\n");
 		const _get_desc_variable = (_start_line: number) => {
 			let _desc_arr = [];
@@ -91,6 +52,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					word: m[1],
 					input: m.input,
 					position: position.with(_d_index + 1, 5),
+					type: get_var_type(m[2]),
 				} as _VToken;
 				if (
 					_arr[m[1]] &&
@@ -101,7 +63,6 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					const _v_line = _v_pos?.line ? _v_pos.line : -1;
 					_arr[m[1]].desc = _get_desc_variable(_v_line);
 				}
-				_find_variable_type(m.input, m[1], _arr);
 			}
 		}
 		// 获取上下文全部变量
@@ -116,15 +77,17 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			hoverContent.isTrusted = true;
 			hoverContent.supportHtml = true;
 			if (_arr[word].desc.length > 0) {
-				const desc = ` \n ${_arr[word].desc} `;
+				hoverContent.appendMarkdown(` \n <hr>  `);
+				const desc = ` \n\n ${_arr[word].desc} `;
 				hoverContent.appendMarkdown(desc);
 			}
+			hoverContent.appendMarkdown(` \n <hr>  `);
 			if (word in _arr) {
 				hoverContent.appendMarkdown(
-					` \n 类型 : <span style="color:#4db1e5;">${_arr[word].type}</span> `
+					`\n\n ##### 类型 : <span style="color:#4db1e5;">${_arr[word].type}</span>  `
 				);
 				hoverContent.appendMarkdown(
-					` \n 位置 : 位于第${_arr[word].position?.line}行 `
+					`\n #####  位置 : 位于第${_arr[word].position?.line}行`
 				);
 			} else {
 				hoverContent.appendMarkdown(` \n 未定义变量`);

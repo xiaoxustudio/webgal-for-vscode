@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:42:21
+ * @LastEditTime: 2024-03-23 13:08:20
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -16,12 +16,12 @@
 
 <h4 align="center">WebGal Script 工具</h4>
 
-## 功能
+# 功能
 
 - Hover提示
 - 关键字补全
 - 规范警告
-- 插值变量提示|变量Hover提示，可显示变量描述（markdown）
+- 插值变量提示|变量Hover提示、类型镶嵌、变量描述（markdown）
 - 格式化
 - 跳转定义
 - 颜色选择器
@@ -51,7 +51,7 @@
 
 或者使用启动命令自行启动插件
 
-## 部分功能展示
+# 部分功能展示
 
 ### Hover提示
 
@@ -68,7 +68,18 @@
 ### 插值变量提示  
 
 ![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable.png)
+
+##### hover提示  
+
 ![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable_hover.png)
+
+##### 类型镶嵌  
+
+![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable_hint.png)
+
+##### 跳转定义  
+
+![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable_jump.png)
 
 ### 格式化
 

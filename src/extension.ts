@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 20:46:22
+ * @LastEditTime: 2024-03-23 11:18:13
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -23,6 +23,7 @@ import { get_files, selector } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
+import { XRInlayHintsProvider } from "./provider/InlayHint";
 let client: LanguageClient;
 let run_Skip_Check = false;
 
@@ -43,6 +44,9 @@ function InitPlugin(context: ExtensionContext) {
 	);
 	run_Skip_Check = true;
 	client = create_client(context);
+	context.subscriptions.push(
+		languages.registerInlayHintsProvider(selector, new XRInlayHintsProvider())
+	);
 	context.subscriptions.push(
 		languages.registerCompletionItemProvider(
 			selector,

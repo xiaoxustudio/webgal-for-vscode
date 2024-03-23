@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 13:04:03
+ * @LastEditTime: 2024-03-23 12:43:49
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -13,7 +13,8 @@ import {
 	Position,
 	TextDocument,
 } from "vscode";
-import { _find_variable_type, _VToken } from "./HoverProvider";
+import { _VToken } from "./HoverProvider";
+import { get_var_type } from "./InlayHint";
 
 export class XRDefinitionProvider implements DefinitionProvider {
 	provideDefinition(
@@ -21,20 +22,21 @@ export class XRDefinitionProvider implements DefinitionProvider {
 		position: Position,
 		token: CancellationToken
 	) {
+		let _result = [];
 		const _arr: { [key: string]: _VToken } = {};
+		const _Var_list: _VToken[] = [];
 		const ALL_ARR = document.getText().split("\n");
 		const _ALL_ARR_cache = [];
-		const _arrType = [];
 		for (let _d_index = 0; _d_index < ALL_ARR.length; _d_index++) {
 			const _data = ALL_ARR[_d_index];
 			let m = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(_data);
 			if (m) {
-				_arr[m[1]] = {
+				_Var_list.push({
 					word: m[1],
 					input: m.input,
 					position: position.with(_d_index, 7),
-				} as _VToken;
-				_arrType.push(_find_variable_type(m.input, m[1], _arr));
+					type: get_var_type(m[2]),
+				} as _VToken);
 			} else {
 				_ALL_ARR_cache.push(_data);
 			}
@@ -56,22 +58,25 @@ export class XRDefinitionProvider implements DefinitionProvider {
 				const word = editor.document.getText(_range);
 				const _length = word.length;
 				const _word_no = word.substring(word.indexOf("{") + 1, _length - 1);
+				const _res = _Var_list.filter((val) => val.word === _word_no);
 				// 判断是否是有效word
-				if (/{\S+}/.test(word) && _arr[_word_no]) {
-					return [
-						{
+				if (/{\S+}/.test(word) && _res.length > 0) {
+					// 取出所有word变量
+					for (let _data of _res) {
+						_result.push({
 							uri: document.uri,
 							range: wordRange.with(
-								_arr[_word_no].position,
-								_arr[_word_no].position?.with(
-									_arr[_word_no].position?.line,
-									_arr[_word_no].input?.indexOf("=")
+								_data.position,
+								_data.position?.with(
+									_data.position?.line,
+									_data.input?.indexOf("=")
 								)
 							),
-						},
-					] as Definition;
+						});
+					}
 				}
 			}
 		}
+		return _result;
 	}
 }
