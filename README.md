@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 13:30:54
+ * @LastEditTime: 2024-03-24 11:47:56
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -16,6 +16,8 @@
 
 <h4 align="center">WebGal Script 工具</h4>
 
+![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen)  ![github license](https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode)  ![Language](https://img.shields.io/badge/language-webgal-brightgreen)
+
 # 功能
 
 - 语言高亮
@@ -26,7 +28,7 @@
 - 格式化
 - 跳转定义
 - 颜色选择器
-- 区域折叠:
+- 区域折叠
 
 ```txt
   ;area 开始区域标记

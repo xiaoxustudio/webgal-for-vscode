@@ -1,0 +1,2 @@
+; 开启插件
+Game_Logo:asd;

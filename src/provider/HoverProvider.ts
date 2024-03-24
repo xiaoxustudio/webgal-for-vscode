@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 19:16:58
+ * @LastEditTime: 2024-03-24 12:17:16
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -8,7 +8,7 @@
 import * as vscode from "vscode";
 import { dictionary } from "../utils/HoverSnippet";
 import { _setvar_pattern } from "./CompletionProvider";
-import { get_var_type } from "./InlayHint";
+import { get_desc_variable, get_var_type } from "../utils/utils_novsc";
 
 export interface _VToken {
 	word: string;
@@ -28,22 +28,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		const lineText = document.lineAt(position).text;
 		const pos = document.getWordRangeAtPosition(position);
 		const _arr: { [key: string]: _VToken } = {};
-		let m;
 		const ALL_ARR = document.getText().split("\n");
-		const _get_desc_variable = (_start_line: number) => {
-			let _desc_arr = [];
-			for (let _d_index = _start_line - 2; _d_index > 0; _d_index--) {
-				const _data = ALL_ARR[_d_index];
-				if (_data.startsWith(";") && _data.length > 0) {
-					_desc_arr.unshift(_data.substring(1));
-				} else if (_data.length > 0) {
-					break;
-				} else {
-					continue;
-				}
-			}
-			return _desc_arr.join("\n");
-		};
 		for (let _d_index = 0; _d_index < ALL_ARR.length; _d_index++) {
 			const _data = ALL_ARR[_d_index];
 			let m = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(_data);
@@ -61,7 +46,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 				) {
 					const _v_pos = _arr[m[1]].position;
 					const _v_line = _v_pos?.line ? _v_pos.line : -1;
-					_arr[m[1]].desc = _get_desc_variable(_v_line);
+					_arr[m[1]].desc = get_desc_variable(ALL_ARR, _v_line);
 				}
 			}
 		}
@@ -132,13 +117,18 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					return hover;
 				}
 			}
-		}  else if (pos) {
+		} else if (pos) {
 			const _base_pos = new vscode.Position(
 				pos.start.line || 0,
 				pos.start.character! - 1 || 0
 			);
 			const _before_pos = new vscode.Range(
-				_base_pos.with(_base_pos.line, _base_pos.character - 1  > 0? _base_pos.character - 1 : _base_pos.character),
+				_base_pos.with(
+					_base_pos.line,
+					_base_pos.character - 1 > 0
+						? _base_pos.character - 1
+						: _base_pos.character
+				),
 				pos.start! || 0
 			);
 			let _s = document.getText(_before_pos);

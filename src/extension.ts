@@ -20,7 +20,7 @@ import { get_files, selector } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
-import { XRInlayHintsProvider } from "./provider/InlayHint";
+import { XRInlayHintsProvider } from "./provider/InlayHintProvider";
 
 let client: LanguageClient;
 let run_Skip_Check = false;

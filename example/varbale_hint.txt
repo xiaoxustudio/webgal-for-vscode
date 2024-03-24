@@ -6,10 +6,10 @@ setVar:c=true;
 
 setVar:d=a+1;
 
+;##### 测试比哪里
 setVar:a=123;
 
 
 intro:{a}是{b}是{c}是{d};
 
-
-
+{a};

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 12:43:49
+ * @LastEditTime: 2024-03-24 12:48:41
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -8,13 +8,12 @@
 import * as vscode from "vscode";
 import {
 	CancellationToken,
-	Definition,
 	DefinitionProvider,
 	Position,
 	TextDocument,
 } from "vscode";
 import { _VToken } from "./HoverProvider";
-import { get_var_type } from "./InlayHint";
+import { get_var_type } from "../utils/utils_novsc";
 
 export class XRDefinitionProvider implements DefinitionProvider {
 	provideDefinition(
@@ -22,8 +21,7 @@ export class XRDefinitionProvider implements DefinitionProvider {
 		position: Position,
 		token: CancellationToken
 	) {
-		let _result = [];
-		const _arr: { [key: string]: _VToken } = {};
+		let _result: vscode.DefinitionLink[] = [];
 		const _Var_list: _VToken[] = [];
 		const ALL_ARR = document.getText().split("\n");
 		const _ALL_ARR_cache = [];
@@ -64,15 +62,15 @@ export class XRDefinitionProvider implements DefinitionProvider {
 					// 取出所有word变量
 					for (let _data of _res) {
 						_result.push({
-							uri: document.uri,
-							range: wordRange.with(
+							targetUri: document.uri,
+							targetRange: wordRange.with(
 								_data.position,
 								_data.position?.with(
 									_data.position?.line,
 									_data.input?.indexOf("=")
 								)
 							),
-						});
+						} as vscode.DefinitionLink);
 					}
 				}
 			}

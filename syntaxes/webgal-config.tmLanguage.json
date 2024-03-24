@@ -12,7 +12,7 @@
     "repository": {
         "command": {
             "match": ".+",
-            "name": "support.function.command.webgal-config"
+            "name": "markup.quote.webgal-config"
         },
         "comment-line": {
             "match": "\\;.*?$",
