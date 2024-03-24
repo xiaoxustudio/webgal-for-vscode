@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 22:02:41
+ * @LastEditTime: 2024-03-24 23:57:35
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -12,6 +12,11 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
+
+## [1.3.8] - 2024.3.24
+
+- 修复资源定义跳转
+- 增加资源定义跳转检测，未识别则不可跳转
 
 ## [1.3.7] - 2024.3.24
 

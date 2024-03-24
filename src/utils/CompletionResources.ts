@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 20:41:18
+ * @LastEditTime: 2024-03-24 22:50:55
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -53,8 +53,13 @@ export const ResType_Map: { [key: string]: resources_location } = {
 	bgm: resources_location.bgm,
 	unlockBgm: resources_location.bgm,
 	changeBg: resources_location.background,
+	unlockCg: resources_location.background,
+	playEffect: resources_location.vocal,
+	playVideo: resources_location.video,
 	changeFigure: resources_location.figure,
 	callScene: resources_location.scene,
+	changeScene: resources_location.scene,
+	choose: resources_location.scene,
 };
 // 指令反资源映射
 export const ResLocation_Map: Map<resources_location, string> = new Map<

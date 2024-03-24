@@ -1,4 +1,10 @@
-import { accessSync, constants } from "fs";
+/*
+ * @Author: xuranXYS
+ * @LastEditTime: 2024-03-24 23:56:03
+ * @GitHub: www.github.com/xiaoxustudio
+ * @WebSite: www.xiaoxustudio.top
+ * @Description: By xuranXYS
+ */
 import {
 	CancellationToken,
 	DocumentLink,
@@ -11,6 +17,7 @@ import {
 import { get_res_dir, ResType_Map } from "../utils/CompletionResources";
 import { currentDirectory } from "../utils/utils";
 import * as vscode from "vscode";
+import { accessSync, constants, existsSync } from "fs";
 
 export class XRDocumentLinkProvider implements DocumentLinkProvider {
 	provideDocumentLinks(
@@ -22,53 +29,52 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 		if (!editor) return _result;
 		let lines = document.getText().split("\n");
 		for (let i = 0; i < lines.length; i++) {
-			const _line_start_text = lines[i].substring(
+			let _lines = lines[i];
+			let _start_text = _lines.substring(
 				0,
-				lines[i].indexOf(":") !== -1
-					? lines[i].indexOf(":")
-					: lines[i].indexOf(";")
+				_lines.indexOf(":") !== -1 ? _lines.indexOf(":") : _lines.indexOf(";")
 			);
-			const _word_text = lines[i].substring(
-				lines[i].indexOf(":") !== -1
-					? lines[i].indexOf(":") + 1
-					: lines[i].indexOf(";") - 1,
-				lines[i].indexOf(";") !== -1 ? lines[i].indexOf(";") : lines[i].length
-			);
-			const match = _word_text.match(/(.[^;\s]+)\.(.[^;\s]+)/);
-			if (match) {
+
+			let match;
+			const regex = /([^;\s-:<>/\\\|\?\*\"\']+)\.([^;\s-:<>/\\\|\?\*\"\']+)/g;
+			while ((match = regex.exec(_lines))) {
+				const _match_text = match[0];
 				const _sp = editor.document.uri.fsPath.split("\\");
 				const _w_dir =
 					_sp[_sp.length - 3 > 0 ? _sp.length - 3 : _sp.length - 2];
-				const dir_res = get_res_dir(ResType_Map[_line_start_text]);
+				const dir_res = get_res_dir(ResType_Map[_start_text]);
 				const _need_find_dir =
 					currentDirectory +
-						(_w_dir == "game" && !currentDirectory.endsWith("game")
-							? "\\game"
-							: "") +
-						"\\" +
-						dir_res ?? "";
-				try {
-					accessSync(_need_find_dir, constants.R_OK);
-					const _base_sp = _need_find_dir + "\\" + _word_text;
-					const start = new Position(
-						i,
-						_line_start_text.length + 1 + (match.index ?? 0)
-					);
-					const end = new Position(
-						i,
-						_line_start_text.length + 1 + (match.index ?? 0) + match[0].length
-					);
-					const r = new Range(start, end);
-					let uri = document.uri.with({ path: _base_sp });
-					if (uri instanceof vscode.Uri) {
-						let link = {
-							target: uri,
-							range: r,
-						} as DocumentLink;
-                        link.tooltip = _base_sp
-						_result.push(link);
-					}
-				} catch {}
+					(_w_dir == "game" && !currentDirectory.endsWith("game")
+						? "\\game"
+						: "") +
+					"\\" +
+					(dir_res ? dir_res : _match_text.endsWith(".txt") ? "scene" : "");
+				const _base_sp = _need_find_dir + "\\" + _match_text;
+				const start = new Position(i, match.index);
+				const end = new Position(i, match.index + _match_text.length);
+				const r = new Range(start, end);
+				let uri = (() => {
+					if (existsSync(_base_sp))
+						return document.uri.with({ path: _base_sp });
+				})();
+				let link;
+				if (uri instanceof vscode.Uri) {
+					link = {
+						target: uri,
+						range: r,
+					} as DocumentLink;
+					link.tooltip = _base_sp;
+				} else {
+					link = {
+						range: r,
+					} as DocumentLink;
+					link.tooltip = "未识别到文件：" + _base_sp;
+				}
+				_result.push(link);
+				if (regex.lastIndex === match.index) {
+					regex.lastIndex++;
+				}
 			}
 		}
 		return _result;
