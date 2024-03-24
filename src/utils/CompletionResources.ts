@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-22 10:54:59
+ * @LastEditTime: 2024-03-24 20:41:18
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -36,3 +36,40 @@ export const resources_map: { [key: string]: string[] } = {
 	video: resources.videos,
 	vocal: resources.audios,
 };
+
+enum resources_location {
+	animation,
+	background,
+	bgm,
+	figure,
+	tex,
+	video,
+	vocal,
+	scene,
+}
+
+// 指令资源映射
+export const ResType_Map: { [key: string]: resources_location } = {
+	bgm: resources_location.bgm,
+	unlockBgm: resources_location.bgm,
+	changeBg: resources_location.background,
+	changeFigure: resources_location.figure,
+	callScene: resources_location.scene,
+};
+// 指令反资源映射
+export const ResLocation_Map: Map<resources_location, string> = new Map<
+	resources_location,
+	string
+>([
+	[resources_location.animation, "animation"],
+	[resources_location.background, "background"],
+	[resources_location.figure, "figure"],
+	[resources_location.tex, "tex"],
+	[resources_location.video, "video"],
+	[resources_location.vocal, "vocal"],
+	[resources_location.scene, "scene"],
+	[resources_location.bgm, "bgm"],
+]);
+export function get_res_dir(type: resources_location) {
+	return ResLocation_Map.get(type);
+}

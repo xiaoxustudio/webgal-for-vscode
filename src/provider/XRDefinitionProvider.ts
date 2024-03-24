@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 12:48:41
+ * @LastEditTime: 2024-03-24 20:55:29
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -22,6 +22,7 @@ export class XRDefinitionProvider implements DefinitionProvider {
 		token: CancellationToken
 	) {
 		let _result: vscode.DefinitionLink[] = [];
+		if (token.isCancellationRequested) return _result;
 		const _Var_list: _VToken[] = [];
 		const ALL_ARR = document.getText().split("\n");
 		const _ALL_ARR_cache = [];
@@ -53,6 +54,7 @@ export class XRDefinitionProvider implements DefinitionProvider {
 					),
 					wordRange.end.with(wordRange.end.line, wordRange.end.character + 1)
 				);
+
 				const word = editor.document.getText(_range);
 				const _length = word.length;
 				const _word_no = word.substring(word.indexOf("{") + 1, _length - 1);

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 19:10:06
+ * @LastEditTime: 2024-03-24 20:56:57
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -21,6 +21,7 @@ import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
 import { XRInlayHintsProvider } from "./provider/InlayHintProvider";
+import { XRDocumentLinkProvider } from "./provider/DocumentLinkProvider";
 
 let client: LanguageClient;
 let run_Skip_Check = false;
@@ -53,8 +54,19 @@ function InitPlugin(context: ExtensionContext) {
 	context.subscriptions.push(
 		languages.registerDefinitionProvider(selector, new XRDefinitionProvider())
 	);
+	context.subscriptions.push(
+		languages.registerDocumentLinkProvider(
+			selector,
+			new XRDocumentLinkProvider()
+		)
+	);
 	commands.registerCommand("extension.goToDefinition", () => {
 		languages.registerDefinitionProvider(selector, new XRDefinitionProvider());
+	});
+	commands.registerCommand("extension.deletePreviousCharacter", (func) => {
+		if (func instanceof Function) {
+			func();
+		}
 	});
 	context.subscriptions.push(
 		languages.registerColorProvider(selector, new XColorProvider())

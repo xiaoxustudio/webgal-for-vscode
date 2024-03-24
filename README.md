@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 11:47:56
+ * @LastEditTime: 2024-03-24 22:02:27
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -26,7 +26,7 @@
 - 规范警告
 - 插值变量提示|变量Hover提示、类型镶嵌、变量描述（markdown）
 - 格式化
-- 跳转定义
+- 跳转定义（资源、变量）
 - 颜色选择器
 - 区域折叠
 
