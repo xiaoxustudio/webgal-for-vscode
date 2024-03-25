@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 20:56:57
+ * @LastEditTime: 2024-03-25 13:39:20
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -60,6 +60,9 @@ function InitPlugin(context: ExtensionContext) {
 			new XRDocumentLinkProvider()
 		)
 	);
+	context.subscriptions.push(
+		languages.registerColorProvider(selector, new XColorProvider())
+	);
 	commands.registerCommand("extension.goToDefinition", () => {
 		languages.registerDefinitionProvider(selector, new XRDefinitionProvider());
 	});
@@ -68,9 +71,6 @@ function InitPlugin(context: ExtensionContext) {
 			func();
 		}
 	});
-	context.subscriptions.push(
-		languages.registerColorProvider(selector, new XColorProvider())
-	);
 	client.start();
 }
 

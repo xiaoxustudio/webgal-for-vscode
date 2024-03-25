@@ -164,6 +164,20 @@ export const commandSuggestions: CompletionItem[] = [
 		detail: `command setTransform:<expression>;`,
 		insertText: "setTransform:",
 	},
+	{
+		label: "jumpLabel",
+		kind: CompletionItemKind.Function,
+		documentation: `跳转到指定标签`,
+		detail: `command jumpLabel:<Laebl Name>;`,
+		insertText: "jumpLabel:",
+	},
+	{
+		label: "label",
+		kind: CompletionItemKind.Function,
+		documentation: `定义标签`,
+		detail: `command label:<Name>;`,
+		insertText: "label:",
+	},
 ];
 export const abbrKeys: CompletionItem[] = [
 	{

@@ -1,13 +1,13 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 22:02:27
+ * @LastEditTime: 2024-03-25 13:57:53
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
 -->
 <h1 align="center">
   <br>
-    <img src="https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/icon.png" alt="logo" width="200">
+    <img src="https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/icon.png" alt="logo" width="200">
   <br>
   webgal for VScode
   <br>
@@ -54,43 +54,49 @@
 
 或者使用启动命令自行启动插件
 
+**可配合vs browser实现不切换浏览器进行编辑**  
+
+![vs browser](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/vs_browser.png)  
+
+![Work](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/work.png)  
+
 # 部分功能展示
 
 ### Hover提示
 
-![Hover提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/hover.png)
+![Hover提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/hover.png)
 
 ### 关键字补全
 
-![关键字补全](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/kw.png)
+![关键字补全](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/kw.png)
 
 ### 规范警告  
 
-![规范警告](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/warning.png)
+![规范警告](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/warning.png)
 
 ### 插值变量提示  
 
-![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable.png)
+![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable.png)
 
 ##### hover提示  
 
-![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable_hover.png)
+![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_hover.png)
 
 ##### 类型镶嵌  
 
-![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable_hint.png)
+![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_hint.png)
 
 ##### 跳转定义  
 
-![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/variable_jump.png)
+![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_jump.png)
 
 ### 格式化
 
-![格式化](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/format.png)
+![格式化](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/format.png)
 
 ### 颜色选择器  
 
-![颜色选择器](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/images/test/color.png)
+![颜色选择器](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/color.png)
 
 # WebGal官方链接
 
