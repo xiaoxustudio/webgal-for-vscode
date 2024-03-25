@@ -17,7 +17,7 @@ import {
 import { get_res_dir, ResType_Map } from "../utils/CompletionResources";
 import { currentDirectory } from "../utils/utils";
 import * as vscode from "vscode";
-import { accessSync, constants, existsSync } from "fs";
+import { existsSync } from "fs";
 
 export class XRDocumentLinkProvider implements DocumentLinkProvider {
 	provideDocumentLinks(
