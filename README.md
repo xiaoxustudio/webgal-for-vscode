@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-25 13:57:53
+ * @LastEditTime: 2024-03-25 14:01:13
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -54,7 +54,7 @@
 
 或者使用启动命令自行启动插件
 
-**可配合vs browser实现不切换浏览器进行编辑**  
+**可配合vs browser进行编辑**  
 
 ![vs browser](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/vs_browser.png)  
 
