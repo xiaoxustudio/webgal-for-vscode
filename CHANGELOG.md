@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-25 08:36:07
+ * @LastEditTime: 2024-03-29 09:36:36
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -10,6 +10,12 @@
 All notable changes to the "webgal-for-vscode" extension will be documented in this file.
 
 ## [Unreleased]
+
+## [1.4.0] - 2024.3.28
+
+- 优化资源链接识别
+- 增加跳转行指令和右键菜单
+- 增加简单调试功能
 
 ## [1.3.9] - 2024.3.25
 

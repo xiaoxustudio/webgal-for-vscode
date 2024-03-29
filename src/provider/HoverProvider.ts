@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 12:17:16
+ * @LastEditTime: 2024-03-26 20:00:16
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -91,6 +91,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					hoverContent.isTrusted = true;
 					hoverContent.supportHtml = true;
 					hoverContent.appendMarkdown(`\n\n${func_val.desc}`);
+					hoverContent.appendMarkdown(` \n <hr>  `);
 					if (func_val.APIL) {
 						const _t = func_val.APIL.split("|");
 						hoverContent.appendMarkdown(`\n\n`);
@@ -108,6 +109,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					hoverContent.isTrusted = true;
 					hoverContent.supportHtml = true;
 					hoverContent.appendMarkdown(`\n\n${kw_val.desc}`);
+					hoverContent.appendMarkdown(` \n <hr>  `);
 					if (kw_val.APIL) {
 						const _t = kw_val.APIL.split("|");
 						hoverContent.appendMarkdown(`\n\n`);
@@ -134,11 +136,11 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			let _s = document.getText(_before_pos);
 			const _d_cmd = dictionary.cmd[word];
 			if (_d_cmd && _s === " -") {
-				const hoverContent = new vscode.MarkdownString(
-					`**${word}** \n\n ${_d_cmd.desc}`
-				);
+				const hoverContent = new vscode.MarkdownString(`**${word}** \n\n `);
 				hoverContent.isTrusted = true;
 				hoverContent.supportHtml = true;
+				hoverContent.appendMarkdown(` \n <hr>  `);
+				hoverContent.appendMarkdown(` \n\n${_d_cmd.desc}`);
 				if (_d_cmd.APIL) {
 					const _t = _d_cmd.APIL.split("|");
 					hoverContent.appendMarkdown(`\n\n`);

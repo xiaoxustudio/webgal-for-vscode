@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 18:45:45
+ * @LastEditTime: 2024-03-26 19:57:05
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -41,6 +41,15 @@ export const dictionary: { [key: string]: DIC } = {
 			desc: "右边显示",
 			Equal: false,
 			APIL: "将立绘放在不同的位置|https://docs.openwebgal.com/webgal-script/bg-and-figure.html#%E5%B0%86%E7%AB%8B%E7%BB%98%E6%94%BE%E5%9C%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BD%8D%E7%BD%AE",
+		},
+		center: <DToken>{
+			desc: "中间显示",
+			Equal: false,
+			APIL: "将立绘放在不同的位置|https://docs.openwebgal.com/webgal-script/bg-and-figure.html#%E5%B0%86%E7%AB%8B%E7%BB%98%E6%94%BE%E5%9C%A8%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BD%8D%E7%BD%AE",
+		},
+		figureId: <DToken>{
+			desc: "关联立绘ID",
+			Equal: false,
 		},
 		id: <DToken>{
 			desc: "指定id",

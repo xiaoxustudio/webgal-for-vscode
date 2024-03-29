@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 23:56:03
+ * @LastEditTime: 2024-03-26 19:54:24
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -34,7 +34,9 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 				0,
 				_lines.indexOf(":") !== -1 ? _lines.indexOf(":") : _lines.indexOf(";")
 			);
-
+			_start_text = _start_text.startsWith(";")
+				? _start_text.substring(1)
+				: _start_text;
 			let match;
 			const regex = /([^;\s-:<>/\\\|\?\*\"\']+)\.([^;\s-:<>/\\\|\?\*\"\']+)/g;
 			while ((match = regex.exec(_lines))) {
@@ -42,7 +44,10 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 				const _sp = editor.document.uri.fsPath.split("\\");
 				const _w_dir =
 					_sp[_sp.length - 3 > 0 ? _sp.length - 3 : _sp.length - 2];
-				const dir_res = get_res_dir(ResType_Map[_start_text]);
+				const _prev_word = _lines[match.index - 1];
+				const dir_res =
+					get_res_dir(ResType_Map[_start_text]) ||
+					(_prev_word == "-" ? get_res_dir(ResType_Map["playEffect"]) : "");
 				const _need_find_dir =
 					currentDirectory +
 					(_w_dir == "game" && !currentDirectory.endsWith("game")
@@ -50,7 +55,9 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 						: "") +
 					"\\" +
 					(dir_res ? dir_res : _match_text.endsWith(".txt") ? "scene" : "");
-				const _base_sp = _need_find_dir + "\\" + _match_text;
+				const _base_sp = _need_find_dir.endsWith("\\")
+					? _need_find_dir + _match_text
+					: _need_find_dir + "\\" + _match_text;
 				const start = new Position(i, match.index);
 				const end = new Position(i, match.index + _match_text.length);
 				const r = new Range(start, end);
