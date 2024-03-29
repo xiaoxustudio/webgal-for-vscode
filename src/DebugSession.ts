@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 14:28:24
+ * @LastEditTime: 2024-03-29 21:20:06
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -17,16 +17,17 @@ import {
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { EventEmitter } from "events";
 import { getGameData } from "./utils/utils";
+import { DebugSession } from "vscode";
 
-export class MyDebugAdapter extends LoggingDebugSession {
+export class XRDebugAdapter extends LoggingDebugSession {
 	private _socket;
 	private _variableHandles = new Handles<string>();
-	constructor() {
+	constructor(private _s: DebugSession) {
 		super("webgal-debug.txt");
 		this.setDebuggerLinesStartAt1(false);
 		this.setDebuggerColumnsStartAt1(false);
 		const _ws = require("./ws");
-		this._socket = _ws.default(this);
+		this._socket = _ws.default(_s);
 	}
 	dispose() {
 		this._socket.close();
@@ -136,10 +137,26 @@ export class MyDebugAdapter extends LoggingDebugSession {
 						};
 						break;
 					default:
-						response.body = {
-							result: "null",
-							variablesReference: 0,
-						};
+						const _ex = /@set\s+(\S+)\s+(\S+)/.exec(expression);
+						const _ex_run = /@script\s+(.*)/.exec(expression);
+						if (_ex) {
+							this._socket.emit("runscript", `setVar:${_ex[1]}=${_ex[2]};`);
+							response.body = {
+								result: _ex[2],
+								variablesReference: 0,
+							};
+						} else if (_ex_run) {
+							this._socket.emit("runscript", `${_ex_run[1]}`);
+							response.body = {
+								result: _ex_run[1],
+								variablesReference: 0,
+							};
+						} else {
+							response.body = {
+								result: "null",
+								variablesReference: 0,
+							};
+						}
 						break;
 				}
 			} else if (

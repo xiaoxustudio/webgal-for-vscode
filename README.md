@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 14:37:29
+ * @LastEditTime: 2024-03-29 21:21:50
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -76,7 +76,11 @@
 前导#为运行配置
 如：#sentence，则输出运行变量sentence的值
 
-特殊：@run:获取运行的所有变量名称，@env:获取环境的所有变量名称
+特殊：
+@run:获取运行的所有变量名称
+@env:获取环境的所有变量名称
+@set 变量名 变量值             ———————— 修改变量
+@script webgalScript脚本         ———————— 自定义执行脚本
 ```
 
 PS：右击有跳转到指定行选项

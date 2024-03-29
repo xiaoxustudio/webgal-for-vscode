@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 13:29:00
+ * @LastEditTime: 2024-03-29 15:34:09
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -23,7 +23,8 @@ import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
 import { XRInlayHintsProvider } from "./provider/InlayHintProvider";
 import { XRDocumentLinkProvider } from "./provider/DocumentLinkProvider";
-import { SimpleDebugAdapterDescriptorFactory } from "./activeDebug";
+import { XRDebugAdapterDescriptorFactory } from "./activeDebug";
+import { XRDebugConfigurationProvider } from "./ws/config";
 
 let client: LanguageClient;
 let run_Skip_Check = false;
@@ -63,12 +64,18 @@ function InitPlugin(context: ExtensionContext) {
 		)
 	);
 	context.subscriptions.push(
+		debug.registerDebugConfigurationProvider(
+			selector.language,
+			new XRDebugConfigurationProvider()
+		)
+	);
+	context.subscriptions.push(
 		languages.registerColorProvider(selector, new XColorProvider())
 	);
 	context.subscriptions.push(
 		debug.registerDebugAdapterDescriptorFactory(
 			"webgal",
-			new SimpleDebugAdapterDescriptorFactory()
+			new XRDebugAdapterDescriptorFactory()
 		)
 	);
 	commands.registerCommand("extension.goToDefinition", () => {

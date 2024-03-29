@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -101,7 +101,7 @@
               "program": {
                 "type": "string",
                 "description": "需要调试的场景(单文件名称即可,不含路径)：文件名.文件扩展名",
-                "default": "start.txt"
+                "default": "${fileBasename}"
               },
               "ws": {
                 "type": "string",
