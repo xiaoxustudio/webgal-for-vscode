@@ -1,5 +1,6 @@
 import * as Net from "net";
 import { MyDebugAdapter } from "./DebugSession";
+
 // first parse command line arguments to see whether the debug adapter should run as a server
 let port = 0;
 const args = process.argv.slice(2);

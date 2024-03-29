@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 09:01:13
+ * @LastEditTime: 2024-03-29 14:28:24
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -12,150 +12,199 @@ import {
 	LoggingDebugSession,
 	Scope,
 	StoppedEvent,
+	Thread,
 } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { EventEmitter } from "events";
 import { getGameData } from "./utils/utils";
 
 export class MyDebugAdapter extends LoggingDebugSession {
-	private _socket: EventEmitter;
-	private _variableHandles = new Handles<"locals" | "globals">();
+	private _socket;
+	private _variableHandles = new Handles<string>();
 	constructor() {
-		super();
+		super("webgal-debug.txt");
 		this.setDebuggerLinesStartAt1(false);
 		this.setDebuggerColumnsStartAt1(false);
-		this._socket = new EventEmitter();
-		this._socket.on("message", (message: DebugProtocol.ProtocolMessage) =>
-			this.handleMessage(message as DebugProtocol.ProtocolMessage)
-		);
-		this._socket.on("close", () => console.log("Connection closed."));
-		this._socket.on("connection", () => {
-			const _ws = require("./ws");
-			_ws.default(this);
-		});
+		const _ws = require("./ws");
+		this._socket = _ws.default(this);
 	}
-	dispose() {}
-	async initializeRequest(
+	dispose() {
+		this._socket.close();
+	}
+	protected initializeRequest(
 		response: DebugProtocol.InitializeResponse
-	): Promise<void> {
+	): void {
 		this.sendEvent(new InitializedEvent());
-		// 设置断点
-		const breakpoints: DebugProtocol.Breakpoint[] = [
-			{
-				line: 1,
-				verified: true,
-			},
-		];
-		// 发送设置断点的请求
-		this.sendEvent(new BreakpointEvent("new", breakpoints[0]));
+		response.body = response.body || {};
+		response.body.supportsConfigurationDoneRequest = true;
+		response.body.supportsEvaluateForHovers = true;
+		response.body.supportsFunctionBreakpoints = true;
+		response.body.supportsStepBack = false;
+		response.body.supportsStepInTargetsRequest = false;
+		response.body.supportsStepInTargetsRequest;
+		response.body.supportsExceptionInfoRequest = false;
+		response.body.supportsDelayedStackTraceLoading = true;
 		this.sendEvent(new StoppedEvent("entry", 0));
+		this.sendEvent(new StoppedEvent("breakpoint", 0));
+		this.sendEvent(
+			new BreakpointEvent("changed", {
+				verified: true,
+				id: 0,
+			} as DebugProtocol.Breakpoint)
+		);
 		console.log("running");
-		this._socket.emit("connection");
 		this.sendResponse(response);
 	}
-	async launchRequest(request: DebugProtocol.LaunchResponse): Promise<void> {
+	protected launchRequest(request: DebugProtocol.LaunchResponse): void {
 		this.sendEvent(new InitializedEvent());
 		this.sendResponse(request);
 	}
-	async setBreakpointsRequest(
+	protected BreakpointsRequest(
 		response: DebugProtocol.Response,
 		args: { breakpoints: any[] }
 	) {
 		response.body = {
-			breakpoints: args.breakpoints.map((bp: { line: any }) => ({
-				verified: true,
-				line: bp.line,
-			})),
+			breakpoints: response,
 		};
 		this.sendResponse(response);
 	}
-	async evaluateRequest(
+	protected setBreakpointsRequest(
+		response: DebugProtocol.Response,
+		args: { breakpoints: any[] }
+	) {
+		const breakpoints = args.breakpoints.map((bp) => {
+			const { line, verified } = bp;
+			const id = this._variableHandles.create(`${line}`);
+			return { line, id, verified };
+		});
+		breakpoints.forEach((bp) =>
+			this.sendEvent(
+				new BreakpointEvent("new", {
+					id: bp.id,
+					line: bp.line,
+					verified: true,
+				})
+			)
+		);
+		response.body = {
+			breakpoints: breakpoints,
+		};
+		this.sendResponse(response);
+	}
+	protected evaluateRequest(
 		response: DebugProtocol.EvaluateResponse,
 		args: DebugProtocol.EvaluateArguments
-	): Promise<void> {
+	): void {
 		if (args.context === "repl") {
-			// 用户在调试控制台输入的表达式
 			const expression = args.expression;
 			const _data = getGameData() as any;
 			const _stage = _data?.stageSyncMsg;
+			const _scene = _data?.sceneMsg;
+			const _start = expression.substring(0, 1);
 			if (
+				_stage &&
+				_start &&
+				_start === "$" &&
+				Object.keys(_stage).indexOf(expression.substring(1)) !== -1
+			) {
+				response.body = {
+					result: String(_stage[expression.substring(1)]),
+					variablesReference: 0,
+				};
+			} else if (
+				_stage &&
+				_start &&
+				_start === "#" &&
+				Object.keys(_scene).indexOf(expression.substring(1)) !== -1
+			) {
+				response.body = {
+					result: String(_scene[expression.substring(1)]),
+					variablesReference: 0,
+				};
+			} else if (_stage && _start && _start === "@") {
+				switch (expression) {
+					case "@run":
+						response.body = {
+							result: String(Object.keys(_scene)),
+							variablesReference: 0,
+						};
+						break;
+					case "@env":
+						response.body = {
+							result: String(Object.keys(_stage)),
+							variablesReference: 0,
+						};
+						break;
+					default:
+						response.body = {
+							result: "null",
+							variablesReference: 0,
+						};
+						break;
+				}
+			} else if (
 				_stage &&
 				Object.keys(_stage).indexOf("GameVar") !== -1 &&
 				Object.keys(_stage.GameVar).indexOf(expression) !== -1
 			) {
 				response.body = {
 					result: String(_stage.GameVar[expression]),
-					variablesReference: 0, // 表示没有更多的变量层次结构
+					variablesReference: 0,
 				};
 			} else {
 				response.body = {
 					result: "null",
-					variablesReference: 0, // 表示没有更多的变量层次结构
+					variablesReference: 0,
 				};
 			}
 		}
 		this.sendResponse(response);
 	}
-	async configurationDoneRequest(response: DebugProtocol.Response, args: any) {
+	protected configurationDoneRequest(
+		response: DebugProtocol.Response,
+		args: any
+	) {
 		this.sendResponse(response);
 	}
-	async threadsRequest(response: DebugProtocol.Response) {
+	protected threadsRequest(response: DebugProtocol.Response) {
 		response.body = {
-			threads: [
-				{
-					id: 1,
-					name: "MyThread",
-				},
-			],
+			threads: [new Thread(1, "thread 1")],
 		};
 		this.sendResponse(response);
 	}
-
-	async stackTraceRequest(
+	protected stackTraceRequest(
 		response: DebugProtocol.StackTraceResponse,
 		args: any
 	) {
+		this.sendResponse(response);
+	}
+	protected scopesRequest(
+		response: DebugProtocol.ScopesResponse,
+		args: DebugProtocol.ScopesArguments
+	): void {
+		const frameReference = args.frameId;
+		const scopes = new Array<Scope>();
+		scopes.push(
+			new Scope(
+				"Local",
+				this._variableHandles.create("local_" + frameReference),
+				false
+			)
+		);
 		response.body = {
-			stackFrames: [
-				{
-					id: 1,
-					name: "MyStackFrame",
-					line: 1,
-					column: 1,
-				},
-			],
+			scopes: scopes,
 		};
 		this.sendResponse(response);
 	}
-	async scopesRequest(response: DebugProtocol.Response, args: any) {
-		response.body = {
-			scopes: [
-				new Scope("Locals", this._variableHandles.create("locals"), false),
-				new Scope("Globals", this._variableHandles.create("globals"), true),
-			],
-		};
-		this.sendResponse(response);
-	}
-	async variablesRequest(
-		request: DebugProtocol.VariablesResponse,
+	protected variablesRequest(
+		response: DebugProtocol.VariablesResponse,
 		args: DebugProtocol.VariablesArguments
-	): Promise<void> {
-		request.body = {
-			variables: [
-				{
-					name: "myVariable",
-					value: "123",
-					variablesReference: 0,
-				},
-			],
-		};
-		this.sendResponse(request);
+	): void {
+		const variables = new Array<DebugProtocol.Variable>();
+		const scopeId = this._variableHandles.get(args.variablesReference);
+		this.sendResponse(response);
 	}
-	async disconnectRequest(
-		request: DebugProtocol.DisconnectRequest
-	): Promise<void> {
-		// 断开连接
-	}
+	protected disconnectRequest(request: DebugProtocol.DisconnectRequest): void {}
 
 	customRequest(
 		command: string,
@@ -163,6 +212,6 @@ export class MyDebugAdapter extends LoggingDebugSession {
 		args: any,
 		request?: DebugProtocol.Request | undefined
 	): void {
-		this.sendResponse(response as DebugProtocol.VariablesResponse);
+		this.sendResponse(response);
 	}
 }

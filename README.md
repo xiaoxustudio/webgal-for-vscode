@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-25 14:01:13
+ * @LastEditTime: 2024-03-29 14:34:54
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -59,6 +59,29 @@
 ![vs browser](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/vs_browser.png)  
 
 ![Work](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/work.png)  
+
+# 调试  
+
+运行-添加配置-选择`webgal Debug`创建`launch.json`文件  
+
+运行即可，可在调试控制台查看指定变量、环境配置等信息  
+
+```txt
+单个字符为变量输出
+如：a，则输出变量a的值
+
+前导$为环境配置
+如：$showText，则输出环境变量showText的值 
+
+前导#为运行配置
+如：$sentence，则输出运行变量sentence的值
+
+特殊：@run:获取运行的所有变量名称，@env:获取环境的所有变量名称
+```
+
+PS：右击有跳转到指定行选项
+
+![调试](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/debug.png)
 
 # 部分功能展示
 

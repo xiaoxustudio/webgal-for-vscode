@@ -2,14 +2,14 @@ import EventEmitter from "node:events";
 import * as vscode from "vscode";
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 09:04:05
+ * @LastEditTime: 2024-03-29 12:14:04
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 let Game_Data = {}; // 游戏全局配置
 let Game_Connect_Status = 0; // 游戏连接状态
-let WS: any;
+let WS: any = null;
 export function getGameData() {
 	return Game_Data;
 }

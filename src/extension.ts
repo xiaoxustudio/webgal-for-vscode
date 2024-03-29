@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 09:15:01
+ * @LastEditTime: 2024-03-29 13:29:00
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -65,16 +65,15 @@ function InitPlugin(context: ExtensionContext) {
 	context.subscriptions.push(
 		languages.registerColorProvider(selector, new XColorProvider())
 	);
-	context.subscriptions.push();
-	commands.registerCommand("extension.goToDefinition", () => {
-		languages.registerDefinitionProvider(selector, new XRDefinitionProvider());
-	});
 	context.subscriptions.push(
 		debug.registerDebugAdapterDescriptorFactory(
 			"webgal",
 			new SimpleDebugAdapterDescriptorFactory()
 		)
 	);
+	commands.registerCommand("extension.goToDefinition", () => {
+		languages.registerDefinitionProvider(selector, new XRDefinitionProvider());
+	});
 	commands.registerCommand("extension.deletePreviousCharacter", (func) => {
 		if (func instanceof Function) {
 			func();
@@ -82,27 +81,26 @@ function InitPlugin(context: ExtensionContext) {
 	});
 	commands.registerCommand("extension.RunLineScript", function () {
 		const _ws = getWS();
-		if (_ws) {
+		if (_ws && _ws._readyState === 1) {
 			const active = window.activeTextEditor;
 			if (active) {
 				const scene_name = active.document.fileName.substring(
 					active.document.fileName.lastIndexOf("\\") + 1
 				);
-				
 				const line_number = active.selection.start.line;
 				const msg = {
 					command: 0,
 					sceneMsg: {
 						scene: scene_name,
-						sentence: line_number,
+						sentence: line_number + 1,
 					}, // @ts-ignore
 					stageSyncMsg: {},
 					message: "Sync",
 				};
 				_ws.send(JSON.stringify(msg));
-			} else {
-				window.showErrorMessage("请先打开调试");
 			}
+		} else {
+			window.showErrorMessage("请先打开调试");
 		}
 	});
 	client.start();
