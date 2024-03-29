@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 14:34:54
+ * @LastEditTime: 2024-03-29 14:37:29
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -74,7 +74,7 @@
 如：$showText，则输出环境变量showText的值 
 
 前导#为运行配置
-如：$sentence，则输出运行变量sentence的值
+如：#sentence，则输出运行变量sentence的值
 
 特殊：@run:获取运行的所有变量名称，@env:获取环境的所有变量名称
 ```
