@@ -8,23 +8,7 @@ import EventEmitter from "events";
 import { WebSocket } from "ws";
 import { FileAccessor } from "../utils/utils_novsc";
 
-/*
- * @Author: xuranXYS
- * @LastEditTime: 2024-03-30 18:56:33
- * @GitHub: www.github.com/xiaoxustudio
- * @WebSite: www.xiaoxustudio.top
- * @Description: By xuranXYS
- */
 const WS = require("ws");
-
-interface IRuntimeStackFrame {
-	index: number;
-	name: string;
-	file: string;
-	line: number;
-	column?: number;
-	instruction?: number;
-}
 
 export type IRuntimeVariableType =
 	| number
@@ -175,7 +159,6 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 		}
 		self.variables = newv;
 		self._ADP.customRequest("updatevar");
-		self._ADP.customRequest("variables");
 		setGameData(_data);
 		if (!editor) return;
 		const _fname = String(editor.document.fileName || "");

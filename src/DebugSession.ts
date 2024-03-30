@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-30 22:13:17
+ * @LastEditTime: 2024-03-30 22:18:29
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -71,7 +71,7 @@ export class XRDebugSession extends LoggingDebugSession {
 		console.log("initializing");
 		this.sendEvent(new InitializedEvent());
 	}
-	protected async attachRequest(
+	protected attachRequest(
 		response: DebugProtocol.AttachResponse,
 		args: IAttachRequestArguments
 	) {
@@ -193,7 +193,7 @@ export class XRDebugSession extends LoggingDebugSession {
 		args: any
 	) {
 		response.body = {
-			stackFrames: [new StackFrame(1, "runtime")],
+			stackFrames: [new StackFrame(1, "XRWebGalruntime")],
 		};
 		this.sendResponse(response);
 	}
@@ -262,9 +262,7 @@ export class XRDebugSession extends LoggingDebugSession {
 
 		return dapVariable;
 	}
-
 	protected disconnectRequest(request: DebugProtocol.DisconnectRequest): void {}
-
 	protected customRequest(
 		command: string,
 		response: DebugProtocol.Response
