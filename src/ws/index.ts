@@ -4,16 +4,108 @@ import {
 	enableGameStatus,
 	setGameData,
 } from "../utils/utils";
+import EventEmitter from "events";
+import { WebSocket } from "ws";
+import { FileAccessor } from "../utils/utils_novsc";
 
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 21:18:05
+ * @LastEditTime: 2024-03-30 18:56:33
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 const WS = require("ws");
-export default function createWS(_ADP: DebugSession) {
+
+interface IRuntimeStackFrame {
+	index: number;
+	name: string;
+	file: string;
+	line: number;
+	column?: number;
+	instruction?: number;
+}
+
+export type IRuntimeVariableType =
+	| number
+	| boolean
+	| string
+	| RuntimeVariable[];
+
+export class RuntimeVariable {
+	public reference?: number;
+
+	public get value() {
+		return this._value;
+	}
+
+	public set value(value: IRuntimeVariableType) {
+		this._value = value;
+	}
+
+	constructor(
+		public readonly name: string,
+		private _value: IRuntimeVariableType
+	) {}
+}
+
+export function timeout(ms: number) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export default class XRRuntime extends EventEmitter {
+	private _WS!: WebSocket;
+	public variables = new Map<string, RuntimeVariable>();
+	private _config: any;
+	constructor(public _ADP: DebugSession, public fileAccessor: FileAccessor) {
+		super();
+	}
+	public setRunLine(Line: number = 1) {
+		const msg = {
+			command: 0,
+			sceneMsg: {
+				scene: this._config.program,
+				sentence: Line,
+			},
+			stageSyncMsg: {},
+			message: "徐然",
+		};
+		this._WS.send(JSON.stringify(msg));
+	}
+	public getLocalVariables(): RuntimeVariable[] {
+		return Array.from(this.variables, ([name, value]) => value);
+	}
+	getWS() {
+		return this._WS;
+	}
+	private normalizePathAndCasing(path: string) {
+		if (this.fileAccessor.isWindows) {
+			return (
+				this._ADP.workspaceFolder?.uri.path.substring(3) +
+				"/game/scene/" +
+				path.replace(/\//g, "\\").toLowerCase()
+			);
+		} else {
+			return (
+				this._ADP.workspaceFolder?.uri.path! +
+				"/game/scene/" +
+				path.replace(/\\/g, "/")
+			);
+		}
+	}
+	async start(program: string) {
+		const _obj = createWS(this._ADP, this);
+		this._WS = _obj.sock;
+		this._config = _obj.config;
+	}
+	public sendEvent(event: string, ...args: any[]): void {
+		setTimeout(() => {
+			this.emit(event, ...args);
+		}, 0);
+	}
+}
+
+function createWS(_ADP: DebugSession, self: XRRuntime) {
 	const config = _ADP.configuration;
 	const _ws_host = config.ws || "ws://localhost:9999/";
 	const sock = new WS("ws://localhost:9999/");
@@ -76,6 +168,14 @@ export default function createWS(_ADP: DebugSession) {
 	});
 	sock.on("message", function (data: Buffer) {
 		let _data = JSON.parse(data.toString());
+		let newv = new Map<string, RuntimeVariable>();
+		for (let _var in _data.stageSyncMsg.GameVar) {
+			const _val = _data.stageSyncMsg.GameVar[_var];
+			newv.set(_var, new RuntimeVariable(_var, _val));
+		}
+		self.variables = newv;
+		self._ADP.customRequest("updatevar");
+		self._ADP.customRequest("variables");
 		setGameData(_data);
 		if (!editor) return;
 		const _fname = String(editor.document.fileName || "");
@@ -104,5 +204,5 @@ export default function createWS(_ADP: DebugSession) {
 			editor.setDecorations(decorationType, [range]);
 		}
 	});
-	return sock;
+	return { sock, config };
 }

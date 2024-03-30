@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 15:34:09
+ * @LastEditTime: 2024-03-30 18:03:32
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -8,8 +8,16 @@
 import {
 	commands,
 	debug,
+	EvaluatableExpression,
 	ExtensionContext,
+	InlineValue,
+	InlineValueContext,
+	InlineValueVariableLookup,
 	languages,
+	Position,
+	ProviderResult,
+	Range,
+	TextDocument,
 	window,
 	workspace,
 } from "vscode";
@@ -78,6 +86,7 @@ function InitPlugin(context: ExtensionContext) {
 			new XRDebugAdapterDescriptorFactory()
 		)
 	);
+
 	commands.registerCommand("extension.goToDefinition", () => {
 		languages.registerDefinitionProvider(selector, new XRDefinitionProvider());
 	});

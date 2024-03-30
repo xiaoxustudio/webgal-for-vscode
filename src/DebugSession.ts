@@ -1,33 +1,51 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 21:20:06
+ * @LastEditTime: 2024-03-30 22:13:17
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import {
-	BreakpointEvent,
 	Handles,
 	InitializedEvent,
+	Logger,
+	logger,
 	LoggingDebugSession,
+	MemoryEvent,
 	Scope,
+	StackFrame,
 	StoppedEvent,
 	Thread,
 } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
-import { EventEmitter } from "events";
 import { getGameData } from "./utils/utils";
 import { DebugSession } from "vscode";
+import XRRuntime, { RuntimeVariable } from "./ws";
+import { FileAccessor } from "./utils/utils_novsc";
+import { WebSocket } from "ws";
+interface IAttachRequestArguments extends ILaunchRequestArguments {}
+interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
+	program: string;
+	stopOnEntry?: boolean;
+	trace?: boolean;
+	noDebug?: boolean;
+	compileError?: "default" | "show" | "hide";
+}
 
-export class XRDebugAdapter extends LoggingDebugSession {
-	private _socket;
-	private _variableHandles = new Handles<string>();
-	constructor(private _s: DebugSession) {
+export class XRDebugSession extends LoggingDebugSession {
+	private static threadID = 1;
+	private _socket!: WebSocket;
+	private _socket_real: XRRuntime;
+	private _variableHandles = new Handles<
+		"locals" | "globals" | RuntimeVariable
+	>();
+	private _valuesInHex = false;
+	constructor(_s: DebugSession, private FileAccess: FileAccessor) {
 		super("webgal-debug.txt");
 		this.setDebuggerLinesStartAt1(false);
 		this.setDebuggerColumnsStartAt1(false);
-		const _ws = require("./ws");
-		this._socket = _ws.default(_s);
+		const _ws = new XRRuntime(_s, FileAccess);
+		this._socket_real = _ws;
 	}
 	dispose() {
 		this._socket.close();
@@ -35,61 +53,41 @@ export class XRDebugAdapter extends LoggingDebugSession {
 	protected initializeRequest(
 		response: DebugProtocol.InitializeResponse
 	): void {
-		this.sendEvent(new InitializedEvent());
+		// 告诉调试器我们支持的功能
 		response.body = response.body || {};
 		response.body.supportsConfigurationDoneRequest = true;
-		response.body.supportsEvaluateForHovers = true;
-		response.body.supportsFunctionBreakpoints = true;
 		response.body.supportsStepBack = false;
+		response.body.supportsSteppingGranularity = false;
+		response.body.supportsEvaluateForHovers = false;
+		response.body.supportsStepBack = false;
+		response.body.supportsSetVariable = false;
+		response.body.supportsRestartFrame = false;
+		response.body.supportsGotoTargetsRequest = false;
 		response.body.supportsStepInTargetsRequest = false;
-		response.body.supportsStepInTargetsRequest;
-		response.body.supportsExceptionInfoRequest = false;
-		response.body.supportsDelayedStackTraceLoading = true;
-		this.sendEvent(new StoppedEvent("entry", 0));
-		this.sendEvent(new StoppedEvent("breakpoint", 0));
-		this.sendEvent(
-			new BreakpointEvent("changed", {
-				verified: true,
-				id: 0,
-			} as DebugProtocol.Breakpoint)
-		);
-		console.log("running");
+		response.body.supportsCompletionsRequest = false;
+		response.body.supportsCancelRequest = false;
+		response.body.supportsBreakpointLocationsRequest = false;
 		this.sendResponse(response);
-	}
-	protected launchRequest(request: DebugProtocol.LaunchResponse): void {
+		console.log("initializing");
 		this.sendEvent(new InitializedEvent());
-		this.sendResponse(request);
 	}
-	protected BreakpointsRequest(
-		response: DebugProtocol.Response,
-		args: { breakpoints: any[] }
+	protected async attachRequest(
+		response: DebugProtocol.AttachResponse,
+		args: IAttachRequestArguments
 	) {
-		response.body = {
-			breakpoints: response,
-		};
-		this.sendResponse(response);
+		return this.launchRequest(response, args);
 	}
-	protected setBreakpointsRequest(
-		response: DebugProtocol.Response,
-		args: { breakpoints: any[] }
-	) {
-		const breakpoints = args.breakpoints.map((bp) => {
-			const { line, verified } = bp;
-			const id = this._variableHandles.create(`${line}`);
-			return { line, id, verified };
-		});
-		breakpoints.forEach((bp) =>
-			this.sendEvent(
-				new BreakpointEvent("new", {
-					id: bp.id,
-					line: bp.line,
-					verified: true,
-				})
-			)
+	protected launchRequest(
+		response: DebugProtocol.LaunchResponse,
+		args: ILaunchRequestArguments
+	): void {
+		logger.setup(
+			args.trace ? Logger.LogLevel.Verbose : Logger.LogLevel.Stop,
+			false
 		);
-		response.body = {
-			breakpoints: breakpoints,
-		};
+		this._socket_real.start(args.program);
+		this._socket = this._socket_real.getWS();
+		this.sendEvent(new StoppedEvent("entry", XRDebugSession.threadID));
 		this.sendResponse(response);
 	}
 	protected evaluateRequest(
@@ -185,31 +183,28 @@ export class XRDebugAdapter extends LoggingDebugSession {
 	}
 	protected threadsRequest(response: DebugProtocol.Response) {
 		response.body = {
-			threads: [new Thread(1, "thread 1")],
+			threads: [new Thread(XRDebugSession.threadID, "thread 1")],
 		};
+
 		this.sendResponse(response);
 	}
 	protected stackTraceRequest(
 		response: DebugProtocol.StackTraceResponse,
 		args: any
 	) {
+		response.body = {
+			stackFrames: [new StackFrame(1, "runtime")],
+		};
 		this.sendResponse(response);
 	}
 	protected scopesRequest(
 		response: DebugProtocol.ScopesResponse,
-		args: DebugProtocol.ScopesArguments
+		args?: DebugProtocol.ScopesArguments
 	): void {
-		const frameReference = args.frameId;
-		const scopes = new Array<Scope>();
-		scopes.push(
-			new Scope(
-				"Local",
-				this._variableHandles.create("local_" + frameReference),
-				false
-			)
-		);
 		response.body = {
-			scopes: scopes,
+			scopes: [
+				new Scope("Locals", this._variableHandles.create("locals"), false),
+			],
 		};
 		this.sendResponse(response);
 	}
@@ -217,18 +212,81 @@ export class XRDebugAdapter extends LoggingDebugSession {
 		response: DebugProtocol.VariablesResponse,
 		args: DebugProtocol.VariablesArguments
 	): void {
-		const variables = new Array<DebugProtocol.Variable>();
-		const scopeId = this._variableHandles.get(args.variablesReference);
+		let vs = (this._socket_real.getLocalVariables() as RuntimeVariable[]).map(
+			(v) => this.convertFromRuntime(v)
+		) as DebugProtocol.Variable[];
+		response.body = {
+			variables: vs,
+		};
 		this.sendResponse(response);
 	}
+	private formatNumber(x: number) {
+		return this._valuesInHex ? "0x" + x.toString(16) : x.toString(10);
+	}
+	private convertFromRuntime(v: RuntimeVariable): DebugProtocol.Variable {
+		let dapVariable: DebugProtocol.Variable = {
+			name: v.name,
+			value: "???",
+			type: typeof v.value,
+			variablesReference: 0,
+			evaluateName: v.name,
+		};
+
+		if (Array.isArray(v.value)) {
+			dapVariable.value = "Object";
+			v.reference ??= this._variableHandles.create(v);
+			dapVariable.variablesReference = v.reference;
+		} else {
+			switch (typeof v.value) {
+				case "number":
+					if (Math.round(v.value) === v.value) {
+						dapVariable.value = this.formatNumber(v.value);
+						(<any>dapVariable).__vscodeVariableMenuContext = "simple";
+						dapVariable.type = "integer";
+					} else {
+						dapVariable.value = v.value.toString();
+						dapVariable.type = "float";
+					}
+					break;
+				case "string":
+					dapVariable.value = `"${v.value}"`;
+					break;
+				case "boolean":
+					dapVariable.value = v.value ? "true" : "false";
+					break;
+				default:
+					dapVariable.value = typeof v.value;
+					break;
+			}
+		}
+
+		return dapVariable;
+	}
+
 	protected disconnectRequest(request: DebugProtocol.DisconnectRequest): void {}
 
-	customRequest(
+	protected customRequest(
 		command: string,
-		response: DebugProtocol.Response,
-		args: any,
-		request?: DebugProtocol.Request | undefined
+		response: DebugProtocol.Response
 	): void {
-		this.sendResponse(response);
+		switch (command) {
+			case "updatevar":
+				{
+					let vs = (
+						this._socket_real.getLocalVariables() as RuntimeVariable[]
+					).map((v) => this.convertFromRuntime(v)) as DebugProtocol.Variable[];
+					response.body = {
+						variables: vs,
+					};
+					response.success = true;
+					response.command = "variables";
+					response.type = "response";
+					this.sendResponse(response);
+				}
+				return;
+			default:
+				this.sendResponse(response);
+				break;
+		}
 	}
 }

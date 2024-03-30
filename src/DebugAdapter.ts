@@ -1,13 +1,14 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-29 19:47:01
+ * @LastEditTime: 2024-03-30 13:53:24
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import * as Net from "net";
-import { XRDebugAdapter } from "./DebugSession";
+import { XRDebugSession } from "./DebugSession";
 import * as vscode from "vscode";
+import { fsAccessor } from "./utils/utils_novsc";
 
 // first parse command line arguments to see whether the debug adapter should run as a server
 let port = 0;
@@ -27,13 +28,13 @@ if (port > 0 && debug) {
 		socket.on("end", () => {
 			console.error(">> client connection closed\n");
 		});
-		const session = new XRDebugAdapter(debug);
+		const session = new XRDebugSession(debug, fsAccessor);
 		session.setRunAsServer(true);
 		session.start(socket, socket);
 	}).listen(port);
 } else if (debug) {
 	// start a single session that communicates via stdin/stdout
-	const session = new XRDebugAdapter(debug);
+	const session = new XRDebugSession(debug, fsAccessor);
 	process.on("SIGTERM", () => {
 		session.shutdown();
 	});

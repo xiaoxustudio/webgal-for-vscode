@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-20 22:47:58
+ * @LastEditTime: 2024-03-30 21:40:26
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -30,7 +30,6 @@ export function create_client(context: ExtensionContext): LanguageClient {
 			fileEvents: workspace.createFileSystemWatcher("**/.clientrc"),
 		},
 	};
-	
 	return new LanguageClient(
 		"XRWEBGALlanguageServer",
 		"XR WEBGAL Language Server",

@@ -1,12 +1,27 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 12:15:59
+ * @LastEditTime: 2024-03-30 13:58:15
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import acorn from "acorn";
 export const source = "WebGal Script";
+import { promises as fs } from "fs";
+export interface FileAccessor {
+	isWindows: boolean;
+	readFile(path: string): Promise<Uint8Array>;
+	writeFile(path: string, contents: Uint8Array): Promise<void>;
+}
+export const fsAccessor: FileAccessor = {
+	isWindows: process.platform === "win32",
+	readFile(path: string): Promise<Uint8Array> {
+		return fs.readFile(path);
+	},
+	writeFile(path: string, contents: Uint8Array): Promise<void> {
+		return fs.writeFile(path, contents);
+	},
+};
 // 获取变量的描述
 export function get_desc_variable(ALL_ARR: string[], _start_line: number) {
 	let _desc_arr = [];

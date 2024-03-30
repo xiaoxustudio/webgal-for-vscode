@@ -11,6 +11,10 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 
 ## [Unreleased]
 
+## [1.4.2] - 2024.3.30
+
+- 调试功能迭代
+
 ## [1.4.1] - 2024.3.29
 
 - 修复配置文件不生效
