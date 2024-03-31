@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-30 22:14:50
+ * @LastEditTime: 2024-03-31 16:28:01
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -86,6 +86,8 @@
 **PS：右击有跳转到指定行选项**  
 
 **PS：调试变量不会实时刷新，需要手动在调试控制台回车刷新，或其他操作来触发更新**
+
+**PS：左边调试变量可修改，env和scene不可修改**
 
 ![调试](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/debug.png)
 

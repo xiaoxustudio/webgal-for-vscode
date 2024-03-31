@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-30 13:53:24
+ * @LastEditTime: 2024-03-30 22:40:40
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -10,7 +10,6 @@ import { XRDebugSession } from "./DebugSession";
 import * as vscode from "vscode";
 import { fsAccessor } from "./utils/utils_novsc";
 
-// first parse command line arguments to see whether the debug adapter should run as a server
 let port = 0;
 const args = process.argv.slice(2);
 args.forEach(function (val, index, array) {
@@ -21,7 +20,6 @@ args.forEach(function (val, index, array) {
 });
 const debug = vscode.debug.activeDebugSession;
 if (port > 0 && debug) {
-	// start a server that creates a new session for every connection request
 	console.error(`waiting for debug protocol on port ${port}`);
 	Net.createServer((socket) => {
 		console.error(">> accepted connection from client");
@@ -33,7 +31,6 @@ if (port > 0 && debug) {
 		session.start(socket, socket);
 	}).listen(port);
 } else if (debug) {
-	// start a single session that communicates via stdin/stdout
 	const session = new XRDebugSession(debug, fsAccessor);
 	process.on("SIGTERM", () => {
 		session.shutdown();

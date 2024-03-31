@@ -18,7 +18,7 @@ export type IRuntimeVariableType =
 
 export class RuntimeVariable {
 	public reference?: number;
-
+	public desc?: "Array" | "Object" | string;
 	public get value() {
 		return this._value;
 	}
@@ -39,8 +39,13 @@ export function timeout(ms: number) {
 
 export default class XRRuntime extends EventEmitter {
 	private _WS!: WebSocket;
-	public variables = new Map<string, RuntimeVariable>();
+	public variables = new Map<string, Map<string, RuntimeVariable>>([
+		["local", new Map<string, RuntimeVariable>()],
+		["env", new Map<string, RuntimeVariable>()],
+		["scene", new Map<string, RuntimeVariable>()],
+	]);
 	private _config: any;
+	public _clearFunc!: Function;
 	constructor(public _ADP: DebugSession, public fileAccessor: FileAccessor) {
 		super();
 	}
@@ -56,8 +61,33 @@ export default class XRRuntime extends EventEmitter {
 		};
 		this._WS.send(JSON.stringify(msg));
 	}
-	public getLocalVariables(): RuntimeVariable[] {
-		return Array.from(this.variables, ([name, value]) => value);
+	public getLocalVariables(type: "env" | "scene" | "var"): RuntimeVariable[] {
+		switch (type) {
+			case "env": {
+				return Array.from(
+					this.variables.get("env") as Map<string, RuntimeVariable>,
+					([name, value]) => value
+				);
+			}
+			case "scene": {
+				return Array.from(
+					this.variables.get("scene") as Map<string, RuntimeVariable>,
+					([name, value]) => value
+				);
+			}
+			case "var": {
+				return Array.from(
+					this.variables.get("local") as Map<string, RuntimeVariable>,
+					([name, value]) => value
+				);
+			}
+			default: {
+				return Array.from(
+					this.variables.get("local") as Map<string, RuntimeVariable>,
+					([name, value]) => value
+				);
+			}
+		}
 	}
 	getWS() {
 		return this._WS;
@@ -81,6 +111,7 @@ export default class XRRuntime extends EventEmitter {
 		const _obj = createWS(this._ADP, this);
 		this._WS = _obj.sock;
 		this._config = _obj.config;
+		this._clearFunc = _obj.clearDecorationType;
 	}
 	public sendEvent(event: string, ...args: any[]): void {
 		setTimeout(() => {
@@ -92,8 +123,10 @@ export default class XRRuntime extends EventEmitter {
 function createWS(_ADP: DebugSession, self: XRRuntime) {
 	const config = _ADP.configuration;
 	const _ws_host = config.ws || "ws://localhost:9999/";
-	const sock = new WS("ws://localhost:9999/");
+	const sock = new WS(_ws_host);
 	const editor = window.activeTextEditor;
+	let _restart: NodeJS.Timeout;
+	let _sendMy = false;
 	let decorationType: TextEditorDecorationType;
 	let last_line_num = -1;
 	function clearDecorationType() {
@@ -116,6 +149,9 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 			};
 			sock.send(JSON.stringify(msg));
 			window.showInformationMessage("(webgal)调试连接到：" + _ws_host);
+			_restart = setTimeout(() => {
+				sock.emit("close");
+			}, 5000);
 		} else {
 			window.showErrorMessage("(webgal)调试连接错误，请重试！");
 			clearDecorationType();
@@ -127,6 +163,8 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 		window.showErrorMessage("(webgal)调试连接错误，请重试！");
 		clearDecorationType();
 		last_line_num = -1;
+		_sendMy = false;
+		_ADP.customRequest("close");
 	});
 	sock.on("runscript", function (e: string) {
 		if (sock.readyState === 1) {
@@ -149,13 +187,41 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 		window.showErrorMessage("(webgal)调试关闭！");
 		clearDecorationType();
 		last_line_num = -1;
+		_sendMy = false;
+		_ADP.customRequest("disconnect");
 	});
 	sock.on("message", function (data: Buffer) {
+		if (!_sendMy) {
+			_sendMy = true;
+		} else if (_restart) {
+			clearTimeout(_restart);
+		}
 		let _data = JSON.parse(data.toString());
-		let newv = new Map<string, RuntimeVariable>();
+		let newv = new Map<string, Map<string, RuntimeVariable>>([
+			["local", new Map<string, RuntimeVariable>()],
+			["env", new Map<string, RuntimeVariable>()],
+			["scene", new Map<string, RuntimeVariable>()],
+		]);
 		for (let _var in _data.stageSyncMsg.GameVar) {
 			const _val = _data.stageSyncMsg.GameVar[_var];
-			newv.set(_var, new RuntimeVariable(_var, _val));
+			const _local = newv.get("local");
+			if (_local) {
+				_local.set(_var, new RuntimeVariable(_var, _val));
+			}
+		}
+		for (let _var in _data.stageSyncMsg) {
+			const _val = _data.stageSyncMsg[_var];
+			const _env = newv.get("env");
+			if (_env && _var !== "GameVar") {
+				_env.set(_var, new RuntimeVariable(_var, _val));
+			}
+		}
+		for (let _var in _data.sceneMsg) {
+			const _val = _data.sceneMsg[_var];
+			const _scene = newv.get("scene");
+			if (_scene) {
+				_scene.set(_var, new RuntimeVariable(_var, _val));
+			}
 		}
 		self.variables = newv;
 		self._ADP.customRequest("updatevar");
@@ -187,5 +253,5 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 			editor.setDecorations(decorationType, [range]);
 		}
 	});
-	return { sock, config };
+	return { sock, config, clearDecorationType };
 }
