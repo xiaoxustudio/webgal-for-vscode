@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-04-21 20:48:04
+ * @LastEditTime: 2024-04-21 20:54:24
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -102,7 +102,6 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 				}
 			}
 		} else if (pos?.start.character === 0) {
-			console.log(_text);
 			for (let i in dictionary.kw) {
 				const kw_val = dictionary.kw[i];
 				if (lineText.startsWith(i)) {
