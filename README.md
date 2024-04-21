@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-31 16:28:01
+ * @LastEditTime: 2024-04-21 20:53:31
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -29,6 +29,7 @@
 - 跳转定义（资源、变量）
 - 颜色选择器
 - 区域折叠
+- 调试功能
 
 ```txt
   ;area 开始区域标记

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-31 16:26:45
+ * @LastEditTime: 2024-04-01 20:51:00
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -31,7 +31,6 @@ interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
 	noDebug?: boolean;
 	compileError?: "default" | "show" | "hide";
 }
-
 export class XRDebugSession extends LoggingDebugSession {
 	private static threadID = 1;
 	private _socket!: WebSocket;
@@ -60,13 +59,15 @@ export class XRDebugSession extends LoggingDebugSession {
 		response.body.supportsStepBack = false;
 		response.body.supportsSteppingGranularity = false;
 		response.body.supportsEvaluateForHovers = false;
-		response.body.supportsStepBack = false;
 		response.body.supportsRestartFrame = false;
 		response.body.supportsGotoTargetsRequest = false;
 		response.body.supportsStepInTargetsRequest = false;
 		response.body.supportsCompletionsRequest = false;
 		response.body.supportsCancelRequest = false;
 		response.body.supportsBreakpointLocationsRequest = false;
+		response.body.supportsInstructionBreakpoints = false;
+		response.body.supportsHitConditionalBreakpoints = false;
+		
 		this.sendResponse(response);
 		console.log("(webgal)initializing");
 		this.sendEvent(new InitializedEvent());
@@ -96,6 +97,14 @@ export class XRDebugSession extends LoggingDebugSession {
 		this._socket_real.start(args.program);
 		this._socket = this._socket_real.getWS();
 		this.sendEvent(new StoppedEvent("entry", XRDebugSession.threadID));
+		this.sendResponse(response);
+	}
+	protected stepBackRequest(
+		response: DebugProtocol.StepBackResponse,
+		args: DebugProtocol.StepBackArguments,
+		request?: DebugProtocol.Request | undefined
+	): void {
+		this.sendEvent(new StoppedEvent("entry"));
 		this.sendResponse(response);
 	}
 	protected evaluateRequest(

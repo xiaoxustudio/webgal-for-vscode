@@ -133,10 +133,12 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 		const editor = window.activeTextEditor;
 		if (editor && decorationType) {
 			editor.setDecorations(decorationType, []);
+			decorationType?.dispose();
 		}
 	}
 	sock.on("open", function () {
 		if (sock.readyState === 1) {
+			clearDecorationType();
 			enableGameStatus(sock);
 			const msg = {
 				command: 0,
