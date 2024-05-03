@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-04-21 20:45:52
+ * @LastEditTime: 2024-05-04 02:58:54
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -27,6 +27,7 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 		let _result: DocumentLink[] = [];
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) return _result;
+		const _is_config = /\\game\\config.txt$/.test(document.fileName);
 		let lines = document.getText().split("\n");
 		for (let i = 0; i < lines.length; i++) {
 			let _lines = lines[i];
@@ -39,7 +40,7 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 				: _start_text;
 			let match;
 			const regex =
-				/[^:\s]+?([^;\s-:<>/\\\|\?\*\"\']+)\.([^;\s-:<>/\\\|\?\*\"\']+)/g;
+				/[^:-\s]+?([^-;\s:<>/\\\|\?\*\"\']+)\.([^-;\s:<>/\\\|\?\*\"\']+)/g;
 			while ((match = regex.exec(_lines))) {
 				const _match_text = match[0];
 				const _sp = editor.document.uri.fsPath.split("\\");

@@ -1,12 +1,12 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-04-21 20:54:24
+ * @LastEditTime: 2024-05-04 02:56:59
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { dictionary } from "../utils/HoverSnippet";
+import { dictionary, config_dictionary } from "../utils/HoverSnippet";
 import { _setvar_pattern } from "./CompletionProvider";
 import { get_desc_variable, get_var_type } from "../utils/utils_novsc";
 
@@ -25,6 +25,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		position: vscode.Position,
 		token: vscode.CancellationToken
 	): vscode.ProviderResult<vscode.Hover> {
+		const file_name = document.fileName;
 		const lineText = document.lineAt(position).text;
 		const pos = document.getWordRangeAtPosition(position);
 		const _arr: { [key: string]: _VToken } = {};
@@ -57,7 +58,20 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		const _text = document.getText(pos_func).replace(/^:/, "");
 		const _var_test = document.getWordRangeAtPosition(position, /{(\w+)}/);
 		const _var_test_text = document.getText(_var_test);
-
+		if (file_name.endsWith("\\game\\config.txt")) {
+			for (let i in config_dictionary) {
+				const kw_val = config_dictionary[i];
+				if (lineText.startsWith(i)) {
+					const hoverContent = new vscode.MarkdownString(`**${word}**`);
+					hoverContent.isTrusted = true;
+					hoverContent.supportHtml = true;
+					hoverContent.appendMarkdown(`\n\n${kw_val.desc}`);
+					hoverContent.appendMarkdown(` \n <hr>  `);
+					const hover = new vscode.Hover(hoverContent);
+					return hover;
+				}
+			}
+		}
 		if (`{${word}}` === _var_test_text) {
 			const hoverContent = new vscode.MarkdownString(`### 变量 **${word}** `);
 			hoverContent.isTrusted = true;

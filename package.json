@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "repository": {
     "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -15,8 +15,9 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "workspaceContains:**/game/config.txt",
-    "workspaceContains:config.txt"
+    "workspaceContains:config.txt",
+    "workspaceContains:**/config.txt",
+    "workspaceContains:**/game/config.txt"
   ],
   "main": "./out/extension.js",
   "icon": "./resources/icon.png",
@@ -48,6 +49,9 @@
       },
       {
         "id": "webgal-config",
+        "extensions": [
+          ".txt"
+        ],
         "aliases": [
           "webgalConfig",
           "webgalconfig",
@@ -60,7 +64,8 @@
         "icon": {
           "dark": "./resources/icon_config.png",
           "light": "./resources/icon_config.png"
-        }
+        },
+        "configuration": "./src/utils/language-configuration.json"
       }
     ],
     "commands": [
@@ -174,7 +179,11 @@
   },
   "capabilities": {
     "colorProvider": "true",
-    "documentFormattingProvider": "true"
+    "documentFormattingProvider": "true",
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": ""
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

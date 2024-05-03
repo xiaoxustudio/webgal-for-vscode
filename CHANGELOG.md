@@ -11,6 +11,11 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 
 ## [Unreleased]
 
+## [1.4.6] - 2024.5.4
+
+- 增加配置文件hover提示
+- 修复参数后资源链接匹配的问题
+
 ## [1.4.5] - 2024.4.21
 
 - 修复词组匹配

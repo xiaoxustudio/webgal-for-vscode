@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-30 13:49:44
+ * @LastEditTime: 2024-05-04 02:56:07
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -30,6 +30,8 @@ export function getWS() {
 	return WS;
 }
 export const selector = { scheme: "file", language: "webgal" };
+export const selectorConfig = { scheme: "file", language: "webgal-config" };
+
 export function rgba01To255(rgba: string): string {
 	const matches = rgba.match(/rgba?\((.+?)\)/);
 	if (!matches) {

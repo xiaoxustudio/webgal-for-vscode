@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-26 19:57:05
+ * @LastEditTime: 2024-05-04 02:16:38
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -11,6 +11,10 @@ export interface DIC {
 export interface DToken {
 	desc: string; // 描述
 	APIL?: string; // api链接
+	Equal?: boolean;
+}
+export interface CToken {
+	desc: string; // 描述
 	Equal?: boolean;
 }
 export const dictionary: { [key: string]: DIC } = {
@@ -208,4 +212,23 @@ export const dictionary: { [key: string]: DIC } = {
 			APIL: "添加特效|https://docs.openwebgal.com/webgal-script/special-effect.html#%E6%B7%BB%E5%8A%A0%E7%89%B9%E6%95%88",
 		},
 	}, // 内置关键字
+};
+// 配置Hover
+export const config_dictionary: { [key: string]: CToken } = {
+	Game_name: {
+		desc: "游戏名称",
+		Equal: true,
+	},
+	Game_key: {
+		desc: "游戏唯一标识",
+	},
+	Title_img: {
+		desc: "标题图片",
+	},
+	Title_bgm: {
+		desc: "标题背景bgm",
+	},
+	Textbox_theme: {
+		desc: "对话框样式",
+	},
 };

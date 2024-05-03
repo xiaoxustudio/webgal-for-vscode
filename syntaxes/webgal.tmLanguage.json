@@ -82,7 +82,7 @@
                     "match": "(.*?)(\\=)(.*?)$",
                     "captures": {
                         "1": {
-                            "name": "variable.parameter.webgal"
+                            "name": "constant.language.webgal"
                         },
                         "2": {
                             "patterns": [

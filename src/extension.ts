@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-30 18:03:32
+ * @LastEditTime: 2024-05-04 02:57:20
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -25,7 +25,7 @@ import DictionaryCompletionItemProvider from "./provider/CompletionProvider";
 import DictionaryHoverProvider from "./provider/HoverProvider";
 import XColorProvider from "./provider/ColorProvider";
 import GoDocumentFormatter from "./utils/Format";
-import { get_files, getWS, selector } from "./utils/utils";
+import { get_files, getWS, selector, selectorConfig } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
@@ -54,7 +54,10 @@ function InitPlugin(context: ExtensionContext) {
 		)
 	);
 	context.subscriptions.push(
-		languages.registerHoverProvider(selector, new DictionaryHoverProvider())
+		languages.registerHoverProvider(
+			[selector, selectorConfig],
+			new DictionaryHoverProvider()
+		)
 	);
 	context.subscriptions.push(
 		languages.registerDocumentFormattingEditProvider(
@@ -67,7 +70,7 @@ function InitPlugin(context: ExtensionContext) {
 	);
 	context.subscriptions.push(
 		languages.registerDocumentLinkProvider(
-			selector,
+			[selector, selectorConfig],
 			new XRDocumentLinkProvider()
 		)
 	);
