@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-11 19:06:02
+ * @LastEditTime: 2024-06-11 19:15:09
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -65,7 +65,7 @@
 
 运行-添加配置-选择`webgal Debug`创建`launch.json`文件  
 
-*请自行ws地址：地址可F12在控制台看到，端口号一般为网页url的端口号*
+*请自行修改ws地址：地址可F12在控制台看到，端口号一般为网页url的端口号*
 
 运行即可，可在调试控制台查看指定变量、环境配置等信息  
 
