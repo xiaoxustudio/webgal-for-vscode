@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-04-21 20:51:31
+ * @LastEditTime: 2024-06-11 19:08:36
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -11,10 +11,10 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 
 ## [Unreleased]
 
-## [1.4.6] - 2024.5.4
+## [1.4.7] - 2024.6.11
 
-- 增加配置文件hover提示
-- 修复参数后资源链接匹配的问题
+- 更新README
+- 修复websocket连接失败问题
 
 ## [1.4.5] - 2024.4.21
 

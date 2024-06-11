@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-04-21 20:53:31
+ * @LastEditTime: 2024-06-11 19:06:02
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -16,7 +16,7 @@
 
 <h4 align="center">WebGal Script 工具</h4>
 
-![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen)  ![github license](https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode)  ![Language](https://img.shields.io/badge/language-webgal-brightgreen)
+<h5 align="center"><img src="https://img.shields.io/badge/documentation-yes-brightgreen" alt="Documentation"> <img src="https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode" alt="github license"> <img src="https://img.shields.io/badge/language-webgal-brightgreen" alt="Language"></h5>
 
 # 功能
 
@@ -51,7 +51,7 @@
 
 # 使用
 
-当前工作目录只要包含**config.txt**时，插件就会自动启动
+当前工作目录**game**只要包含**config.txt**时，插件就会自动启动
 
 或者使用启动命令自行启动插件
 
@@ -64,6 +64,8 @@
 # 调试  
 
 运行-添加配置-选择`webgal Debug`创建`launch.json`文件  
+
+*请自行ws地址：地址可F12在控制台看到，端口号一般为网页url的端口号*
 
 运行即可，可在调试控制台查看指定变量、环境配置等信息  
 

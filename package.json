@@ -2,7 +2,7 @@
   "name": "webgal-for-vscode",
   "displayName": "webgal for VSCode",
   "description": "webgal-for-vscode by xuran",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "repository": {
     "type": "git",
     "url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -15,8 +15,6 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "workspaceContains:config.txt",
-    "workspaceContains:**/config.txt",
     "workspaceContains:**/game/config.txt"
   ],
   "main": "./out/extension.js",
@@ -111,7 +109,7 @@
               "ws": {
                 "type": "string",
                 "description": "WebSoket 地址",
-                "default": "ws://localhost:9999/"
+                "default": "ws://localhost:3001/api/webgalsync"
               }
             }
           }
@@ -122,7 +120,7 @@
             "request": "launch",
             "name": "Launch Webgal Script",
             "program": "${fileBasename}",
-            "ws": "ws://localhost:9999/"
+            "ws": "ws://localhost:3001/api/webgalsync"
           }
         ],
         "configurationSnippets": [
@@ -134,7 +132,7 @@
               "request": "launch",
               "name": "${2:Launch Webgal Script}",
               "program": "${fileBasename}",
-              "ws": "ws://localhost:9999/"
+              "ws": "ws://localhost:3001/api/webgalsync"
             }
           }
         ]
@@ -214,7 +212,7 @@
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11",
-    "ws": "^8.16.0"
+    "ws": "^8.17.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

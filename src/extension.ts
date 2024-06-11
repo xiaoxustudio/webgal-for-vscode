@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-05-04 02:57:20
+ * @LastEditTime: 2024-06-11 13:16:14
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -33,6 +33,7 @@ import { XRInlayHintsProvider } from "./provider/InlayHintProvider";
 import { XRDocumentLinkProvider } from "./provider/DocumentLinkProvider";
 import { XRDebugAdapterDescriptorFactory } from "./activeDebug";
 import { XRDebugConfigurationProvider } from "./ws/config";
+import { IDebugMessage, DebugCommand } from "./utils/utils_novsc";
 
 let client: LanguageClient;
 let run_Skip_Check = false;
@@ -107,14 +108,17 @@ function InitPlugin(context: ExtensionContext) {
 					active.document.fileName.lastIndexOf("\\") + 1
 				);
 				const line_number = active.selection.start.line;
-				const msg = {
-					command: 0,
-					sceneMsg: {
-						scene: scene_name,
-						sentence: line_number + 1,
-					}, // @ts-ignore
-					stageSyncMsg: {},
-					message: "Sync",
+				const msg: IDebugMessage = {
+					event: "message",
+					data: {
+						command: DebugCommand.JUMP,
+						sceneMsg: {
+							scene: scene_name,
+							sentence: line_number + 1,
+						}, // @ts-ignore
+						stageSyncMsg: {},
+						message: "徐然",
+					},
 				};
 				_ws.send(JSON.stringify(msg));
 			}

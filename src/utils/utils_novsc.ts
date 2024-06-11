@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-30 13:58:15
+ * @LastEditTime: 2024-06-11 14:06:55
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -13,6 +13,54 @@ export interface FileAccessor {
 	readFile(path: string): Promise<Uint8Array>;
 	writeFile(path: string, contents: Uint8Array): Promise<void>;
 }
+export class RuntimeVariable {
+	public reference?: number;
+	public desc?: "Array" | "Object" | string;
+	public get value() {
+		return this._value;
+	}
+
+	public set value(value: IRuntimeVariableType) {
+		this._value = value;
+	}
+
+	constructor(
+		public readonly name: string,
+		private _value: IRuntimeVariableType
+	) {}
+}
+
+export type IRuntimeVariableType =
+	| number
+	| boolean
+	| string
+	| RuntimeVariable[];
+
+export enum DebugCommand {
+	// 跳转
+	JUMP,
+	// 同步自客户端
+	SYNCFC,
+	// 同步自编辑器
+	SYNCFE,
+	// 执行指令
+	EXE_COMMAND,
+	// 重新拉取模板样式文件
+	REFETCH_TEMPLATE_FILES,
+}
+export interface IDebugMessage {
+	event: string;
+	data: {
+		command: DebugCommand;
+	sceneMsg: {
+			sentence: number;
+			scene: string;
+		}  ;
+		message: string;
+		stageSyncMsg: any;
+	};
+}
+
 export const fsAccessor: FileAccessor = {
 	isWindows: process.platform === "win32",
 	readFile(path: string): Promise<Uint8Array> {
@@ -104,4 +152,12 @@ export function get_var_type(var_text: string): string {
 		}
 	}
 	return ` ${label} `;
+}
+
+export function is_JSON(_likely_josn: any) {
+	try {
+		return !!JSON.parse(_likely_josn);
+	} catch {
+		return false;
+	}
 }

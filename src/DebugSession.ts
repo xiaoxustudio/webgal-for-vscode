@@ -20,8 +20,8 @@ import {
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { getGameData } from "./utils/utils";
 import { debug, DebugSession } from "vscode";
-import XRRuntime, { RuntimeVariable } from "./ws";
-import { FileAccessor } from "./utils/utils_novsc";
+import XRRuntime from "./ws";
+import { FileAccessor, RuntimeVariable } from "./utils/utils_novsc";
 import { WebSocket } from "ws";
 interface IAttachRequestArguments extends ILaunchRequestArguments {}
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
@@ -67,7 +67,7 @@ export class XRDebugSession extends LoggingDebugSession {
 		response.body.supportsBreakpointLocationsRequest = false;
 		response.body.supportsInstructionBreakpoints = false;
 		response.body.supportsHitConditionalBreakpoints = false;
-		
+
 		this.sendResponse(response);
 		console.log("(webgal)initializing");
 		this.sendEvent(new InitializedEvent());
