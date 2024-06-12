@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-11 14:06:55
+ * @LastEditTime: 2024-06-12 15:03:29
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -70,6 +70,7 @@ export const fsAccessor: FileAccessor = {
 		return fs.writeFile(path, contents);
 	},
 };
+
 // 获取变量的描述
 export function get_desc_variable(ALL_ARR: string[], _start_line: number) {
 	let _desc_arr = [];

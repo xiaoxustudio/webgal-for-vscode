@@ -70,11 +70,23 @@
             "match": "[\\:\\=\\<\\>\\|\\+\\-]",
             "name": "keyword.operator.webgal"
         },
+        "boolean": {
+            "match": "\\s*(true|false)\\s*$",
+            "name": "markup.quote.webgal"
+        },
+        "number": {
+            "match": "\\s*(\\d+)\\s*$",
+            "name": "constant.numeric.webgal"
+        },
+        "string": {
+            "match": ".*",
+            "name": "string.webgal"
+        },
         "parameter": {
             "patterns": [
                 {
                     "comment": "value only, ie val0",
-                    "match": "(?!.*\\=).+",
+                    "match": "(?!.*\\=)(.+)",
                     "name": "variable.other.webgal"
                 },
                 {
@@ -92,7 +104,17 @@
                             ]
                         },
                         "3": {
-                            "name": "variable.other.webgal"
+                            "patterns": [
+                                {
+                                    "include": "#boolean"
+                                },
+                                {
+                                    "include": "#number"
+                                },
+                                {
+                                    "include": "#string"
+                                }
+                            ]
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-11 19:08:36
+ * @LastEditTime: 2024-06-12 10:12:39
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -10,6 +10,12 @@
 All notable changes to the "webgal-for-vscode" extension will be documented in this file.
 
 ## [Unreleased]
+
+## [1.4.8] - 2024.6.12
+
+- 更新语言高亮
+- 修复issue **4**
+- 修复config配置文件无法找到的bug
 
 ## [1.4.7] - 2024.6.11
 
