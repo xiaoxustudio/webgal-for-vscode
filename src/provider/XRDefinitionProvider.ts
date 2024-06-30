@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-25 08:36:25
+ * @LastEditTime: 2024-06-30 17:03:14
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -12,8 +12,8 @@ import {
 	Position,
 	TextDocument,
 } from "vscode";
-import { _VToken } from "./HoverProvider";
 import { get_var_type } from "../utils/utils_novsc";
+import { _VToken } from "../utils/utils";
 
 export class XRDefinitionProvider implements DefinitionProvider {
 	provideDefinition(
@@ -34,6 +34,7 @@ export class XRDefinitionProvider implements DefinitionProvider {
 			if (m) {
 				_Var_list.push({
 					word: m[1],
+					value: m[2],
 					input: m.input,
 					position: position.with(_d_index, 7),
 					type: get_var_type(m[2]),

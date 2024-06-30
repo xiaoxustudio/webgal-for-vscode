@@ -1,11 +1,22 @@
 import * as vscode from "vscode";
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-05-04 02:56:07
+ * @LastEditTime: 2024-06-30 17:45:45
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
+export interface _VToken {
+	word: string;
+	type: string;
+	is_global?: boolean;
+	position?: vscode.Position;
+	input?: string;
+	value?: string;
+	desc: string;
+}
+export type VList = { [key: string]: _VToken };
+
 let Game_Data = {}; // 游戏全局配置
 let Game_Connect_Status = 0; // 游戏连接状态
 let WS: any = null;

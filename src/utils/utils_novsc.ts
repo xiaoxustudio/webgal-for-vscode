@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-12 15:03:29
+ * @LastEditTime: 2024-06-30 17:49:35
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -8,6 +8,7 @@
 import acorn from "acorn";
 export const source = "WebGal Script";
 import { promises as fs } from "fs";
+
 export interface FileAccessor {
 	isWindows: boolean;
 	readFile(path: string): Promise<Uint8Array>;
@@ -52,15 +53,28 @@ export interface IDebugMessage {
 	event: string;
 	data: {
 		command: DebugCommand;
-	sceneMsg: {
+		sceneMsg: {
 			sentence: number;
 			scene: string;
-		}  ;
+		};
 		message: string;
 		stageSyncMsg: any;
 	};
 }
-
+// 上一次全局变量表
+export let GlobalVar: {
+	[key: PropertyKey]: any;
+} = {};
+export const setGlobalVar = (_gv: object) => {
+	GlobalVar = _gv;
+};
+export const getGlobalVar = () => {
+	let _o: { [key: PropertyKey]: any } = {};
+	for (let i in GlobalVar) {
+		_o[GlobalVar.word] = GlobalVar.value;
+	}
+	return _o;
+};
 export const fsAccessor: FileAccessor = {
 	isWindows: process.platform === "win32",
 	readFile(path: string): Promise<Uint8Array> {
@@ -92,7 +106,9 @@ export function get_var_type(var_text: string): string {
 		label = "布尔值";
 	} else {
 		try {
-			const __val_real = new Function("return " + var_text)();
+			const __val_real = new Function("return " + var_text).bind(
+				getGlobalVar()
+			);
 			switch (typeof __val_real) {
 				case "number":
 					label = "数字";

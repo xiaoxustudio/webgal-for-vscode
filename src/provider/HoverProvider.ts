@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-05-04 02:56:59
+ * @LastEditTime: 2024-06-30 17:46:22
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -8,16 +8,12 @@
 import * as vscode from "vscode";
 import { dictionary, config_dictionary } from "../utils/HoverSnippet";
 import { _setvar_pattern } from "./CompletionProvider";
-import { get_desc_variable, get_var_type } from "../utils/utils_novsc";
-
-export interface _VToken {
-	word: string;
-	type: string;
-	is_global?: boolean;
-	position?: vscode.Position;
-	input?: string;
-	desc: string;
-}
+import {
+	get_desc_variable,
+	get_var_type,
+	setGlobalVar,
+} from "../utils/utils_novsc";
+import { VList, _VToken } from "../utils/utils";
 
 export default class DictionaryHoverProvider implements vscode.HoverProvider {
 	provideHover(
@@ -28,7 +24,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 		const file_name = document.fileName;
 		const lineText = document.lineAt(position).text;
 		const pos = document.getWordRangeAtPosition(position);
-		const _arr: { [key: string]: _VToken } = {};
+		const _arr: VList = {};
 		const ALL_ARR = document.getText().split("\n");
 		for (let _d_index = 0; _d_index < ALL_ARR.length; _d_index++) {
 			const _data = ALL_ARR[_d_index];
@@ -36,6 +32,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			if (m) {
 				_arr[m[1]] = {
 					word: m[1],
+					value: m[2],
 					input: m.input,
 					position: position.with(_d_index + 1, 5),
 					type: get_var_type(m[2]),
@@ -51,6 +48,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 				}
 			}
 		}
+		setGlobalVar(_arr);
 		// 获取上下文全部变量
 		const word = document.getText(pos);
 		const _new_pos = document.positionAt(document.offsetAt(position) + 1);
@@ -84,11 +82,12 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			hoverContent.appendMarkdown(` \n <hr>  `);
 			if (word in _arr) {
 				hoverContent.appendMarkdown(
-					`\n\n ##### 类型 : <span style="color:#4db1e5;">${_arr[word].type}</span>  `
+					`\n\n\n  类型 : <span style="color:#4db1e5;">${_arr[word].type}</span>  `
 				);
 				hoverContent.appendMarkdown(
-					`\n #####  位置 : 位于第${_arr[word].position?.line}行`
+					`\n\n 位置 : 位于第${_arr[word].position?.line}行`
 				);
+				hoverContent.appendCodeblock(_arr[word].input!, "webgal");
 			} else {
 				hoverContent.appendMarkdown(` \n 未定义变量`);
 			}

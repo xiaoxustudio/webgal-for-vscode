@@ -17,7 +17,6 @@ import {
 import { getConfig } from "../utils/utils";
 import { get_var_type } from "../utils/utils_novsc";
 
-
 export class XRInlayHintsProvider implements InlayHintsProvider {
 	async provideInlayHints(
 		document: TextDocument,
@@ -31,7 +30,7 @@ export class XRInlayHintsProvider implements InlayHintsProvider {
 			return hints;
 		}
 		const text = document.getText(range);
-		const regex = /(setVar):([\w\d_]+)=(\S+)(.*);?/g;
+		const regex = /(setVar):([\w\d_]+)=(.*);?/g;
 		for (const match of text.matchAll(regex)) {
 			if (token.isCancellationRequested) break;
 			const _index = match.index || 0;

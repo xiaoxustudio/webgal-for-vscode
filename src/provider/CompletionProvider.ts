@@ -1,16 +1,15 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 12:25:34
+ * @LastEditTime: 2024-06-30 17:42:00
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { currentDirectory, get_files } from "../utils/utils";
+import { _VToken, currentDirectory, get_files, VList } from "../utils/utils";
 import { resources_map } from "../utils/CompletionResources";
 import { accessSync, constants } from "node:fs";
 import { CancellationToken } from "vscode-languageclient";
-import { _VToken } from "./HoverProvider";
 import { get_desc_variable, get_var_type } from "../utils/utils_novsc";
 export const _setvar_pattern = /setVar:\s*(\w+)\s*=/g;
 export default class DictionaryCompletionItemProvider
@@ -40,7 +39,7 @@ export default class DictionaryCompletionItemProvider
 		);
 		const AllText = document.getText();
 		const suggestions: vscode.CompletionItem[] = [];
-		const _arr: { [key: string]: _VToken } = {};
+		const _arr: VList = {};
 		const ALL_ARR = AllText.split("\n");
 		for (let _d_index = 0; _d_index < ALL_ARR.length; _d_index++) {
 			const _data = ALL_ARR[_d_index];
@@ -49,6 +48,7 @@ export default class DictionaryCompletionItemProvider
 				const _one_exec = _exec_cache[1];
 				_arr[_one_exec] = {
 					word: _one_exec,
+					value: _exec_cache[2],
 					input: _exec_cache.input,
 					position: position.with(_d_index + 1, 5),
 					type: get_var_type(_exec_cache[2]),
