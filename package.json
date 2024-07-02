@@ -2,7 +2,7 @@
 	"name": "webgal-for-vscode",
 	"displayName": "webgal for VSCode",
 	"description": "webgal-for-vscode by xuran",
-	"version": "1.4.9",
+	"version": "1.4.10",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/xiaoxustudio/webgal-for-vscode"
@@ -12,7 +12,9 @@
 	},
 	"publisher": "Xuran1783558957",
 	"categories": [
-		"Programming Languages"
+		"Programming Languages",
+		"Formatters",
+		"Debuggers"
 	],
 	"activationEvents": [
 		"workspaceContains:**/game/config.txt"
@@ -154,6 +156,7 @@
 					"enum": [
 						"关闭",
 						"最前面",
+						"变量名前",
 						"变量名后",
 						"最后面"
 					],

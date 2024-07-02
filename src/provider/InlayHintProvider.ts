@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 11:49:11
+ * @LastEditTime: 2024-06-30 23:00:08
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -30,23 +30,27 @@ export class XRInlayHintsProvider implements InlayHintsProvider {
 			return hints;
 		}
 		const text = document.getText(range);
-		const regex = /(setVar):([\w\d_]+)=(.*);?/g;
+		const regex = /(setVar)\s*:\s*([\w\d_]+)=(.*);?/g;
 		for (const match of text.matchAll(regex)) {
 			if (token.isCancellationRequested) break;
 			const _index = match.index || 0;
 			let _pos;
 			const p1 = _index;
-			const p2 = _index + match[1].length + 1 + match[2].length;
-			const p3 = _index + match[0].length;
+			const p2 = _index + match[1].length + 1 + match[2].length + 1;
+			const p3 = _index + match[1].length + 1 + match[2].length;
+			const p4 = _index + match[0].length;
 			switch (_config_isHint) {
 				case "最前面":
 					_pos = p1;
+					break;
+				case "变量名前":
+					_pos = p3;
 					break;
 				case "变量名后":
 					_pos = p2;
 					break;
 				case "最后面":
-					_pos = p3;
+					_pos = p4;
 					break;
 				default:
 					_pos = p2;

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 18:59:25
+ * @LastEditTime: 2024-06-30 22:51:27
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -33,7 +33,6 @@ import {
 	keyNames,
 	setAnimationKeys,
 } from "./provider/completionServerProvider";
-
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -164,7 +163,7 @@ async function validateTextDocument(
 	let m: RegExpExecArray | null;
 	let problems = 0;
 	const diagnostics: Diagnostic[] = [];
-	let _sp = text.split(/(\n|\t\n|\r\n)/);
+	let _sp = text.split(/\n|\t\n|\r\n/);
 	for (let i in Warning) {
 		const _token = Warning[i];
 		const _pattern = _token.pattern as RegExp;
@@ -240,11 +239,12 @@ async function validateTextDocument(
 				(m = _pattern.exec(_line_text)) &&
 				problems < settings.maxNumberOfProblems
 			) {
-				const _res = FormatBlacklist.every(
-					(val) => m?.input.startsWith(val) === true
-				);
+				const _res =
+					FormatBlacklist.length > 0
+						? FormatBlacklist.every((val) => !m?.input.startsWith(val))
+						: true;
 				// 格式化黑名单和enable
-				if (_res || _token?.enable === false) {
+				if (!_res || _token?.enable === false) {
 					continue;
 				}
 				// 通过

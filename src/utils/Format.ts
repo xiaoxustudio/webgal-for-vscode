@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 16:00:49
+ * @LastEditTime: 2024-06-30 18:54:44
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -37,34 +37,24 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 		const _text_sp = text.split("\n");
 		const _out_sp = [];
 		for (let i of _text_sp) {
-			const _index = i.indexOf(":");
-			const _index_m = i.indexOf(";");
-			const _start_formats = i.substring(0, _index);
-			const _end_formats = i.substring(_index);
-			if (_index_m === -1 && i.length > 0 && i !== "\r") {
-				i = _start_formats + _end_formats.trimEnd() + ";";
-				_out_sp.push(i);
-			} else {
-				i = _start_formats + _end_formats;
-				_out_sp.push(i);
-			}
-			// 冒号格式化
-			// if (_index === -1) {
-			// 	i = _start_formats + _end_formats;
-			// 	_out_sp.push(i);
-			// 	continue;
-			// } else if (i.substring(_index + 1, _index + 2) === " ") {
-			// 	i = _start_formats + _end_formats;
-			// 	_out_sp.push(i);
-			// 	continue;
-			// } else if (FormatBlacklist.includes(_start_formats)) {
-			// 	i = _start_formats + _end_formats;
-			// 	_out_sp.push(i);
-			// 	continue;
-			// } else {
-			// 	i = _start_formats + ": " + i.substring(_index + 1);
-			// 	_out_sp.push(i);
-			// }
+			const process = (_str: string) => {
+				// 处理末尾没有;
+				if (_str.indexOf(";") === -1 && _str.length > 0 && _str !== "\r") {
+					const _index = _str.indexOf(":");
+					_str =
+						_str.substring(0, _index) + _str.substring(_index).trimEnd() + ";";
+				}
+				// 处理冒号两侧空格
+				if (_str.indexOf(":") !== -1) {
+					const index = _str.indexOf(":");
+					_str =
+						_str.substring(0, index).trim() +
+						": " +
+						_str.substring(index + 1).trim();
+				}
+				return _str;
+			};
+			_out_sp.push(process(i));
 		}
 		return _out_sp.join("\n");
 	}

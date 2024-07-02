@@ -1,8 +1,8 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-24 18:59:45
+ * @LastEditTime: 2024-06-30 22:47:35
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
-export const FormatBlacklist: string[] = ["setVar"];
+export const FormatBlacklist: string[] = [];

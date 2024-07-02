@@ -4,7 +4,7 @@ import { source } from "./utils_novsc";
 
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-23 13:21:59
+ * @LastEditTime: 2024-07-02 09:18:18
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -91,9 +91,8 @@ export const Warning: { [key: string]: WarningToken } = {
 			return `${args[0]} 冒号后面需要添加一个空格`;
 		},
 		DiagnosticInformation: "指令不规范（%id%）",
-		pattern: /(^[^;\n\t:]*?\S+:\S+){1,}/g,
+		pattern: /^([^\s]+):[^\s](.+)/g,
 		is_line: true,
-		enable: false,
 	},
 	"0004": {
 		id: "0004",

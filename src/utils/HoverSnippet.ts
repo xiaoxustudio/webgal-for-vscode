@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-05-04 02:16:38
+ * @LastEditTime: 2024-07-02 14:53:32
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -111,6 +111,9 @@ export const dictionary: { [key: string]: DIC } = {
 		},
 		delayTime: <DToken>{
 			desc: "动画延迟时间",
+		},
+		buttonText: <DToken>{
+			desc: "确认按钮的文本",
 		},
 		hold: <DToken>{
 			desc: "结束后保持",

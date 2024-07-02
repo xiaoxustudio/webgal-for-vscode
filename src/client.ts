@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-03-30 21:40:26
+ * @LastEditTime: 2024-07-02 10:38:21
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -14,6 +14,7 @@ import {
 import { ExtensionContext, workspace } from "vscode";
 import path from "path";
 import { selector } from "./utils/utils";
+
 
 export function create_client(context: ExtensionContext): LanguageClient {
 	const serverModule = context.asAbsolutePath(path.join("out", "server.js"));
