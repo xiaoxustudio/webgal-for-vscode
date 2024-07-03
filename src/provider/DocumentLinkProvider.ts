@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-12 15:40:22
+ * @LastEditTime: 2024-07-03 15:22:17
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -40,7 +40,7 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 				: _start_text;
 			let match;
 			const regex =
-				/[^:-\s]+?([^-;\s:<>/\\\|\?\*\"\']+)\.([^-;\s:<>/\\\|\?\*\"\']+)/g;
+				/[^:-\s]+?([^;\s:<>/\\\|\?\*\"\']+)\.([^-;\s:<>/\\\|\?\*\"\']+)/g;
 			while ((match = regex.exec(_lines))) {
 				const _match_text = match[0];
 				const _sp = editor.document.uri.fsPath.split("\\");

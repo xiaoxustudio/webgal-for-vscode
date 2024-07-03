@@ -93,10 +93,10 @@
 			"match": "\\s*\\[(.+)\\](\\()([^\\[]+)(\\))\\s*",
 			"captures": {
 				"1": {
-					"name": "variable.parameter.webgal"
+					"name": "variable.parameter.webgal_rich"
 				},
 				"2": {
-					"name": "variable.parameter.webgal"
+					"name": "variable.parameter.webgal_rich"
 				},
 				"3": {
 					"patterns": [
@@ -106,7 +106,7 @@
 					]
 				},
 				"4": {
-					"name": "variable.parameter.webgal"
+					"name": "variable.parameter.webgal_rich"
 				}
 			}
 		},
@@ -116,10 +116,10 @@
 		},
 		"variableShow": {
 			"match": "{(\\S+)}",
-			"name": "variable.parameter.webgal"
+			"name": "variable.parameter.webgal_variable"
 		},
 		"choose": {
-			"match": "\\s*(.+)(?:\\])?(\\-\\>)?(.[^|]+):(.[^|]+)\\s*(\\|)?\\s*(.*?)",
+			"match": "\\s*(.+-\\>)?(.[^|]+):(.[^|]+)\\s*(\\|)?\\s*(.*?)",
 			"captures": {
 				"1": {
 					"patterns": [
@@ -127,12 +127,13 @@
 							"match": "\\s*\\((.+)\\)\\[([^\\[]+)\\]\\s*",
 							"captures": {
 								"1": {
-									"name": "variable.parameter.webgal"
+									"name": "variable.parameter.webgal_choose_exp1"
 								},
 								"2": {
-									"name": "variable.parameter.webgal"
+									"name": "variable.parameter.webgal_choose_exp2"
 								},
 								"3": {
+									"name": "nane",
 									"patterns": [
 										{
 											"include": "#RichTextStyle"
@@ -140,7 +141,7 @@
 									]
 								},
 								"4": {
-									"name": "variable.parameter.webgal"
+									"name": "variable.parameter.webgal_name"
 								},
 								"5": {
 									"name": "storage.modifier.package.java"
@@ -149,8 +150,8 @@
 						}
 					]
 				},
-				"3": {
-					"name": "constant.character.escape.webgal"
+				"2": {
+					"name": "constant.character.escape.webgal_choose_name"
 				},
 				"5": {
 					"name": "constant.rgb-value.webgal"
