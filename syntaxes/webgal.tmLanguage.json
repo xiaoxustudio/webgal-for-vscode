@@ -182,15 +182,7 @@
 					"match": "(.*?)(\\=)(.*?)$",
 					"captures": {
 						"1": {
-							"name": "constant.language.webgal",
-							"patterns": [
-								{
-									"include": "#RichText"
-								},
-								{
-									"include": "#valueBase"
-								}
-							]
+							"name": "variable.name.webgal_name"
 						},
 						"2": {
 							"patterns": [
