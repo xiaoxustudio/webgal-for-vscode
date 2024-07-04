@@ -217,7 +217,7 @@
 		"vscode-languageclient": "^9.0.1",
 		"vscode-languageserver": "^9.0.1",
 		"vscode-languageserver-textdocument": "^1.0.11",
-		"ws": "^8.17.0"
+		"ws": "^8.17.1"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.30",
