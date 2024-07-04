@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-30 22:51:27
+ * @LastEditTime: 2024-07-04 18:12:43
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -25,7 +25,6 @@ import {
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { Warning, message, getDiagnosticInformation } from "./utils/Warnings";
-import { FormatBlacklist } from "./utils/FormatBlackList";
 import {
 	abbrKeys,
 	commandSuggestions,
@@ -181,11 +180,8 @@ async function validateTextDocument(
 			(m = _pattern.exec(text)) &&
 			problems < settings.maxNumberOfProblems
 		) {
-			const _res = FormatBlacklist.every(
-				(val) => m?.input.startsWith(val) === true
-			);
-			// 格式化黑名单和enable
-			if (_res || _token?.enable === false) {
+			// enable
+			if (_token?.enable === false) {
 				continue;
 			}
 			// 通过
@@ -239,12 +235,8 @@ async function validateTextDocument(
 				(m = _pattern.exec(_line_text)) &&
 				problems < settings.maxNumberOfProblems
 			) {
-				const _res =
-					FormatBlacklist.length > 0
-						? FormatBlacklist.every((val) => !m?.input.startsWith(val))
-						: true;
-				// 格式化黑名单和enable
-				if (!_res || _token?.enable === false) {
+				// enable
+				if (_token?.enable === false) {
 					continue;
 				}
 				// 通过

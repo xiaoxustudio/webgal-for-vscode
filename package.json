@@ -207,9 +207,11 @@
 		"vscode-languageclient": "^9.0.1"
 	},
 	"dependencies": {
+		"@types/js-beautify": "^1.14.3",
 		"@types/vscode": "^1.87.0",
 		"@vscode/debugadapter": "^1.65.0",
 		"acorn": "^8.11.3",
+		"js-beautify": "^1.14.3",
 		"vscode-debugadapter": "^1.51.0",
 		"vscode-debugprotocol": "^1.51.0",
 		"vscode-languageclient": "^9.0.1",

@@ -86,7 +86,7 @@
 			"name": "constant.numeric.webgal"
 		},
 		"string": {
-			"match": "(\\S+)",
+			"match": "(\\S+?)",
 			"name": "string.webgal"
 		},
 		"RichText": {
@@ -172,7 +172,7 @@
 					"match": "\b(?!.*\\=)(.+)\b",
 					"name": "entity.other.webgal",
 					"captures": {
-						"0": {
+						"1": {
 							"patterns": [{ "include": "#valueBase" }]
 						}
 					}
@@ -192,6 +192,7 @@
 							]
 						},
 						"3": {
+							"name": "xuran",
 							"patterns": [{ "include": "#valueBase" }]
 						}
 					}

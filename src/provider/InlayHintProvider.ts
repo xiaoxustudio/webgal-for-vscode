@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-30 23:00:08
+ * @LastEditTime: 2024-07-03 21:13:23
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -30,9 +30,10 @@ export class XRInlayHintsProvider implements InlayHintsProvider {
 			return hints;
 		}
 		const text = document.getText(range);
-		const regex = /(setVar)\s*:\s*([\w\d_]+)=(.*);?/g;
+		const regex = /(?:\n)(?<!\;)(setVar)\s*:\s*([\w\d_]+)=(.*);/g;
 		for (const match of text.matchAll(regex)) {
 			if (token.isCancellationRequested) break;
+			if (match[0].startsWith(";")) continue;
 			const _index = match.index || 0;
 			let _pos;
 			const p1 = _index;

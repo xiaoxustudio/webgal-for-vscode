@@ -1,6 +1,6 @@
 <!--
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-30 18:55:56
+ * @LastEditTime: 2024-07-04 18:15:16
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -11,7 +11,7 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 
 ## [Unreleased]
 
-## [1.4.10] - 2024.6.30
+## [1.4.10] - 2024.7.4
 
 - 优化格式化功能
 - 优化类型镶嵌

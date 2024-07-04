@@ -1,12 +1,12 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-30 18:54:44
+ * @LastEditTime: 2024-07-04 18:11:28
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { FormatBlacklist } from "./FormatBlackList";
+import js_beautify from "js-beautify";
 const _format_p = /(\s{2,}\-\S+)/;
 
 class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
@@ -15,7 +15,6 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 		options: vscode.FormattingOptions,
 		token: vscode.CancellationToken
 	): vscode.ProviderResult<vscode.TextEdit[]> {
-		// webgal不支持加空格的设置变量，格式化暂时下线
 		const text = document.getText();
 		const formattedText = this.formatText(text);
 		const edit = new vscode.TextEdit(
@@ -52,9 +51,25 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 						": " +
 						_str.substring(index + 1).trim();
 				}
+				const _exp = ["setVar"];
+				const _exp_bool = _exp.every((val) => _str.startsWith(val));
+				// 处理等号后面符号的空格
+				if (_exp_bool && _str.indexOf("=") !== -1) {
+					const options = { indent_size: 2, space_in_empty_paren: true };
+					const code = js_beautify(
+						_str.substring(_str.indexOf("=") + 1),
+						options
+					);
+					_str = _str.substring(0, _str.indexOf("=")) + "=" + code;
+				}
+				// 处理开头为空格;
+				if (_str.startsWith(" ")) {
+					_str = _str.match(/\s+(.*)/i)![1];
+				}
 				return _str;
 			};
-			_out_sp.push(process(i));
+			const _code_format = process(i);
+			_out_sp.push(_code_format);
 		}
 		return _out_sp.join("\n");
 	}
