@@ -413,7 +413,6 @@ export class XRDebugSession extends LoggingDebugSession {
 					// };
 					// response.success = true;
 					// response.command = "variables";
-					// response.type = "response";
 					this.sendResponse(response);
 				}
 				return;

@@ -18,6 +18,9 @@
 
 <h5 align="center"><img src="https://img.shields.io/badge/documentation-yes-brightgreen" alt="Documentation"> <img src="https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode" alt="github license"> <img src="https://img.shields.io/badge/language-webgal-brightgreen" alt="Language"></h5>
 
+
+[webgal-devtool](https://github.com/xiaoxustudio/webgal-devtool)：一款用于调试WebGal游戏的浏览器devtools扩展。
+
 # 功能
 
 - 语言高亮

@@ -5,11 +5,17 @@
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
 -->
+
 # Change Log
 
 All notable changes to the "webgal-for-vscode" extension will be documented in this file.
 
 ## [Unreleased]
+
+## [1.4.11] - 2024.9.3
+
+- 优化 DocumentLink，未找到文件将不会提示
+- 修复类型镶嵌位置错误的bug
 
 ## [1.4.10] - 2024.7.4
 
@@ -19,18 +25,18 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 ## [1.4.9] - 2024.6.30
 
 - 更新语言高亮
-- 修改Hover样式
+- 修改 Hover 样式
 
 ## [1.4.8] - 2024.6.12
 
 - 更新语言高亮
-- 修复issue **4**
-- 修复config配置文件无法找到的bug
+- 修复 issue **4**
+- 修复 config 配置文件无法找到的 bug
 
 ## [1.4.7] - 2024.6.11
 
-- 更新README
-- 修复websocket连接失败问题
+- 更新 README
+- 修复 websocket 连接失败问题
 
 ## [1.4.5] - 2024.4.21
 
@@ -39,14 +45,14 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 
 ## [1.4.4] - 2024.3.31
 
-- 修复重新调试bug
-- 调试功能迭代03
+- 修复重新调试 bug
+- 调试功能迭代 03
 - 调试可直接修改变量数值
 
 ## [1.4.3] - 2024.3.30
 
-- 修复bug
-- 调试功能迭代02
+- 修复 bug
+- 调试功能迭代 02
 
 ## [1.4.2] - 2024.3.30
 
@@ -76,18 +82,18 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 ## [1.3.7] - 2024.3.24
 
 - 增加资源定义跳转
-- 修复补全后删除前缀失效bug
+- 修复补全后删除前缀失效 bug
 
 ## [1.3.6] - 2024.3.24
 
 - 优化操作
 - 更换图标
-- 修复变量补全bug
+- 修复变量补全 bug
 - 变量插值补全增加描述显示
 
 ## [1.3.5] - 2024.3.23
 
-- 修复类型镶嵌失效bug
+- 修复类型镶嵌失效 bug
 - 类型镶嵌增加设置位置配置
 
 ## [1.3.4] - 2024.3.23
@@ -107,29 +113,29 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 ## [1.3.2] - 2024.3.22
 
 - 优化资源补全，补全后删除前缀
-- 优化Hover参数提示
+- 优化 Hover 参数提示
 
 ## [1.3.1] - 2024.3.22
 
-- 修复资源补全的bug
+- 修复资源补全的 bug
 
 ## [1.3.0] - 2024.3.22
 
-- 优化0005警告
+- 优化 0005 警告
 - 增加资源文件补全功能
 - 新增指令启动插件指令
-- 变量注释支持MarkDown文本
+- 变量注释支持 MarkDown 文本
 
 ## [1.2.8] - 2024.3.21
 
 - 暂时去除冒号相关的格式化和警告
 - 增加;的警告信息
-- 变量插值Hover增加描述功能
+- 变量插值 Hover 增加描述功能
 - 整理目录结构
 
 ## [1.2.7] - 2024.3.20
 
-- 修复0003警告
+- 修复 0003 警告
 - 优化警告信息截取
 - 增加示例
 - 格式化优化
@@ -137,13 +143,13 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 
 ## [1.2.6] - 2024.3.20
 
-- 修复工作区lsp不启用的bug
+- 修复工作区 lsp 不启用的 bug
 - 优化操作
 
 ## [1.2.5] - 2024.3.19
 
 - 增加部分提示
-- 修复random不能提示的bug
+- 修复 random 不能提示的 bug
 
 ## [1.2.4] - 2024.3.19
 
@@ -153,14 +159,14 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 
 ### Add
 
-- 优化补全功能（更改为LSP补全）
-- 变量Hover提示
+- 优化补全功能（更改为 LSP 补全）
+- 变量 Hover 提示
 
 ## [1.2.2] - 2024.3.19
 
 ### Add
 
-- 禁止格式化setVar
+- 禁止格式化 setVar
 
 ## [1.2.1] - 2024.3.19
 
@@ -186,5 +192,5 @@ All notable changes to the "webgal-for-vscode" extension will be documented in t
 
 ### Add
 
-- 基础Hover提示
+- 基础 Hover 提示
 - 基础关键字补全

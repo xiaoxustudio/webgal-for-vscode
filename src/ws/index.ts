@@ -225,7 +225,7 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 			}
 		}
 		self.variables = newv;
-		self._ADP.customRequest("updatevar");
+		// self._ADP.customRequest("updatevar");
 		setGameData(_data);
 		if (!editor || !editor.document) return;
 		const _fname = String(editor.document.fileName || "");

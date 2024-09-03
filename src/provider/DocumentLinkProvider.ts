@@ -88,13 +88,8 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 						range: r,
 					} as DocumentLink;
 					link.tooltip = _base_sp;
-				} else {
-					link = {
-						range: r,
-					} as DocumentLink;
-					link.tooltip = "未识别到文件：" + _base_sp;
+					_result.push(link);
 				}
-				_result.push(link);
 				if (regex.lastIndex === match.index) {
 					regex.lastIndex++;
 				}

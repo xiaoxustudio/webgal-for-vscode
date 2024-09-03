@@ -30,19 +30,19 @@ export class XRInlayHintsProvider implements InlayHintsProvider {
 			return hints;
 		}
 		const text = document.getText(range);
-		const regex = /(?:\n)(?<!\;)(setVar)\s*:\s*([\w\d_]+)=(.*);/g;
+		const regex = /(?:\n)(?<!\;)(setVar)(\s*:\s*)([\w\d_]+)=(.*);/g;
 		for (const match of text.matchAll(regex)) {
 			if (token.isCancellationRequested) break;
 			if (match[0].startsWith(";")) continue;
 			const _index = match.index || 0;
 			let _pos;
 			const p1 = _index;
-			const p2 = _index + match[1].length + 1 + match[2].length + 1;
-			const p3 = _index + match[1].length + 1 + match[2].length;
+			const p2 = _index + match[1].length + match[2].length + match[3].length + 1;
+			const p3 = _index + match[1].length + match[2].length;
 			const p4 = _index + match[0].length;
 			switch (_config_isHint) {
 				case "最前面":
-					_pos = p1;
+					_pos = p1 + 1;
 					break;
 				case "变量名前":
 					_pos = p3;
