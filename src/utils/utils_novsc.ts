@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-30 17:49:35
+ * @LastEditTime: 2025-10-12 13:36:39
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -11,8 +11,8 @@ import { promises as fs } from "fs";
 
 export interface FileAccessor {
 	isWindows: boolean;
-	readFile(path: string): Promise<Uint8Array>;
-	writeFile(path: string, contents: Uint8Array): Promise<void>;
+	readFile(path: string): Promise<Buffer>;
+	writeFile(path: string, contents: Buffer): Promise<void>;
 }
 export class RuntimeVariable {
 	public reference?: number;
@@ -69,19 +69,20 @@ export const setGlobalVar = (_gv: object) => {
 	GlobalVar = _gv;
 };
 export const getGlobalVar = () => {
-	let _o: { [key: PropertyKey]: any } = {};
-	for (let i in GlobalVar) {
+	// to key:value
+	let _o: Record<string,any> = {};
+	Object.keys(GlobalVar).forEach(() => {
 		_o[GlobalVar.word] = GlobalVar.value;
-	}
+	})
 	return _o;
 };
 export const fsAccessor: FileAccessor = {
 	isWindows: process.platform === "win32",
-	readFile(path: string): Promise<Uint8Array> {
+	readFile(path: string): Promise<Buffer> {
 		return fs.readFile(path);
 	},
-	writeFile(path: string, contents: Uint8Array): Promise<void> {
-		return fs.writeFile(path, contents);
+	writeFile(path: string, contents: Buffer): Promise<void> {
+		return fs.writeFile(path, contents.toString());
 	},
 };
 

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-30 17:46:22
+ * @LastEditTime: 2025-10-29 16:10:27
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -14,6 +14,8 @@ import {
 	setGlobalVar,
 } from "../utils/utils_novsc";
 import { VList, _VToken } from "../utils/utils";
+
+const prefix = "https://docs.openwebgal.com/script-reference/commands/"
 
 export default class DictionaryHoverProvider implements vscode.HoverProvider {
 	provideHover(
@@ -124,9 +126,9 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					hoverContent.appendMarkdown(`\n\n${kw_val.desc}`);
 					hoverContent.appendMarkdown(` \n <hr>  `);
 					if (kw_val.APIL) {
-						const _t = kw_val.APIL.split("|");
+						const _t = kw_val.APIL
 						hoverContent.appendMarkdown(`\n\n`);
-						hoverContent.appendMarkdown(`**API** : [${_t[0]}](${_t[1]})`);
+						hoverContent.appendMarkdown(`**API** : [${_t}](${prefix}${i}.html)`);
 					}
 					const hover = new vscode.Hover(hoverContent);
 					return hover;
