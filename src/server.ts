@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-07-04 18:12:43
+ * @LastEditTime: 2025-10-29 17:05:59
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -94,9 +94,15 @@ connection.onInitialized(() => {
 
 interface ServerSettings {
 	maxNumberOfProblems: number;
+	isShowWarning: boolean; // 是否显示警告
+	isShowHint: "关闭" | "最前面" | "变量名前" | "变量名后" | "最后面";
 }
 
-const defaultSettings: ServerSettings = { maxNumberOfProblems: 1000 };
+const defaultSettings = {
+	maxNumberOfProblems: 1000,
+	isShowWarning: true,
+	isShowHint: "变量名后"
+} satisfies ServerSettings;
 let globalSettings: ServerSettings = defaultSettings;
 
 const documentSettings: Map<string, Thenable<ServerSettings>> = new Map();
@@ -158,6 +164,9 @@ async function validateTextDocument(
 	textDocument: TextDocument
 ): Promise<Diagnostic[]> {
 	const settings = await getDocumentSettings(textDocument.uri);
+	if (!settings.isShowWarning) {
+		return [];
+	}
 	const text = textDocument.getText();
 	let m: RegExpExecArray | null;
 	let problems = 0;

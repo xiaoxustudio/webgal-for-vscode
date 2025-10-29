@@ -150,6 +150,12 @@
 					"default": 500,
 					"description": "警告信息的最大数量"
 				},
+				"XRWebGalLanguageServer.isShowWarning": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "是否显示警告信息"
+				},
 				"XRWebGalLanguageServer.isShowHint": {
 					"scope": "resource",
 					"type": "string",
