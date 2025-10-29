@@ -10,7 +10,7 @@ import {
 	CancellationToken,
 	DefinitionProvider,
 	Position,
-	TextDocument,
+	TextDocument
 } from "vscode";
 import { get_var_type } from "../utils/utils_novsc";
 import { _VToken } from "../utils/utils";
@@ -37,14 +37,14 @@ export class XRDefinitionProvider implements DefinitionProvider {
 					value: m[2],
 					input: m.input,
 					position: position.with(_d_index, 7),
-					type: get_var_type(m[2]),
+					type: get_var_type(m[2])
 				} as _VToken);
 			} else if (m1) {
 				_Label_list.push({
 					word: m1[1],
 					input: m1.input,
 					position: position.with(_d_index, 6),
-					desc: m1.input.substring(0, m1.input.indexOf(":")),
+					desc: m1.input.substring(0, m1.input.indexOf(":"))
 				} as _VToken);
 			} else {
 				_ALL_ARR_cache.push(_data);
@@ -53,7 +53,8 @@ export class XRDefinitionProvider implements DefinitionProvider {
 		const editor = vscode.window.activeTextEditor;
 		if (editor) {
 			const position_select = editor.selection.active;
-			const wordRange = editor.document.getWordRangeAtPosition(position_select);
+			const wordRange =
+				editor.document.getWordRangeAtPosition(position_select);
 			if (wordRange) {
 				const _range = wordRange.with(
 					wordRange.start.with(
@@ -62,7 +63,10 @@ export class XRDefinitionProvider implements DefinitionProvider {
 							? wordRange.start.character - 1
 							: wordRange.start.character
 					),
-					wordRange.end.with(wordRange.end.line, wordRange.end.character + 1)
+					wordRange.end.with(
+						wordRange.end.line,
+						wordRange.end.character + 1
+					)
 				);
 				const _range_label = editor.document.getWordRangeAtPosition(
 					wordRange.start.with(
@@ -75,10 +79,18 @@ export class XRDefinitionProvider implements DefinitionProvider {
 				const _start_text = editor.document.getText(_range_label);
 				const word = editor.document.getText(_range);
 				const _length = word.length;
-				const _word_no = word.substring(word.indexOf("{") + 1, _length - 1);
-				const _word_no_1 = word.substring(word.indexOf(":") + 1, _length - 1);
+				const _word_no = word.substring(
+					word.indexOf("{") + 1,
+					_length - 1
+				);
+				const _word_no_1 = word.substring(
+					word.indexOf(":") + 1,
+					_length - 1
+				);
 				const _res = _Var_list.filter((val) => val.word === _word_no);
-				const _res1 = _Label_list.filter((val) => val.word === _word_no_1);
+				const _res1 = _Label_list.filter(
+					(val) => val.word === _word_no_1
+				);
 				// 判断是否是有效word
 				if (/{\S+}/.test(word) && _res.length > 0) {
 					// 取出所有word变量
@@ -91,7 +103,7 @@ export class XRDefinitionProvider implements DefinitionProvider {
 									_data.position?.line,
 									_data.input?.indexOf("=")
 								)
-							),
+							)
 						} as vscode.DefinitionLink);
 					}
 				} else if (
@@ -107,7 +119,7 @@ export class XRDefinitionProvider implements DefinitionProvider {
 									_data.position?.line,
 									_data.input?.indexOf(":")
 								)
-							),
+							)
 						} as vscode.DefinitionLink);
 					}
 				}

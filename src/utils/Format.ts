@@ -38,10 +38,16 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 		for (let i of _text_sp) {
 			const process = (_str: string) => {
 				// 处理末尾没有;
-				if (_str.indexOf(";") === -1 && _str.length > 0 && _str !== "\r") {
+				if (
+					_str.indexOf(";") === -1 &&
+					_str.length > 0 &&
+					_str !== "\r"
+				) {
 					const _index = _str.indexOf(":");
 					_str =
-						_str.substring(0, _index) + _str.substring(_index).trimEnd() + ";";
+						_str.substring(0, _index) +
+						_str.substring(_index).trimEnd() +
+						";";
 				}
 				// 处理冒号两侧空格
 				if (_str.indexOf(":") !== -1) {
@@ -55,7 +61,10 @@ class GoDocumentFormatter implements vscode.DocumentFormattingEditProvider {
 				const _exp_bool = _exp.every((val) => _str.startsWith(val));
 				// 处理等号后面符号的空格
 				if (_exp_bool && _str.indexOf("=") !== -1) {
-					const options = { indent_size: 2, space_in_empty_paren: true };
+					const options = {
+						indent_size: 2,
+						space_in_empty_paren: true
+					};
 					const code = js_beautify(
 						_str.substring(_str.indexOf("=") + 1),
 						options

@@ -29,7 +29,9 @@ export default class DictionaryCompletionItemProvider
 		);
 		const _end = new vscode.Position(
 			position.line,
-			position.character - 1 > 0 ? position.character - 1 : position.character
+			position.character - 1 > 0
+				? position.character - 1
+				: position.character
 		);
 		const _range = new vscode.Range(_start, _end);
 		const line = document.lineAt(position.line).text;
@@ -51,7 +53,7 @@ export default class DictionaryCompletionItemProvider
 					value: _exec_cache[2],
 					input: _exec_cache.input,
 					position: position.with(_d_index + 1, 5),
-					type: get_var_type(_exec_cache[2]),
+					type: get_var_type(_exec_cache[2])
 				} as _VToken;
 				if (
 					_arr[_one_exec] &&
@@ -71,7 +73,9 @@ export default class DictionaryCompletionItemProvider
 					keyword,
 					vscode.CompletionItemKind.Variable
 				);
-				item.documentation = new vscode.MarkdownString(_arr[keyword].desc);
+				item.documentation = new vscode.MarkdownString(
+					_arr[keyword].desc
+				);
 				suggestions.push(item);
 			}
 		} else if (
@@ -81,7 +85,8 @@ export default class DictionaryCompletionItemProvider
 		) {
 			const _sp =
 				vscode.window.activeTextEditor.document.uri.fsPath.split("\\");
-			const _w_dir = _sp[_sp.length - 3 > 0 ? _sp.length - 3 : _sp.length - 2];
+			const _w_dir =
+				_sp[_sp.length - 3 > 0 ? _sp.length - 3 : _sp.length - 2];
 			const _need_find_dir =
 				currentDirectory +
 				(_w_dir == "game" && !currentDirectory.endsWith("game")
@@ -118,7 +123,10 @@ export default class DictionaryCompletionItemProvider
 		}
 		return suggestions;
 	}
-	resolveCompletionItem(item: vscode.CompletionItem, token: CancellationToken) {
+	resolveCompletionItem(
+		item: vscode.CompletionItem,
+		token: CancellationToken
+	) {
 		const _activeEditor = vscode.window.activeTextEditor;
 		const docment = _activeEditor?.document;
 		const _select = _activeEditor?.selection;
@@ -147,8 +155,8 @@ export default class DictionaryCompletionItemProvider
 								},
 								{ undoStopAfter: false, undoStopBefore: false }
 							);
-						},
-					],
+						}
+					]
 				} as vscode.Command;
 			}
 		}

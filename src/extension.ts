@@ -19,7 +19,7 @@ import {
 	Range,
 	TextDocument,
 	window,
-	workspace,
+	workspace
 } from "vscode";
 import DictionaryCompletionItemProvider from "./provider/CompletionProvider";
 import DictionaryHoverProvider from "./provider/HoverProvider";
@@ -46,7 +46,10 @@ function InitPlugin(context: ExtensionContext) {
 	run_Skip_Check = true;
 	client = create_client(context);
 	context.subscriptions.push(
-		languages.registerInlayHintsProvider(selector, new XRInlayHintsProvider())
+		languages.registerInlayHintsProvider(
+			selector,
+			new XRInlayHintsProvider()
+		)
 	);
 	context.subscriptions.push(
 		languages.registerCompletionItemProvider(
@@ -67,7 +70,10 @@ function InitPlugin(context: ExtensionContext) {
 		)
 	);
 	context.subscriptions.push(
-		languages.registerDefinitionProvider(selector, new XRDefinitionProvider())
+		languages.registerDefinitionProvider(
+			selector,
+			new XRDefinitionProvider()
+		)
 	);
 	context.subscriptions.push(
 		languages.registerDocumentLinkProvider(
@@ -92,7 +98,10 @@ function InitPlugin(context: ExtensionContext) {
 	);
 
 	commands.registerCommand("extension.goToDefinition", () => {
-		languages.registerDefinitionProvider(selector, new XRDefinitionProvider());
+		languages.registerDefinitionProvider(
+			selector,
+			new XRDefinitionProvider()
+		);
 	});
 	commands.registerCommand("extension.deletePreviousCharacter", (func) => {
 		if (func instanceof Function) {
@@ -114,11 +123,11 @@ function InitPlugin(context: ExtensionContext) {
 						command: DebugCommand.JUMP,
 						sceneMsg: {
 							scene: scene_name,
-							sentence: line_number + 1,
+							sentence: line_number + 1
 						}, // @ts-ignore
 						stageSyncMsg: {},
-						message: "徐然",
-					},
+						message: "徐然"
+					}
 				};
 				_ws.send(JSON.stringify(msg));
 			}

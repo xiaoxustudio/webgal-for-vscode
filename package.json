@@ -192,21 +192,14 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"lint": "eslint src --ext ts",
+		"format": " prettier --write \"src/**/*.ts\"",
 		"test": "vscode-test",
 		"publish": "vsce publish --yarn"
 	},
 	"devDependencies": {
-		"@types/mocha": "^10.0.6",
-		"@types/vscode": "^1.87.0",
-		"@typescript-eslint/eslint-plugin": "^7.0.2",
-		"@typescript-eslint/parser": "^7.0.2",
-		"@vscode/test-cli": "^0.0.6",
-		"@vscode/test-electron": "^2.3.9",
-		"eslint": "^8.56.0",
-		"typescript": "^5.3.3",
-		"vscode-languageclient": "^9.0.1",
 		"@types/node": "^20.11.30",
-		"@types/ws": "^8.5.10"
+		"@types/ws": "^8.5.10",
+		"prettier": "^3.6.2"
 	},
 	"dependencies": {
 		"@types/js-beautify": "^1.14.3",
@@ -220,9 +213,5 @@
 		"vscode-languageserver": "^9.0.1",
 		"vscode-languageserver-textdocument": "^1.0.11",
 		"ws": "^8.17.1"
-	},
-	"devDependencies": {
-		"@types/node": "^20.11.30",
-		"@types/ws": "^8.5.10"
 	}
 }

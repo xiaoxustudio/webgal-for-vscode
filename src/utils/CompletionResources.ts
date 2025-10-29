@@ -24,7 +24,7 @@ export const resources = {
 	animation, // 动画
 	figures, // 立绘
 	textures, // 纹理
-	videos, // 视频
+	videos // 视频
 };
 
 export const resources_map: { [key: string]: string[] } = {
@@ -34,7 +34,7 @@ export const resources_map: { [key: string]: string[] } = {
 	figure: resources.figures,
 	tex: resources.textures,
 	video: resources.videos,
-	vocal: resources.audios,
+	vocal: resources.audios
 };
 
 enum resources_location {
@@ -45,7 +45,7 @@ enum resources_location {
 	tex,
 	video,
 	vocal,
-	scene,
+	scene
 }
 
 // 指令资源映射
@@ -62,7 +62,7 @@ export const ResType_Map: { [key: string]: resources_location } = {
 	choose: resources_location.scene,
 	// 配置文件
 	Title_bgm: resources_location.bgm,
-	Title_img: resources_location.background,
+	Title_img: resources_location.background
 };
 // 指令反资源映射
 export const ResLocation_Map: Map<resources_location, string> = new Map<
@@ -76,7 +76,7 @@ export const ResLocation_Map: Map<resources_location, string> = new Map<
 	[resources_location.video, "video"],
 	[resources_location.vocal, "vocal"],
 	[resources_location.scene, "scene"],
-	[resources_location.bgm, "bgm"],
+	[resources_location.bgm, "bgm"]
 ]);
 export function get_res_dir(type: resources_location) {
 	return ResLocation_Map.get(type);

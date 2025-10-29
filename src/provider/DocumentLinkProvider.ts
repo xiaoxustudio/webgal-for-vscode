@@ -12,7 +12,7 @@ import {
 	Position,
 	ProviderResult,
 	Range,
-	TextDocument,
+	TextDocument
 } from "vscode";
 import { get_res_dir, ResType_Map } from "../utils/CompletionResources";
 import { currentDirectory } from "../utils/utils";
@@ -33,7 +33,9 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 			let _lines = lines[i];
 			let _start_text = _lines.substring(
 				0,
-				_lines.indexOf(":") !== -1 ? _lines.indexOf(":") : _lines.indexOf(";")
+				_lines.indexOf(":") !== -1
+					? _lines.indexOf(":")
+					: _lines.indexOf(";")
 			);
 			_start_text = _start_text.startsWith(";")
 				? _start_text.substring(1)
@@ -53,13 +55,19 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 				const _prev_word = _lines[match.index - 1];
 				const dir_res =
 					get_res_dir(ResType_Map[_start_text]) ||
-					(_prev_word == "-" ? get_res_dir(ResType_Map["playEffect"]) : "");
+					(_prev_word == "-"
+						? get_res_dir(ResType_Map["playEffect"])
+						: "");
 				let _need_find_dir;
 				if (is_config) {
 					_need_find_dir =
 						currentDirectory +
 						"\\game\\" +
-						(dir_res ? dir_res : _match_text.endsWith(".txt") ? "scene" : "");
+						(dir_res
+							? dir_res
+							: _match_text.endsWith(".txt")
+								? "scene"
+								: "");
 				} else {
 					_need_find_dir =
 						currentDirectory +
@@ -67,7 +75,11 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 							? "\\game"
 							: "") +
 						"\\" +
-						(dir_res ? dir_res : _match_text.endsWith(".txt") ? "scene" : "");
+						(dir_res
+							? dir_res
+							: _match_text.endsWith(".txt")
+								? "scene"
+								: "");
 				}
 				const _base_sp = path.join(
 					_need_find_dir.endsWith("\\")
@@ -85,7 +97,7 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 				if (uri instanceof vscode.Uri) {
 					link = {
 						target: uri,
-						range: r,
+						range: r
 					} as DocumentLink;
 					link.tooltip = _base_sp;
 					_result.push(link);

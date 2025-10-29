@@ -2,7 +2,7 @@ import { DebugSession, Range, TextEditorDecorationType, window } from "vscode";
 import {
 	disableGameStatus,
 	enableGameStatus,
-	setGameData,
+	setGameData
 } from "../utils/utils";
 import EventEmitter from "events";
 import WebSocket, { WebSocket as WS } from "ws";
@@ -11,7 +11,7 @@ import {
 	FileAccessor,
 	IDebugMessage,
 	is_JSON,
-	RuntimeVariable,
+	RuntimeVariable
 } from "../utils/utils_novsc";
 
 export function timeout(ms: number) {
@@ -23,11 +23,14 @@ export default class XRRuntime extends EventEmitter {
 	public variables = new Map<string, Map<string, RuntimeVariable>>([
 		["local", new Map<string, RuntimeVariable>()],
 		["env", new Map<string, RuntimeVariable>()],
-		["scene", new Map<string, RuntimeVariable>()],
+		["scene", new Map<string, RuntimeVariable>()]
 	]);
 	private _config: any;
 	public _clearFunc!: Function;
-	constructor(public _ADP: DebugSession, public fileAccessor: FileAccessor) {
+	constructor(
+		public _ADP: DebugSession,
+		public fileAccessor: FileAccessor
+	) {
 		super();
 	}
 	public setRunLine(Line: number = 1) {
@@ -37,11 +40,11 @@ export default class XRRuntime extends EventEmitter {
 				command: DebugCommand.JUMP,
 				sceneMsg: {
 					scene: this._config.program,
-					sentence: Line,
+					sentence: Line
 				}, // @ts-ignore
 				stageSyncMsg: {},
-				message: "Sync",
-			},
+				message: "Sync"
+			}
 		};
 		this._WS.send(JSON.stringify(msg));
 	}
@@ -130,11 +133,11 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 					command: DebugCommand.JUMP,
 					sceneMsg: {
 						scene: config.program,
-						sentence: 0,
+						sentence: 0
 					}, // @ts-ignore
 					stageSyncMsg: {},
-					message: "徐然",
-				},
+					message: "徐然"
+				}
 			};
 			sock.send(JSON.stringify(msg));
 			window.showInformationMessage("(webgal)调试连接到：" + _ws_host);
@@ -164,11 +167,11 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 					command: DebugCommand.EXE_COMMAND,
 					sceneMsg: {
 						scene: config.program,
-						sentence: 1,
+						sentence: 1
 					},
 					stageSyncMsg: {},
-					message: e,
-				},
+					message: e
+				}
 			};
 			sock.send(JSON.stringify(msg));
 		}
@@ -200,7 +203,7 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 		let newv = new Map<string, Map<string, RuntimeVariable>>([
 			["local", new Map<string, RuntimeVariable>()],
 			["env", new Map<string, RuntimeVariable>()],
-			["scene", new Map<string, RuntimeVariable>()],
+			["scene", new Map<string, RuntimeVariable>()]
 		]);
 		for (let _var in _data.data.stageSyncMsg.GameVar) {
 			const _val = _data.data.stageSyncMsg.GameVar[_var];
@@ -233,11 +236,15 @@ function createWS(_ADP: DebugSession, self: XRRuntime) {
 		const _now = _fname.substring(_fname.lastIndexOf("\\") + 1);
 		const _target = _dname.substring(_dname.lastIndexOf("\\") + 1);
 		if (!_now || !_target) return;
-		if (sceneMsg && last_line_num !== sceneMsg.sentence && _now === _target) {
+		if (
+			sceneMsg &&
+			last_line_num !== sceneMsg.sentence &&
+			_now === _target
+		) {
 			clearDecorationType();
 			decorationType = window.createTextEditorDecorationType({
 				backgroundColor: "rgba(150, 0, 0, 0.3)",
-				isWholeLine: true,
+				isWholeLine: true
 			});
 			last_line_num = sceneMsg.sentence;
 			const _num = Math.max(last_line_num - 1, 0);

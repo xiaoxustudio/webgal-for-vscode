@@ -33,7 +33,7 @@ export const Warning: { [key: string]: WarningToken } = {
 		},
 		DiagnosticInformation: "指令格式不规范（%id%）",
 		pattern: /(\s{2,}-[A-Za-z]+)\b/g,
-		is_line: false,
+		is_line: false
 	},
 	"0002": {
 		id: "0002",
@@ -66,24 +66,24 @@ export const Warning: { [key: string]: WarningToken } = {
 					severity: DiagnosticSeverity.Warning,
 					range: {
 						start: textDocument.positionAt(_offset),
-						end: textDocument.positionAt(_offset + _text.length),
+						end: textDocument.positionAt(_offset + _text.length)
 					},
 					message: message(this.id, _ori_text.trim()),
-					source,
+					source
 				};
 				diagnostic.relatedInformation = [
 					{
 						location: {
 							uri: textDocument.uri,
-							range: Object.assign({}, diagnostic.range),
+							range: Object.assign({}, diagnostic.range)
 						},
-						message: getDiagnosticInformation(this.id),
-					},
+						message: getDiagnosticInformation(this.id)
+					}
 				];
 				return diagnostic;
 			}
 			return null;
-		},
+		}
 	},
 	"0003": {
 		id: "0003",
@@ -92,7 +92,7 @@ export const Warning: { [key: string]: WarningToken } = {
 		},
 		DiagnosticInformation: "指令不规范（%id%）",
 		pattern: /^([^\s]+):[^\s](.+)/g,
-		is_line: true,
+		is_line: true
 	},
 	"0004": {
 		id: "0004",
@@ -101,7 +101,7 @@ export const Warning: { [key: string]: WarningToken } = {
 		},
 		DiagnosticInformation: "变量插值不规范（%id%）",
 		pattern: /{(\S+\s{1,}|\s{1,}\S+|\s{1,}\S+\s{1,})}/g,
-		is_line: false,
+		is_line: false
 	},
 	"0005": {
 		id: "0005",
@@ -128,33 +128,37 @@ export const Warning: { [key: string]: WarningToken } = {
 				}
 			}
 			const _res_match_start = _text.endsWith(";") ? true : false;
-			const _res = _text.startsWith(";") || _res_match_start ? true : false;
-			const _condition = !_text.includes(";") && !_res && _text.length > 0;
+			const _res =
+				_text.startsWith(";") || _res_match_start ? true : false;
+			const _condition =
+				!_text.includes(";") && !_res && _text.length > 0;
 			if (_condition) {
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Warning,
 					range: {
 						start: textDocument.positionAt(_offset),
-						end: textDocument.positionAt(_offset + _text.trim().length),
+						end: textDocument.positionAt(
+							_offset + _text.trim().length
+						)
 					},
 					message: message(this.id, _text.trim()),
-					source,
+					source
 				};
 				diagnostic.relatedInformation = [
 					{
 						location: {
 							uri: textDocument.uri,
-							range: Object.assign({}, diagnostic.range),
+							range: Object.assign({}, diagnostic.range)
 						},
-						message: getDiagnosticInformation(this.id),
-					},
+						message: getDiagnosticInformation(this.id)
+					}
 				];
 				return diagnostic;
 			}
 			return null;
 		},
-		is_line: true,
-	},
+		is_line: true
+	}
 };
 
 /**

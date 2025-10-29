@@ -11,7 +11,7 @@ import {
 	CancellationToken,
 	InlayHint,
 	InlayHintKind,
-	InlayHintsProvider,
+	InlayHintsProvider
 } from "vscode";
 
 import { getConfig } from "../utils/utils";
@@ -37,7 +37,12 @@ export class XRInlayHintsProvider implements InlayHintsProvider {
 			const _index = match.index || 0;
 			let _pos;
 			const p1 = _index;
-			const p2 = _index + match[1].length + match[2].length + match[3].length + 1;
+			const p2 =
+				_index +
+				match[1].length +
+				match[2].length +
+				match[3].length +
+				1;
 			const p3 = _index + match[1].length + match[2].length;
 			const p4 = _index + match[0].length;
 			switch (_config_isHint) {

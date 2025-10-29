@@ -16,7 +16,8 @@ export default class XColorProvider implements vscode.DocumentColorProvider {
 		const colorRegex = /#[0-9a-fA-F]{3,6}/g;
 		const colors: vscode.ColorInformation[] = [];
 		const hexToRgba = (hex: string) => {
-			const hexRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i;
+			const hexRegex =
+				/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i;
 			const matches = hex.match(hexRegex);
 			if (!matches) {
 				return [0, 0, 0, 0];
@@ -47,7 +48,9 @@ export default class XColorProvider implements vscode.DocumentColorProvider {
 			const startPos = document.positionAt(match.index);
 			const endPos = document.positionAt(match.index + match[0].length);
 			const range = new vscode.Range(startPos, endPos);
-			const _content = isRgba255(match[0]) ? rgba255To01(match[0]) : match[0];
+			const _content = isRgba255(match[0])
+				? rgba255To01(match[0])
+				: match[0];
 			const _s = _content
 				.substring(_content.indexOf("(") + 1, _content.indexOf(")"))
 				.split(",");
@@ -91,8 +94,8 @@ export default class XColorProvider implements vscode.DocumentColorProvider {
 					context.range,
 					rgba01To255(`rgba(${red},${green},${blue},${alpha})`)
 				),
-				additionalTextEdits: undefined,
-			},
+				additionalTextEdits: undefined
+			}
 		];
 	}
 }

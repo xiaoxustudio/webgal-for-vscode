@@ -20,7 +20,7 @@ import {
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
 	Position,
-	Range,
+	Range
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -30,7 +30,7 @@ import {
 	commandSuggestions,
 	figureKeys,
 	keyNames,
-	setAnimationKeys,
+	setAnimationKeys
 } from "./provider/completionServerProvider";
 
 const connection = createConnection(ProposedFeatures.all);
@@ -60,19 +60,19 @@ connection.onInitialize((params: InitializeParams) => {
 		capabilities: {
 			textDocumentSync: TextDocumentSyncKind.Incremental,
 			completionProvider: {
-				resolveProvider: true,
+				resolveProvider: true
 			},
 			diagnosticProvider: {
 				interFileDependencies: false,
-				workspaceDiagnostics: false,
-			},
-		},
+				workspaceDiagnostics: false
+			}
+		}
 	};
 	if (hasWorkspaceFolderCapability) {
 		result.capabilities.workspace = {
 			workspaceFolders: {
-				supported: true,
-			},
+				supported: true
+			}
 		};
 	}
 	return result;
@@ -123,7 +123,7 @@ function getDocumentSettings(resource: string): Thenable<ServerSettings> {
 	if (!result) {
 		result = connection.workspace.getConfiguration({
 			scopeUri: resource,
-			section: "XRWebGalLanguageServer",
+			section: "XRWebGalLanguageServer"
 		});
 		documentSettings.set(resource, result);
 	}
@@ -139,12 +139,12 @@ connection.languages.diagnostics.on(async (params) => {
 	if (document !== undefined) {
 		return {
 			kind: DocumentDiagnosticReportKind.Full,
-			items: await validateTextDocument(document),
+			items: await validateTextDocument(document)
 		} satisfies DocumentDiagnosticReport;
 	} else {
 		return {
 			kind: DocumentDiagnosticReportKind.Full,
-			items: [],
+			items: []
 		} satisfies DocumentDiagnosticReport;
 	}
 });
@@ -188,23 +188,23 @@ async function validateTextDocument(
 			problems++;
 			const range = {
 				start: textDocument.positionAt(m.index),
-				end: textDocument.positionAt(m.index + m[0].length),
+				end: textDocument.positionAt(m.index + m[0].length)
 			};
 			const diagnostic: Diagnostic = {
 				severity: DiagnosticSeverity.Warning,
 				range,
 				message: message(i, m[0].trim()),
-				source: "WebGal Script",
+				source: "WebGal Script"
 			};
 			if (hasDiagnosticRelatedInformationCapability) {
 				diagnostic.relatedInformation = [
 					{
 						location: {
 							uri: textDocument.uri,
-							range: Object.assign({}, diagnostic.range),
+							range: Object.assign({}, diagnostic.range)
 						},
-						message: getDiagnosticInformation(i),
-					},
+						message: getDiagnosticInformation(i)
+					}
 				];
 			}
 			diagnostics.push(diagnostic);
@@ -243,23 +243,25 @@ async function validateTextDocument(
 				problems++;
 				const range = {
 					start: textDocument.positionAt(_newarr.length + 1),
-					end: textDocument.positionAt(_newarr.length + m.input.length),
+					end: textDocument.positionAt(
+						_newarr.length + m.input.length
+					)
 				};
 				const diagnostic: Diagnostic = {
 					severity: DiagnosticSeverity.Warning,
 					range,
 					message: message(i, m.input.trim()),
-					source: "WebGal Script",
+					source: "WebGal Script"
 				};
 				if (hasDiagnosticRelatedInformationCapability) {
 					diagnostic.relatedInformation = [
 						{
 							location: {
 								uri: textDocument.uri,
-								range: Object.assign({}, diagnostic.range),
+								range: Object.assign({}, diagnostic.range)
 							},
-							message: getDiagnosticInformation(i),
-						},
+							message: getDiagnosticInformation(i)
+						}
 					];
 				}
 				diagnostics.push(diagnostic);
@@ -282,14 +284,14 @@ connection.onCompletion(
 			character:
 				position.character - 2 > 0
 					? position.character - 2
-					: position.character - 1,
+					: position.character - 1
 		} as Position;
 		const _end = {
 			line: position.line,
 			character:
 				position.character - 1 > 0
 					? position.character - 1
-					: position.character,
+					: position.character
 		} as Position;
 		const _range = { start: _start, end: _end } as Range;
 		if (document) {

@@ -95,7 +95,10 @@ export function get_files(
 	for (let file of _list) {
 		const fullPath = path.join(baseDir, file);
 		if (fs.statSync(fullPath).isDirectory()) {
-			_arr = [..._arr, ...get_files(fullPath, find_suffix, absolute_path)];
+			_arr = [
+				..._arr,
+				...get_files(fullPath, find_suffix, absolute_path)
+			];
 		} else if (find_suffix.includes(path.extname(file))) {
 			const RelativePath = vscode.workspace.asRelativePath(fullPath);
 			_arr.push(!absolute_path ? RelativePath : fullPath);

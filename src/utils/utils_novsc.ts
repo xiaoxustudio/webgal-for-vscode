@@ -47,7 +47,7 @@ export enum DebugCommand {
 	// 执行指令
 	EXE_COMMAND,
 	// 重新拉取模板样式文件
-	REFETCH_TEMPLATE_FILES,
+	REFETCH_TEMPLATE_FILES
 }
 export interface IDebugMessage {
 	event: string;
@@ -70,10 +70,10 @@ export const setGlobalVar = (_gv: object) => {
 };
 export const getGlobalVar = () => {
 	// to key:value
-	let _o: Record<string,any> = {};
+	let _o: Record<string, any> = {};
 	Object.keys(GlobalVar).forEach(() => {
 		_o[GlobalVar.word] = GlobalVar.value;
-	})
+	});
 	return _o;
 };
 export const fsAccessor: FileAccessor = {
@@ -83,7 +83,7 @@ export const fsAccessor: FileAccessor = {
 	},
 	writeFile(path: string, contents: Buffer): Promise<void> {
 		return fs.writeFile(path, contents.toString());
-	},
+	}
 };
 
 // 获取变量的描述
@@ -122,7 +122,7 @@ export function get_var_type(var_text: string): string {
 						try {
 							acorn.parse(var_text, {
 								sourceType: "module",
-								ecmaVersion: 2020,
+								ecmaVersion: 2020
 							});
 							return true;
 						} catch (error) {
@@ -148,7 +148,7 @@ export function get_var_type(var_text: string): string {
 				try {
 					acorn.parse(var_text, {
 						sourceType: "module",
-						ecmaVersion: 2020,
+						ecmaVersion: 2020
 					});
 					return true;
 				} catch (error) {

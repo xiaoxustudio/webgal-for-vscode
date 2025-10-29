@@ -15,7 +15,7 @@ import {
 	Scope,
 	StackFrame,
 	StoppedEvent,
-	Thread,
+	Thread
 } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { getGameData } from "./utils/utils";
@@ -39,7 +39,10 @@ export class XRDebugSession extends LoggingDebugSession {
 		"locals" | "globals" | "env" | "scene" | RuntimeVariable
 	>();
 	private _valuesInHex = false;
-	constructor(_s: DebugSession, private FileAccess: FileAccessor) {
+	constructor(
+		_s: DebugSession,
+		private FileAccess: FileAccessor
+	) {
 		super("webgal-debug.txt");
 		this.setDebuggerLinesStartAt1(false);
 		this.setDebuggerColumnsStartAt1(false);
@@ -125,7 +128,7 @@ export class XRDebugSession extends LoggingDebugSession {
 			) {
 				response.body = {
 					result: String(_stage[expression.substring(1)]),
-					variablesReference: 0,
+					variablesReference: 0
 				};
 			} else if (
 				_stage &&
@@ -135,41 +138,44 @@ export class XRDebugSession extends LoggingDebugSession {
 			) {
 				response.body = {
 					result: String(_scene[expression.substring(1)]),
-					variablesReference: 0,
+					variablesReference: 0
 				};
 			} else if (_stage && _start && _start === "@") {
 				switch (expression) {
 					case "@run":
 						response.body = {
 							result: String(Object.keys(_scene)),
-							variablesReference: 0,
+							variablesReference: 0
 						};
 						break;
 					case "@env":
 						response.body = {
 							result: String(Object.keys(_stage)),
-							variablesReference: 0,
+							variablesReference: 0
 						};
 						break;
 					default:
 						const _ex = /@set\s+(\S+)\s+(\S+)/.exec(expression);
 						const _ex_run = /@script\s+(.*)/.exec(expression);
 						if (_ex) {
-							this._socket.emit("runscript", `setVar:${_ex[1]}=${_ex[2]};`);
+							this._socket.emit(
+								"runscript",
+								`setVar:${_ex[1]}=${_ex[2]};`
+							);
 							response.body = {
 								result: _ex[2],
-								variablesReference: 0,
+								variablesReference: 0
 							};
 						} else if (_ex_run) {
 							this._socket.emit("runscript", `${_ex_run[1]}`);
 							response.body = {
 								result: _ex_run[1],
-								variablesReference: 0,
+								variablesReference: 0
 							};
 						} else {
 							response.body = {
 								result: "null",
-								variablesReference: 0,
+								variablesReference: 0
 							};
 						}
 						break;
@@ -181,12 +187,12 @@ export class XRDebugSession extends LoggingDebugSession {
 			) {
 				response.body = {
 					result: String(_stage.GameVar[expression]),
-					variablesReference: 0,
+					variablesReference: 0
 				};
 			} else {
 				response.body = {
 					result: "null",
-					variablesReference: 0,
+					variablesReference: 0
 				};
 			}
 		}
@@ -200,7 +206,7 @@ export class XRDebugSession extends LoggingDebugSession {
 	}
 	protected threadsRequest(response: DebugProtocol.Response) {
 		response.body = {
-			threads: [new Thread(XRDebugSession.threadID, "thread 1")],
+			threads: [new Thread(XRDebugSession.threadID, "thread 1")]
 		};
 
 		this.sendResponse(response);
@@ -210,7 +216,7 @@ export class XRDebugSession extends LoggingDebugSession {
 		args: any
 	) {
 		response.body = {
-			stackFrames: [new StackFrame(1, "XRWebGalruntime")],
+			stackFrames: [new StackFrame(1, "XRWebGalruntime")]
 		};
 		this.sendResponse(response);
 	}
@@ -220,10 +226,14 @@ export class XRDebugSession extends LoggingDebugSession {
 	): void {
 		response.body = {
 			scopes: [
-				new Scope("Locals", this._variableHandles.create("locals"), false),
+				new Scope(
+					"Locals",
+					this._variableHandles.create("locals"),
+					false
+				),
 				new Scope("Env", this._variableHandles.create("env"), false),
-				new Scope("Scene", this._variableHandles.create("scene"), false),
-			],
+				new Scope("Scene", this._variableHandles.create("scene"), false)
+			]
 		};
 		this.sendResponse(response);
 	}
@@ -241,7 +251,9 @@ export class XRDebugSession extends LoggingDebugSession {
 			) as DebugProtocol.Variable[];
 		} else if (_nfef === "scene") {
 			vs = (
-				this._socket_real.getLocalVariables("scene") as RuntimeVariable[]
+				this._socket_real.getLocalVariables(
+					"scene"
+				) as RuntimeVariable[]
 			).map((v) =>
 				this.convertFromRuntime(v, args.variablesReference)
 			) as DebugProtocol.Variable[];
@@ -260,11 +272,14 @@ export class XRDebugSession extends LoggingDebugSession {
 						let _var = {
 							name: _val.name,
 							value: _val_name,
-							variablesReference: _val.reference ?? 0,
+							variablesReference: _val.reference ?? 0
 						} as DebugProtocol.Variable;
 						vs.push(_var);
 					}
-				} else if (typeof _nfef.value === "object" && _nfef.desc === "Object") {
+				} else if (
+					typeof _nfef.value === "object" &&
+					_nfef.desc === "Object"
+				) {
 					const _keys = _nfef.value;
 					for (let i in _keys) {
 						const _val = _keys[i] as RuntimeVariable;
@@ -272,7 +287,7 @@ export class XRDebugSession extends LoggingDebugSession {
 						let _var = {
 							name: _val.name,
 							value: _val_name,
-							variablesReference: _val.reference ?? 0,
+							variablesReference: _val.reference ?? 0
 						} as DebugProtocol.Variable;
 						vs.push(_var);
 					}
@@ -280,14 +295,14 @@ export class XRDebugSession extends LoggingDebugSession {
 					let _var = {
 						name: _nfef.name,
 						value: String(_nfef.value),
-						variablesReference: 0,
+						variablesReference: 0
 					} as DebugProtocol.Variable;
 					vs.push(_var);
 				}
 			}
 		}
 		response.body = {
-			variables: vs,
+			variables: vs
 		};
 		this.sendResponse(response);
 	}
@@ -298,9 +313,12 @@ export class XRDebugSession extends LoggingDebugSession {
 	): void {
 		const _origin_var = this._variableHandles.get(args.variablesReference);
 		if (_origin_var === "locals") {
-			this._socket.emit("runscript", `setVar:${args.name}=${args.value};`);
+			this._socket.emit(
+				"runscript",
+				`setVar:${args.name}=${args.value};`
+			);
 			response.body = {
-				...args,
+				...args
 			};
 		}
 		this.sendResponse(response);
@@ -317,7 +335,7 @@ export class XRDebugSession extends LoggingDebugSession {
 			value: "???",
 			type: typeof v.value,
 			variablesReference: 0,
-			evaluateName: v.name,
+			evaluateName: v.name
 		};
 		if (v.value instanceof Object) {
 			v.reference ??= this._variableHandles.create(v);
@@ -376,7 +394,8 @@ export class XRDebugSession extends LoggingDebugSession {
 				case "number":
 					if (Math.round(v.value) === v.value) {
 						dapVariable.value = this.formatNumber(v.value);
-						(<any>dapVariable).__vscodeVariableMenuContext = "simple";
+						(<any>dapVariable).__vscodeVariableMenuContext =
+							"simple";
 						dapVariable.type = "integer";
 					} else {
 						dapVariable.value = v.value.toString();
@@ -397,7 +416,9 @@ export class XRDebugSession extends LoggingDebugSession {
 
 		return dapVariable;
 	}
-	protected disconnectRequest(request: DebugProtocol.DisconnectRequest): void {}
+	protected disconnectRequest(
+		request: DebugProtocol.DisconnectRequest
+	): void {}
 	protected customRequest(
 		command: string,
 		response: DebugProtocol.Response

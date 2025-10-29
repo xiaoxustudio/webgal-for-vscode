@@ -11,11 +11,11 @@ import { _setvar_pattern } from "./CompletionProvider";
 import {
 	get_desc_variable,
 	get_var_type,
-	setGlobalVar,
+	setGlobalVar
 } from "../utils/utils_novsc";
 import { VList, _VToken } from "../utils/utils";
 
-const prefix = "https://docs.openwebgal.com/script-reference/commands/"
+const prefix = "https://docs.openwebgal.com/script-reference/commands/";
 
 export default class DictionaryHoverProvider implements vscode.HoverProvider {
 	provideHover(
@@ -37,7 +37,7 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					value: m[2],
 					input: m.input,
 					position: position.with(_d_index + 1, 5),
-					type: get_var_type(m[2]),
+					type: get_var_type(m[2])
 				} as _VToken;
 				if (
 					_arr[m[1]] &&
@@ -62,7 +62,9 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			for (let i in config_dictionary) {
 				const kw_val = config_dictionary[i];
 				if (lineText.startsWith(i)) {
-					const hoverContent = new vscode.MarkdownString(`**${word}**`);
+					const hoverContent = new vscode.MarkdownString(
+						`**${word}**`
+					);
 					hoverContent.isTrusted = true;
 					hoverContent.supportHtml = true;
 					hoverContent.appendMarkdown(`\n\n${kw_val.desc}`);
@@ -73,7 +75,9 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			}
 		}
 		if (`{${word}}` === _var_test_text) {
-			const hoverContent = new vscode.MarkdownString(`### 变量 **${word}** `);
+			const hoverContent = new vscode.MarkdownString(
+				`### 变量 **${word}** `
+			);
 			hoverContent.isTrusted = true;
 			hoverContent.supportHtml = true;
 			if (_arr[word].desc.length > 0) {
@@ -102,7 +106,9 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			for (let i in dictionary.func) {
 				const func_val = dictionary.func[i];
 				if (i.indexOf(_text) !== -1 && _text === word + "()") {
-					const hoverContent = new vscode.MarkdownString(`**${word}**`);
+					const hoverContent = new vscode.MarkdownString(
+						`**${word}**`
+					);
 					hoverContent.isTrusted = true;
 					hoverContent.supportHtml = true;
 					hoverContent.appendMarkdown(`\n\n${func_val.desc}`);
@@ -110,7 +116,9 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 					if (func_val.APIL) {
 						const _t = func_val.APIL.split("|");
 						hoverContent.appendMarkdown(`\n\n`);
-						hoverContent.appendMarkdown(`**API** : [${_t[0]}](${_t[1]})`);
+						hoverContent.appendMarkdown(
+							`**API** : [${_t[0]}](${_t[1]})`
+						);
 					}
 					const hover = new vscode.Hover(hoverContent);
 					return hover;
@@ -120,15 +128,19 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			for (let i in dictionary.kw) {
 				const kw_val = dictionary.kw[i];
 				if (lineText.startsWith(i)) {
-					const hoverContent = new vscode.MarkdownString(`**${word}**`);
+					const hoverContent = new vscode.MarkdownString(
+						`**${word}**`
+					);
 					hoverContent.isTrusted = true;
 					hoverContent.supportHtml = true;
 					hoverContent.appendMarkdown(`\n\n${kw_val.desc}`);
 					hoverContent.appendMarkdown(` \n <hr>  `);
 					if (kw_val.APIL) {
-						const _t = kw_val.APIL
+						const _t = kw_val.APIL;
 						hoverContent.appendMarkdown(`\n\n`);
-						hoverContent.appendMarkdown(`**API** : [${_t}](${prefix}${i}.html)`);
+						hoverContent.appendMarkdown(
+							`**API** : [${_t}](${prefix}${i}.html)`
+						);
 					}
 					const hover = new vscode.Hover(hoverContent);
 					return hover;
@@ -151,7 +163,9 @@ export default class DictionaryHoverProvider implements vscode.HoverProvider {
 			let _s = document.getText(_before_pos);
 			const _d_cmd = dictionary.cmd[word];
 			if (_d_cmd && _s === " -") {
-				const hoverContent = new vscode.MarkdownString(`**${word}** \n\n `);
+				const hoverContent = new vscode.MarkdownString(
+					`**${word}** \n\n `
+				);
 				hoverContent.isTrusted = true;
 				hoverContent.supportHtml = true;
 				hoverContent.appendMarkdown(` \n <hr>  `);
