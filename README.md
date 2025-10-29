@@ -1,153 +1,120 @@
-<!--
- * @Author: xuranXYS
- * @LastEditTime: 2024-06-11 19:15:09
- * @GitHub: www.github.com/xiaoxustudio
- * @WebSite: www.xiaoxustudio.top
- * @Description: By xuranXYS
--->
 <h1 align="center">
-  <br>
-    <img src="https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/icon.png" alt="logo" width="200">
-  <br>
-  webgal for VScode
-  <br>
-  <br>
+<br>
+<img src="https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/icon.png" alt="logo" width="200">
+<br>
+webgal for VScode
+<br>
+<br>
 </h1>
 
-<h4 align="center">WebGal Script 工具</h4>
-
+<h4 align="center">WebGal Script Tool</h4> 
 <h5 align="center"><img src="https://img.shields.io/badge/documentation-yes-brightgreen" alt="Documentation"> <img src="https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode" alt="github license"> <img src="https://img.shields.io/badge/language-webgal-brightgreen" alt="Language"></h5>
 
 
-[webgal-devtool](https://github.com/xiaoxustudio/webgal-devtool)：一款用于调试WebGal游戏的浏览器devtools扩展。
+- [简体中文](./README_CN.md)
+- [English](./README.md)
 
-# 功能
 
-- 语言高亮
-- Hover提示
-- 关键字补全
-- 规范警告
-- 插值变量提示|变量Hover提示、类型镶嵌、变量描述（markdown）
-- 格式化
-- 跳转定义（资源、变量）
-- 颜色选择器
-- 区域折叠
-- 调试功能
 
+[webgal-devtool](https://github.com/xiaoxustudio/webgal-devtool): A browser devtools extension designed for debugging WebGal games. 
+# Function 
+- Language highlighting
+- Hover tooltip
+- Keyword completion
+- Compliance warning
+- Interpolation variable prompt | Variable Hover prompt, type embedding, variable description (markdown)
+- Formatting
+- Jump to definition (resource, variable)
+- Color picker
+- Area collapse
+- Debugging function 
 ```txt
-  ;area 开始区域标记
-  ...
-  ;endarea 结束区域标记
+; area - Start area marker 
+...
+; endarea - Mark for indicating the end of an area 
 ```
 
-- 资源文件补全
-
+Resource file completion 
 ```txt
 
-  资源文件夹$资源文件
-  如：tex$i 将会提示tex文件夹下文件名称包含i的文件
-
-  资源文件夹有：
-  animation、background、bgm、figure、tex、video、vocal
-
+Resource folder $Resource file
+For example: tex$i will prompt for files in the tex folder whose names contain the letter "i". 
+The resource folder contains:
+animation, background, bgm, figure, tex, video, vocal 
 ```
 
-# 使用
+# Usage 
+When the current working directory is **game** and it contains **config.txt**, the plugin will automatically start. 
+Or you can start the plugin by using the startup command yourself. 
+Can be edited in conjunction with the vs browser 
+![vs browser](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/vs_browser.png)
 
-当前工作目录**game**只要包含**config.txt**时，插件就会自动启动
+![Work](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/work.png)
 
-或者使用启动命令自行启动插件
-
-**可配合vs browser进行编辑**  
-
-![vs browser](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/vs_browser.png)  
-
-![Work](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/work.png)  
-
-# 调试  
-
-运行-添加配置-选择`webgal Debug`创建`launch.json`文件  
-
-*请自行修改ws地址：地址可F12在控制台看到，端口号一般为网页url的端口号*
-
-运行即可，可在调试控制台查看指定变量、环境配置等信息  
-
+# Debugging 
+Run - Add Configuration - Select `webgal Debug` to create the `launch.json` file 
+Please modify the ws address yourself: The address can be seen in the console by pressing F12. The port number is usually the same as that of the web page URL. 
+Just run it. You can view the specified variables, environment configurations, etc. in the debug console. 
 ```txt
-单个字符为变量输出
-如：a，则输出变量a的值
-
-前导$为环境配置
-如：$showText，则输出环境变量showText的值 
-
-前导#为运行配置
-如：#sentence，则输出运行变量sentence的值
-
-特殊：
-@run:获取运行的所有变量名称
-@env:获取环境的所有变量名称
-@set 变量名 变量值             ———————— 修改变量
-@script webgalScript脚本         ———————— 自定义执行脚本
+Output a single character as a variable
+For example: a, then output the value of the variable a 
+The prefix $ is used for environment configuration.
+For example: $showText will output the value of the environment variable showText. 
+The prefix "#" is for configuration during operation.
+For example: #sentence, then the value of the running variable "sentence" will be output. 
+Special:
+@run: Retrieves all variable names in the running environment
+@env: Retrieves all variable names in the environment
+@set variable_name variable_value  —————— Modify the variable
+@script webgalScript script         —————— Customize the execution script 
 ```
 
-**PS：右击有跳转到指定行选项**  
+**Note: Right-clicking offers the option to jump to the specified line.** 
+**Note: The debug variables will not be updated in real time. You need to manually press the Enter key in the debug console or perform other operations to trigger the update.** 
+**Note: The variables on the left can be modified, while env and scene cannot be changed.** 
 
-**PS：调试变量不会实时刷新，需要手动在调试控制台回车刷新，或其他操作来触发更新**
+![Debugging](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/debug.png) 
 
-**PS：左边调试变量可修改，env和scene不可修改**
+# Partial Function Display 
+##### Hover Tip 
+![Hover Tooltip](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/hover.png) 
 
-![调试](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/debug.png)
+##### Keyword Completion 
+![Keyword Completion](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/kw.png)
 
-# 部分功能展示
+##### Regulatory Warning 
+![Standard Warning](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/warning.png)
 
-### Hover提示
+##### Interpolation Variable Prompt 
+![Interpolation Variable Prompt](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable.png) 
 
-![Hover提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/hover.png)
+##### Hover Tip 
+![Interpolation Variable Hint](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_hover.png)
 
-### 关键字补全
+##### Type Mosaic
+![Interpolation Variable Hint](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_hint.png) 
 
-![关键字补全](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/kw.png)
+##### Jumping Definition 
+![Interpolation Variable Hint](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_jump.png) 
 
-### 规范警告  
+##### Formatting 
+![Format](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/format.png) 
 
-![规范警告](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/warning.png)
+##### Color Selector 
+![Color Selector](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/color.png) 
 
-### 插值变量提示  
+# Official Link of WebGal 
+Official Repository: [Repository](https://github.com/MakinoharaShoko/WebGAL) 
 
-![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable.png)
+Official documentation: [Document](https://docs.openwebgal.com/) 
 
-##### hover提示  
+# Regarding 
 
-![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_hover.png)
+Author: [Xu Ran](https://github.com/xiaoxustudio) 
 
-##### 类型镶嵌  
+Contact Information: [xugame@qq.com](mailto:xugame@qq.com) 
 
-![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_hint.png)
-
-##### 跳转定义  
-
-![插值变量提示](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/variable_jump.png)
-
-### 格式化
-
-![格式化](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/format.png)
-
-### 颜色选择器  
-
-![颜色选择器](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/color.png)
-
-# WebGal官方链接
-
-官方仓库：[仓库](https://github.com/MakinoharaShoko/WebGAL)  
-
-官方文档：[文档](https://docs.openwebgal.com/)
-
-# 关于
-
-作者：[徐然](https://github.com/xiaoxustudio)  
-
-联系方式：[xugame@qq.com](emailto://xugame@qq.com)
-
-欢迎提出您宝贵的 **issue**，我们将会处理。
+Please feel free to raise your valuable **issue**. We will handle it. 
 
 # LICENSE
 

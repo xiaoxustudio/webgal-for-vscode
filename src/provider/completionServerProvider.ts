@@ -1,19 +1,5 @@
 import { CompletionItem, CompletionItemKind } from "vscode-languageserver";
 
-/* 
-
-applyStyle: <DToken>{
-			desc: "更换 UI 样式",
-			APIL: "更换 UI 样式",
-		},
-		setTransition: <DToken>{
-			desc: "设置舞台对象的入场或出场动画。",
-			APIL: "设置舞台对象的入场或出场动画",
-		},
-		
-		
-		*/
-
 export const commandSuggestions: CompletionItem[] = [
 	{
 		label: "applyStyle",
