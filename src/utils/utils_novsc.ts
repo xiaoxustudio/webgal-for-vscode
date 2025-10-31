@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2025-10-12 13:36:39
+ * @LastEditTime: 2025-10-31 20:58:50
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -49,6 +49,7 @@ export enum DebugCommand {
 	// 重新拉取模板样式文件
 	REFETCH_TEMPLATE_FILES
 }
+
 export interface IDebugMessage {
 	event: string;
 	data: {

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2024-06-11 13:16:14
+ * @LastEditTime: 2025-10-31 20:58:32
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -8,20 +8,11 @@
 import {
 	commands,
 	debug,
-	EvaluatableExpression,
 	ExtensionContext,
-	InlineValue,
-	InlineValueContext,
-	InlineValueVariableLookup,
 	languages,
-	Position,
-	ProviderResult,
-	Range,
-	TextDocument,
 	window,
 	workspace
 } from "vscode";
-import DictionaryCompletionItemProvider from "./provider/CompletionProvider";
 import DictionaryHoverProvider from "./provider/HoverProvider";
 import XColorProvider from "./provider/ColorProvider";
 import GoDocumentFormatter from "./utils/Format";
@@ -52,12 +43,6 @@ function InitPlugin(context: ExtensionContext) {
 		)
 	);
 	context.subscriptions.push(
-		languages.registerCompletionItemProvider(
-			selector,
-			new DictionaryCompletionItemProvider()
-		)
-	);
-	context.subscriptions.push(
 		languages.registerHoverProvider(
 			[selector, selectorConfig],
 			new DictionaryHoverProvider()
@@ -75,6 +60,7 @@ function InitPlugin(context: ExtensionContext) {
 			new XRDefinitionProvider()
 		)
 	);
+
 	context.subscriptions.push(
 		languages.registerDocumentLinkProvider(
 			[selector, selectorConfig],
@@ -87,9 +73,11 @@ function InitPlugin(context: ExtensionContext) {
 			new XRDebugConfigurationProvider()
 		)
 	);
+
 	context.subscriptions.push(
 		languages.registerColorProvider(selector, new XColorProvider())
 	);
+
 	context.subscriptions.push(
 		debug.registerDebugAdapterDescriptorFactory(
 			"webgal",

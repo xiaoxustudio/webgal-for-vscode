@@ -20,8 +20,7 @@ const prefix = "https://docs.openwebgal.com/script-reference/commands/";
 export default class DictionaryHoverProvider implements vscode.HoverProvider {
 	provideHover(
 		document: vscode.TextDocument,
-		position: vscode.Position,
-		token: vscode.CancellationToken
+		position: vscode.Position
 	): vscode.ProviderResult<vscode.Hover> {
 		const file_name = document.fileName;
 		const lineText = document.lineAt(position).text;

@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2025-10-29 17:05:59
+ * @LastEditTime: 2025-10-31 20:59:03
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -20,7 +20,8 @@ import {
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
 	Position,
-	Range
+	Range,
+	CompletionItemKind
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -32,6 +33,7 @@ import {
 	keyNames,
 	setAnimationKeys
 } from "./provider/completionServerProvider";
+import { CommandNames, globalArgs, WebGALKeywords } from "./utils/provider";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -108,7 +110,6 @@ let globalSettings: ServerSettings = defaultSettings;
 const documentSettings: Map<string, Thenable<ServerSettings>> = new Map();
 
 connection.onDidChangeConfiguration((change) => {
-	// 这里
 	if (hasConfigurationCapability) {
 		documentSettings.clear();
 	} else {
@@ -280,53 +281,57 @@ async function validateTextDocument(
 	return diagnostics;
 }
 
-connection.onDidChangeWatchedFiles((_change) => {
-	// connection.console.log("We received a file change event");
-});
-
 connection.onCompletion(
 	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
 		const position = _textDocumentPosition.position;
-		const _start = {
-			line: position.line,
-			character:
-				position.character - 2 > 0
-					? position.character - 2
-					: position.character - 1
-		} as Position;
-		const _end = {
-			line: position.line,
-			character:
-				position.character - 1 > 0
-					? position.character - 1
-					: position.character
-		} as Position;
-		const _range = { start: _start, end: _end } as Range;
-		if (document) {
-			const BeforeText = document.getText(_range);
-			if (BeforeText == "$") {
-				return [];
+		if (!document) return [];
+		const beforeText = document.getText({
+			start: {
+				line: position.line,
+				character:
+					position.character - 2 > 0
+						? position.character - 2
+						: position.character - 1
+			},
+			end: {
+				line: position.line,
+				character:
+					position.character - 1 > 0
+						? position.character - 1
+						: position.character
 			}
-			const _offset = document.offsetAt(_textDocumentPosition.position);
-			const _offset_line = document.offsetAt(
-				Position.create(_textDocumentPosition.position.line, 0)
-			);
-			const _text = document.getText().substring(_offset_line, _offset);
-			const _regex = /.*-\S+$/;
-			if (_text.match(_regex) && _text.startsWith("setAnimation:")) {
-				return [...abbrKeys, ...keyNames, ...setAnimationKeys];
-			}
-			if (_text.match(_regex) && _text.startsWith("changeFigure:")) {
-				return [...abbrKeys, ...keyNames, ...figureKeys];
-			}
-			if (_text.match(_regex) && _text.includes(":")) {
-				return [...abbrKeys, ...keyNames];
-			} else {
-				return commandSuggestions;
+		} satisfies Range);
+		if (beforeText == "$") return []; // 索引资源
+
+		const offsetLine = document.offsetAt(
+			Position.create(_textDocumentPosition.position.line, 0)
+		);
+		const text = document
+			.getText()
+			.substring(
+				offsetLine,
+				document.offsetAt(_textDocumentPosition.position)
+			)
+			.trim();
+
+		for (const key in WebGALKeywords) {
+			const keyData = WebGALKeywords[key as CommandNames];
+			// 如果输入的文本以关键词开头，则匹配相应的参数
+			if (text.startsWith(key)) {
+				const data = [...keyData.args, ...globalArgs].map((arg) => {
+					return {
+						label: arg.arg,
+						kind: CompletionItemKind.Constant,
+						documentation: arg.desc,
+						detail: arg.desc
+					};
+				}) as CompletionItem[];
+				return data;
 			}
 		}
-		return [];
+
+		return commandSuggestions;
 	}
 );
 
