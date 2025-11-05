@@ -473,3 +473,27 @@ export const WebGALKeywords: WGKeyWords = {
 		args: []
 	}
 };
+
+export interface CToken {
+	desc: string; // 描述
+	Equal?: boolean;
+}
+
+export const configMap: Record<string, CToken> = {
+	Game_name: {
+		desc: "游戏名称",
+		Equal: true
+	},
+	Game_key: {
+		desc: "游戏唯一标识"
+	},
+	Title_img: {
+		desc: "标题图片"
+	},
+	Title_bgm: {
+		desc: "标题背景bgm"
+	},
+	Textbox_theme: {
+		desc: "对话框样式"
+	}
+};

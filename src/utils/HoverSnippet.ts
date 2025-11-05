@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2025-10-29 16:25:11
+ * @LastEditTime: 2025-11-05 08:17:02
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -240,23 +240,4 @@ export const dictionary: { [key: string]: DIC } = {
 			APIL: "设置复杂动画"
 		}
 	} // 内置关键字
-};
-// 配置Hover
-export const config_dictionary: { [key: string]: CToken } = {
-	Game_name: {
-		desc: "游戏名称",
-		Equal: true
-	},
-	Game_key: {
-		desc: "游戏唯一标识"
-	},
-	Title_img: {
-		desc: "标题图片"
-	},
-	Title_bgm: {
-		desc: "标题背景bgm"
-	},
-	Textbox_theme: {
-		desc: "对话框样式"
-	}
 };
