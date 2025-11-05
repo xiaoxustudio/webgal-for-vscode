@@ -45,15 +45,19 @@ animation, background, bgm, figure, tex, video, vocal
 
 # Usage 
 When the current working directory is **game** and it contains **config.txt**, the plugin will automatically start. 
+
 Or you can start the plugin by using the startup command yourself. 
 Can be edited in conjunction with the vs browser 
+
 ![vs browser](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/vs_browser.png)
 
 ![Work](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/work.png)
 
 # Debugging 
 Run - Add Configuration - Select `webgal Debug` to create the `launch.json` file 
+
 Please modify the ws address yourself: The address can be seen in the console by pressing F12. The port number is usually the same as that of the web page URL. 
+
 Just run it. You can view the specified variables, environment configurations, etc. in the debug console. 
 ```txt
 Output a single character as a variable
@@ -70,7 +74,9 @@ Special:
 ```
 
 **Note: Right-clicking offers the option to jump to the specified line.** 
+
 **Note: The debug variables will not be updated in real time. You need to manually press the Enter key in the debug console or perform other operations to trigger the update.** 
+
 **Note: The variables on the left can be modified, while env and scene cannot be changed.** 
 
 ![Debugging](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/debug.png) 
@@ -104,6 +110,7 @@ Special:
 ![Color Selector](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/color.png) 
 
 # Official Link of WebGal 
+
 Official Repository: [Repository](https://github.com/MakinoharaShoko/WebGAL) 
 
 Official documentation: [Document](https://docs.openwebgal.com/) 
