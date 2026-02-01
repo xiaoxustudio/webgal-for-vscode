@@ -1,6 +1,6 @@
 /*
  * @Author: xuranXYS
- * @LastEditTime: 2025-10-31 20:59:03
+ * @LastEditTime: 2025-11-05 08:44:29
  * @GitHub: www.github.com/xiaoxustudio
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
@@ -19,21 +19,17 @@ import {
 	InitializeResult,
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
-	Position,
 	Range,
-	CompletionItemKind
+	CompletionItemKind,
+	Hover,
+	Position
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { Warning, message, getDiagnosticInformation } from "./utils/Warnings";
-import {
-	abbrKeys,
-	commandSuggestions,
-	figureKeys,
-	keyNames,
-	setAnimationKeys
-} from "./provider/completionServerProvider";
-import { CommandNames, globalArgs, WebGALKeywords } from "./utils/provider";
+import { Warning, message, getDiagnosticInformation } from "../utils/Warnings";
+import { commandSuggestions } from "../provider/completionServerProvider";
+import { CommandNames, globalArgs, WebGALKeywords } from "../utils/provider";
+import { findTokenRange, getWordAtPosition } from "./utils";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -64,6 +60,7 @@ connection.onInitialize((params: InitializeParams) => {
 			completionProvider: {
 				resolveProvider: true
 			},
+			hoverProvider: true,
 			diagnosticProvider: {
 				interFileDependencies: false,
 				workspaceDiagnostics: false
@@ -284,41 +281,21 @@ async function validateTextDocument(
 connection.onCompletion(
 	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
-		const position = _textDocumentPosition.position;
 		if (!document) return [];
-		const beforeText = document.getText({
-			start: {
-				line: position.line,
-				character:
-					position.character - 2 > 0
-						? position.character - 2
-						: position.character - 1
-			},
-			end: {
-				line: position.line,
-				character:
-					position.character - 1 > 0
-						? position.character - 1
-						: position.character
-			}
-		} satisfies Range);
-		if (beforeText == "$") return []; // 索引资源
-
-		const offsetLine = document.offsetAt(
-			Position.create(_textDocumentPosition.position.line, 0)
+		const { token } = findTokenRange(
+			document,
+			_textDocumentPosition.position
 		);
-		const text = document
-			.getText()
-			.substring(
-				offsetLine,
-				document.offsetAt(_textDocumentPosition.position)
-			)
-			.trim();
-
+		const CompletionItemSuggestions = [];
+		const wordMeta = getWordAtPosition(
+			document,
+			Position.create(_textDocumentPosition.position.line, 0)
+		); // 获得当前单词
+		if (!wordMeta) return [];
 		for (const key in WebGALKeywords) {
 			const keyData = WebGALKeywords[key as CommandNames];
 			// 如果输入的文本以关键词开头，则匹配相应的参数
-			if (text.startsWith(key)) {
+			if (token.startsWith("-") && wordMeta.word === key) {
 				const data = [...keyData.args, ...globalArgs].map((arg) => {
 					return {
 						label: arg.arg,
@@ -327,17 +304,58 @@ connection.onCompletion(
 						detail: arg.desc
 					};
 				}) as CompletionItem[];
-				return data;
+				return data.filter((item, index, self) => {
+					return (
+						self.findIndex((t) => t.label === item.label) === index
+					);
+				});
 			}
 		}
 
-		return commandSuggestions;
+		if (
+			token.startsWith("./") ||
+			token.startsWith("../") ||
+			token.startsWith("/") ||
+			token.startsWith("~") ||
+			token.includes("/")
+		) {
+			// 路径
+		}
+		CompletionItemSuggestions.push(...commandSuggestions);
+		return CompletionItemSuggestions;
 	}
 );
 
 connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
 	return item;
 });
+
+connection.onHover(
+	(_textDocumentPosition: TextDocumentPositionParams): Hover => {
+		const document = documents.get(_textDocumentPosition.textDocument.uri);
+		if (!document) return { contents: [] };
+		const wordMeta = getWordAtPosition(
+			document,
+			_textDocumentPosition.position
+		); // 获得当前单词
+		if (!wordMeta) return { contents: [] };
+		for (const key in WebGALKeywords) {
+			const keyData = WebGALKeywords[key as CommandNames];
+			// 如果输入的文本以关键词开头，则匹配相应的参数
+			if (wordMeta.word.startsWith(key)) {
+				return {
+					contents: [
+						{
+							language: "markdown",
+							value: keyData.desc
+						}
+					]
+				};
+			}
+		}
+		return { contents: [] };
+	}
+);
 
 documents.listen(connection);
 

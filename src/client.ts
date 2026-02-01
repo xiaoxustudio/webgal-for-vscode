@@ -16,7 +16,9 @@ import path from "path";
 import { selector } from "./utils/utils";
 
 export function create_client(context: ExtensionContext): LanguageClient {
-	const serverModule = context.asAbsolutePath(path.join("out", "server.js"));
+	const serverModule = context.asAbsolutePath(
+		path.join("out", "server", "server.js")
+	);
 	const serverOptions: ServerOptions = {
 		run: { module: serverModule, transport: TransportKind.ipc },
 		debug: {

@@ -13,7 +13,7 @@ import {
 	window,
 	workspace
 } from "vscode";
-import DictionaryHoverProvider from "./provider/HoverProvider";
+// import DictionaryHoverProvider from "./provider/HoverProvider";
 import XColorProvider from "./provider/ColorProvider";
 import GoDocumentFormatter from "./utils/Format";
 import { get_files, getWS, selector, selectorConfig } from "./utils/utils";
@@ -42,12 +42,12 @@ function InitPlugin(context: ExtensionContext) {
 			new XRInlayHintsProvider()
 		)
 	);
-	context.subscriptions.push(
-		languages.registerHoverProvider(
-			[selector, selectorConfig],
-			new DictionaryHoverProvider()
-		)
-	);
+	// context.subscriptions.push(
+	// 	languages.registerHoverProvider(
+	// 		[selector, selectorConfig],
+	// 		new DictionaryHoverProvider()
+	// 	)
+	// );
 	context.subscriptions.push(
 		languages.registerDocumentFormattingEditProvider(
 			selector,
