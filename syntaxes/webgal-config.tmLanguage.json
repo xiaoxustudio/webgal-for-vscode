@@ -28,7 +28,7 @@
         },
         "command-colon": {
             "comment": "cmd:[arg][;cmt]",
-            "match": "^(Game_Logo|Game_key|Game_name|Textbox_theme|Title_bgm|Title_img)(\\:)([^\\;\\n]*?)($|\\;.*?$)",
+            "match": "^(Game_Logo|Game_key|Game_name|Textbox_theme|Title_bgm|Title_img|Enable_Appreciation|Default_Language|Show_panic|Legacy_Expression_Blend_Mode)(\\:)([^\\;\\n]*?)($|\\;.*?$)",
             "captures": {
                 "1": {
                     "patterns": [

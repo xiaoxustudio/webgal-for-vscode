@@ -2,61 +2,27 @@
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "WebGAL Script",
 	"patterns": [
-		{
-			"include": "#comment-line"
-		},
-		{
-			"include": "#statement"
-		}
+		{ "include": "#comment-line" },
+		{ "include": "#statement" }
 	],
 	"repository": {
 		"argument-list": {
 			"patterns": [
 				{
-					"comment": "only one argument left, ie kwarg0=val0",
-					"match": "(?!.*\\s\\-)(.+)",
+					"comment": ">1 arguments left, ie -kwarg0=val0 -kwarg1=val1 ...",
+					"match": "(\\s\\-)(.*?)(\\s\\-.*)$",
 					"captures": {
-						"1": {
-							"name": "keyword.operator.new",
-							"patterns": [
-								{
-									"include": "#RichText"
-								},
-								{
-									"include": "#parameter"
-								}
-							]
-						}
+						"1": { "patterns": [ { "include": "#operator" } ] },
+						"2": { "patterns": [ { "include": "#parameter" } ] },
+						"3": { "patterns": [ { "include": "#argument-list" } ] }
 					}
 				},
 				{
-					"comment": ">1 arguments left, ie [kwarg0=val0] -[kwarg1=val1]",
-					"match": "(.*?)(\\s\\-)(.*?)$",
+					"comment": "only one argument left, ie -kwarg0=val0",
+					"match": "(\\s\\-)(.*)",
 					"captures": {
-						"1": {
-							"patterns": [
-								{
-									"include": "#RichText"
-								},
-								{
-									"include": "#parameter"
-								}
-							]
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "#operator"
-								}
-							]
-						},
-						"3": {
-							"patterns": [
-								{
-									"include": "#argument-list"
-								}
-							]
-						}
+						"1": { "patterns": [ { "include": "#operator" } ] },
+						"2": { "patterns": [ { "include": "#parameter" } ] }
 					}
 				}
 			]
@@ -70,154 +36,28 @@
 			"name": "support.function.command.webgal"
 		},
 		"comment-line": {
-			"match": ";.*?$",
+			"match": "\\;.*?$",
 			"name": "comment.line.webgal"
 		},
 		"operator": {
-			"match": "\\s*[\\:\\=\\<\\>\\|\\+\\-]\\s*",
+			"match": "[\\:\\=\\<\\>\\|\\+\\-]",
 			"name": "keyword.operator.webgal"
-		},
-		"boolean": {
-			"match": "\\s*(true|false)\\s*",
-			"name": "markup.quote.webgal"
-		},
-		"number": {
-			"match": "\\s*(\\d+)|(\\d+)\\s*",
-			"name": "constant.numeric.webgal"
-		},
-		"string": {
-			"match": "(\\S+?)",
-			"name": "string.webgal"
-		},
-		"RichText": {
-			"match": "\\s*\\[(.+)\\](\\()([^\\[]+)(\\))\\s*",
-			"captures": {
-				"1": {
-					"name": "variable.parameter.webgal_rich"
-				},
-				"2": {
-					"name": "variable.parameter.webgal_rich"
-				},
-				"3": {
-					"patterns": [
-						{
-							"include": "#RichTextStyle"
-						}
-					]
-				},
-				"4": {
-					"name": "variable.parameter.webgal_rich"
-				}
-			}
-		},
-		"RichTextStyle": {
-			"name": "markup.italic",
-			"match": "(.+)"
-		},
-		"variableShow": {
-			"match": "{(\\S+)}",
-			"name": "variable.parameter.webgal_variable"
-		},
-		"choose": {
-			"match": "\\s*(.+-\\>)?(.[^|]+):(.[^|]+)\\s*(\\|)?\\s*(.*?)",
-			"captures": {
-				"1": {
-					"patterns": [
-						{
-							"match": "\\s*\\((.+)\\)\\[([^\\[]+)\\]\\s*",
-							"captures": {
-								"1": {
-									"name": "variable.parameter.webgal_choose_exp1"
-								},
-								"2": {
-									"name": "variable.parameter.webgal_choose_exp2"
-								},
-								"3": {
-									"name": "nane",
-									"patterns": [
-										{
-											"include": "#RichTextStyle"
-										}
-									]
-								},
-								"4": {
-									"name": "variable.parameter.webgal_name"
-								},
-								"5": {
-									"name": "storage.modifier.package.java"
-								}
-							}
-						}
-					]
-				},
-				"2": {
-					"name": "constant.character.escape.webgal_choose_name"
-				},
-				"5": {
-					"name": "constant.rgb-value.webgal"
-				},
-				"6": {
-					"patterns": [
-						{
-							"include": "#choose"
-						}
-					]
-				}
-			}
 		},
 		"parameter": {
 			"patterns": [
 				{
 					"comment": "value only, ie val0",
-					"match": "\b(?!.*\\=)(.+)\b",
-					"name": "entity.other.webgal",
-					"captures": {
-						"1": {
-							"patterns": [{ "include": "#valueBase" }]
-						}
-					}
+					"match": "(?!.*\\=).+",
+					"name": "variable.parameter.webgal"
 				},
 				{
 					"comment": "name and value, ie [kwarg0]=[val0]",
 					"match": "(.*?)(\\=)(.*?)$",
 					"captures": {
-						"1": {
-							"name": "variable.name.webgal_name"
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "#operator"
-								}
-							]
-						},
-						"3": {
-							"name": "xuran",
-							"patterns": [{ "include": "#valueBase" }]
-						}
+						"1": { "name": "variable.parameter.webgal" },
+						"2": { "patterns": [ { "include": "#operator" } ] },
+						"3": { "name": "variable.other.webgal" }
 					}
-				}
-			]
-		},
-		"valueBase": {
-			"patterns": [
-				{
-					"include": "#operator"
-				},
-				{
-					"include": "#boolean"
-				},
-				{
-					"include": "#number"
-				},
-				{
-					"include": "#string"
-				},
-				{
-					"include": "#choose"
-				},
-				{
-					"include": "#parameter"
 				}
 			]
 		},
@@ -226,189 +66,71 @@
 				{
 					"comment": "utterance only",
 					"match": "(?!.*\\s\\-)(.+)",
-					"captures": {
-						"1": {
-							"patterns": [
-								{
-									"include": "#RichText"
-								},
-								{
-									"include": "#variableShow"
-								}
-							]
-						}
-					}
+					"captures": { "0": { "name": "string.unquoted.utterance.webgal" } }
 				},
 				{
 					"comment": "utterance and argument list",
-					"match": "(.*?)(\\s\\-)(.*?)$",
+					"match": "(.*?)(\\s\\-.*?)$",
 					"captures": {
-						"1": {
-							"name": "string.unquoted.utterance.webgal",
-							"patterns": [
-								{
-									"include": "#RichText"
-								},
-								{
-									"include": "#variableShow"
-								}
-							]
-						},
-						"2": {
-							"patterns": [
-								{
-									"include": "#operator"
-								}
-							]
-						},
-						"3": {
-							"patterns": [
-								{
-									"include": "#argument-list"
-								}
-							]
-						}
+						"1": { "name": "string.unquoted.utterance.webgal" },
+						"2": { "patterns": [ { "include": "#argument-list" } ] }
 					}
 				}
 			]
 		},
 		"character-colon": {
 			"comment": "[char]:[utt[ -args]][;cmt]",
-			"match": "^(?!(?:intro|changeBg|changeFigure|miniAvatar|playEffect|changeScene|choose|end|bgm|playVideo|setComplexAnimation|setFilter|pixiInit|pixiPerform|label|jumpLabel|setVar|callScene|showVars|unlockCg|unlockBgm|say|filmMode|callScene|setTextbox|setAnimation|wait)\\:)([^\\:]*)(\\:)(.*?)($|(?<!\\\\);.*?$)",
+			"match": "^(?!(?:say|changeBg|changeFigure|bgm|playVideo|pixiPerform|pixiInit|intro|miniAvatar|changeScene|choose|end|setComplexAnimation|label|jumpLabel|setVar|callScene|showVars|unlockCg|unlockBgm|filmMode|setTextbox|setAnimation|playEffect|setTempAnimation|setTransform|setTransition|getUserInput|applyStyle|wait)\\:)(.*?)(\\:)([^\\;\\n]*?)($|\\;.*?$)",
 			"captures": {
 				"1": {
 					"name": "meta.character.webgal",
-					"patterns": [
-						{
-							"include": "#character"
-						}
-					]
+					"patterns": [ { "include": "#character" } ]
 				},
-				"2": {
-					"patterns": [
-						{
-							"include": "#operator"
-						}
-					]
-				},
-				"3": {
-					"patterns": [
-						{
-							"include": "#RichText"
-						},
-						{
-							"include": "#utterance"
-						}
-					]
-				},
-				"4": {
-					"patterns": [
-						{
-							"include": "#comment-line"
-						}
-					]
-				}
+				"2": { "patterns": [ { "include": "#operator" } ] },
+				"3": { "patterns": [ { "include": "#utterance" } ] },
+				"4": { "patterns": [ { "include": "#comment-line" } ] }
 			}
 		},
 		"command-colon": {
 			"comment": "cmd:[arg0[ -args]][;cmt]",
-			"match": "^(intro|changeBg|changeFigure|playEffect|miniAvatar|changeScene|choose|end|bgm|playVideo|setComplexAnimation|setFilter|pixiInit|pixiPerform|label|jumpLabel|setVar|callScene|showVars|unlockCg|unlockBgm|say|filmMode|callScene|setTextbox|setAnimation|wait)(\\:)(.*?)($|(?<!\\\\);.*?$)",
+			"match": "^(say|changeBg|changeFigure|bgm|playVideo|pixiPerform|pixiInit|intro|miniAvatar|changeScene|choose|end|setComplexAnimation|label|jumpLabel|setVar|callScene|showVars|unlockCg|unlockBgm|filmMode|setTextbox|setAnimation|playEffect|setTempAnimation|setTransform|setTransition|getUserInput|applyStyle|wait)(\\:)([^\\;\\n]*?)($|\\;.*?$)",
 			"captures": {
 				"1": {
 					"name": "meta.command.webgal",
-					"patterns": [
-						{
-							"include": "#command"
-						}
-					]
+					"patterns": [ { "include": "#command" } ]
 				},
-				"2": {
-					"patterns": [
-						{
-							"include": "#operator"
-						}
-					]
-				},
-				"3": {
-					"patterns": [
-						{
-							"include": "#RichText"
-						},
-						{
-							"include": "#choose"
-						},
-						{
-							"include": "#argument-list"
-						}
-					]
-				},
-				"4": {
-					"patterns": [
-						{
-							"include": "#comment-line"
-						}
-					]
-				}
+				"2": { "patterns": [ { "include": "#operator" } ] },
+				"3": { "patterns": [ { "include": "#argument-list" } ] },
+				"4": { "patterns": [ { "include": "#comment-line" } ] }
 			}
 		},
 		"command-semicolon": {
 			"comment": "cmd;[cmt]",
-			"match": "^(intro|changeBg|changeFigure|playEffect|miniAvatar|changeScene|choose|end|bgm|playVideo|setComplexAnimation|setFilter|pixiInit|pixiPerform|label|jumpLabel|setVar|callScene|showVars|unlockCg|unlockBgm|say|filmMode|callScene|setTextbox|setAnimation|wait)($|\\;.*?$)",
+			"match": "^(say|changeBg|changeFigure|bgm|playVideo|pixiPerform|pixiInit|intro|miniAvatar|changeScene|choose|end|setComplexAnimation|label|jumpLabel|setVar|callScene|showVars|unlockCg|unlockBgm|filmMode|setTextbox|setAnimation|playEffect|setTempAnimation|setTransform|setTransition|getUserInput|applyStyle|wait)($|\\;.*?$)",
 			"captures": {
 				"1": {
 					"name": "meta.command.webgal",
-					"patterns": [
-						{
-							"include": "#command"
-						}
-					]
+					"patterns": [ { "include": "#command" } ]
 				},
-				"2": {
-					"patterns": [
-						{
-							"include": "#comment-line"
-						}
-					]
-				}
+				"2": { "patterns": [ { "include": "#comment-line" } ] }
 			}
 		},
 		"utterance-semicolon": {
 			"comment": "utt[ -args];[cmt]",
-			"match": "^(?!(?:intro|changeBg|changeFigure|playEffect|miniAvatar|changeScene|choose|end|bgm|playVideo|setComplexAnimation|setFilter|pixiInit|pixiPerform|label|jumpLabel|setVar|callScene|showVars|unlockCg|unlockBgm|say|filmMode|callScene|setTextbox|setAnimation|wait)\\;)([^\\:\\;\\n]+?)(\\;.*?$)",
+			"match": "^(?!(?:say|changeBg|changeFigure|bgm|playVideo|pixiPerform|pixiInit|intro|miniAvatar|changeScene|choose|end|setComplexAnimation|label|jumpLabel|setVar|callScene|showVars|unlockCg|unlockBgm|filmMode|setTextbox|setAnimation|playEffect|setTempAnimation|setTransform|setTransition|getUserInput|applyStyle|wait)\\;)([^\\:\\;\\n]+?)($|\\;.*?$)",
 			"captures": {
-				"1": {
-					"patterns": [
-						{
-							"include": "#utterance"
-						}
-					]
-				},
-				"2": {
-					"patterns": [
-						{
-							"include": "#comment-line"
-						}
-					]
-				}
+				"1": { "patterns": [ { "include": "#utterance" } ] },
+				"2": { "patterns": [ { "include": "#comment-line" } ] }
 			}
 		},
 		"statement": {
 			"patterns": [
-				{
-					"include": "#character-colon"
-				},
-				{
-					"include": "#command-colon"
-				},
-				{
-					"include": "#command-semicolon"
-				},
-				{
-					"include": "#utterance-semicolon"
-				}
+				{ "include": "#character-colon" },
+				{ "include": "#command-colon" },
+				{ "include": "#command-semicolon" },
+				{ "include": "#utterance-semicolon" }
 			]
 		}
 	},
-	"scopeName": "source.webgal",
-	"fileTypes": ["txt"]
+	"scopeName": "source.webgal"
 }
