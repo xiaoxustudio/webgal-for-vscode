@@ -6,30 +6,97 @@ import { Position, TextDocument } from "vscode-languageserver-textdocument";
 /** 获取位置的指令单词 */
 export function getWordAtPosition(
 	doc: TextDocument,
-	pos: Position
+	pos: Position,
+	charRegex?: RegExp
 ): { word: string; start: number; end: number } | null {
 	const text = doc.getText();
 	const offset = doc.offsetAt(pos);
 	if (offset < 0 || offset > text.length) return null;
 
-	// Unicode-aware "word" character test: letters, numbers, underscore
-	// Requires JS RegExp Unicode flag (Node >= 10+)
-	const isWordChar = (ch: string) => /\p{L}|\p{N}|_/u.test(ch);
+	// 如果没有提供 charRegex，使用默认
+	const testChar = (ch: string) => {
+		if (!charRegex) return /\p{L}|\p{N}|_/u.test(ch);
+		// 为避免全局标志的问题，使用新的无 g 的正则来测试单个字符
+		const flags = (charRegex.flags || "").replace("g", "");
+		const r = new RegExp(charRegex.source, flags);
+		return r.test(ch);
+	};
 
-	// expand left from offset-1
 	let i = offset - 1;
-	while (i >= 0 && isWordChar(text.charAt(i))) i--;
+	while (i >= 0 && testChar(text.charAt(i))) i--;
 	const start = i + 1;
 
-	// expand right from offset
 	let j = offset;
-	while (j < text.length && isWordChar(text.charAt(j))) j++;
+	while (j < text.length && testChar(text.charAt(j))) j++;
 	const end = j;
 
 	if (start >= end) return null;
-	return { word: text.slice(start, end), start, end };
+	const word = text.slice(start, end);
+	return { word, start, end };
 }
 
+export function getPatternAtPosition(
+	doc: TextDocument,
+	pos: Position,
+	pattern: RegExp,
+	maxRadius = 512
+): {
+	text: string;
+	start: number;
+	end: number;
+	groups?: RegExpExecArray;
+} | null {
+	const text = doc.getText();
+	const offset = doc.offsetAt(pos);
+	if (offset < 0 || offset > text.length) return null;
+
+	// 去掉 g 标志，因为我们在循环中自己控制 exec
+	const flags = (pattern.flags || "").replace("g", "");
+	const re = new RegExp(pattern.source, flags);
+
+	// 限定搜索窗口，避免对大文件全匹配
+	const startSearch = Math.max(0, offset - maxRadius);
+	const endSearch = Math.min(text.length, offset + maxRadius);
+	const substr = text.slice(startSearch, endSearch);
+
+	let m: RegExpExecArray | null;
+	while ((m = re.exec(substr)) !== null) {
+		const matchStart = startSearch + m.index;
+		const matchEnd = matchStart + m[0].length;
+		if (offset >= matchStart && offset <= matchEnd) {
+			return { text: m[0], start: matchStart, end: matchEnd, groups: m };
+		}
+		// 如果没有全局标志，手动退出以免死循环
+		if (!pattern.global && !pattern.sticky) break;
+		// 继续循环（re.exec 对于没有 g 会重复同一 match，所以上面要 break）
+	}
+	return null;
+}
+
+export function getTokenOrPatternAtPosition(
+	doc: TextDocument,
+	pos: Position,
+	charRegex?: RegExp,
+	pattern?: RegExp
+): { word: string; start: number; end: number } | null {
+	// 先用你已有的基于字符的扩展（保证传入 charRegex 是字符级的）
+	const basic = getWordAtPosition(doc, pos, charRegex);
+	if (basic && pattern) {
+		// 如果 basic 匹配整个 pattern，则返回 basic（有时 basic 包含大括号）
+		const flags = (pattern.flags || "").replace("g", "");
+		const full = new RegExp(`^(?:${pattern.source})$`, flags);
+		if (full.test(basic.word)) return basic;
+	}
+	if (basic) return basic;
+
+	// 否则尝试全文模式查找（pattern 提供时）
+	if (pattern) {
+		const found = getPatternAtPosition(doc, pos, pattern);
+		if (found)
+			return { word: found.text, start: found.start, end: found.end };
+	}
+	return null;
+}
 /** Helper: 判断是否属于 路径字符 */
 export function isPathChar(ch: string): boolean {
 	return /[A-Za-z0-9_.\-\/~]/.test(ch);

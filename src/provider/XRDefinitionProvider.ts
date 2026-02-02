@@ -12,8 +12,8 @@ import {
 	Position,
 	TextDocument
 } from "vscode";
-import { get_var_type } from "../utils/utils_novsc";
-import { _VToken } from "../utils/utils";
+import { getVariableType } from "../utils/utils_novsc";
+import { IVToken } from "../utils/utils";
 
 export class XRDefinitionProvider implements DefinitionProvider {
 	provideDefinition(
@@ -23,8 +23,8 @@ export class XRDefinitionProvider implements DefinitionProvider {
 	) {
 		let _result: vscode.DefinitionLink[] = [];
 		if (token.isCancellationRequested) return _result;
-		const _Var_list: _VToken[] = [];
-		const _Label_list: _VToken[] = [];
+		const _Var_list: IVToken[] = [];
+		const _Label_list: IVToken[] = [];
 		const ALL_ARR = document.getText().split("\n");
 		const _ALL_ARR_cache = [];
 		for (let _d_index = 0; _d_index < ALL_ARR.length; _d_index++) {
@@ -37,15 +37,15 @@ export class XRDefinitionProvider implements DefinitionProvider {
 					value: m[2],
 					input: m.input,
 					position: position.with(_d_index, 7),
-					type: get_var_type(m[2])
-				} as _VToken);
+					type: getVariableType(m[2])
+				} as IVToken);
 			} else if (m1) {
 				_Label_list.push({
 					word: m1[1],
 					input: m1.input,
 					position: position.with(_d_index, 6),
 					desc: m1.input.substring(0, m1.input.indexOf(":"))
-				} as _VToken);
+				} as IVToken);
 			} else {
 				_ALL_ARR_cache.push(_data);
 			}

@@ -13,12 +13,13 @@ import {
 } from "vscode-languageclient/node";
 import { ExtensionContext, workspace } from "vscode";
 import path from "path";
-import { selector } from "./utils/utils";
+import { selector, selectorConfig } from "./utils/utils";
 
 export function create_client(context: ExtensionContext): LanguageClient {
 	const serverModule = context.asAbsolutePath(
 		path.join("out", "server", "server.js")
 	);
+
 	const serverOptions: ServerOptions = {
 		run: { module: serverModule, transport: TransportKind.ipc },
 		debug: {
@@ -26,14 +27,16 @@ export function create_client(context: ExtensionContext): LanguageClient {
 			transport: TransportKind.ipc
 		}
 	};
+
 	const clientOptions: LanguageClientOptions = {
-		documentSelector: [selector],
+		documentSelector: [selector, selectorConfig],
 		synchronize: {
 			fileEvents: workspace.createFileSystemWatcher("**/.clientrc")
 		}
 	};
+
 	return new LanguageClient(
-		"XRWEBGALlanguageServer",
+		"XR WEBGAL Language Server",
 		"XR WEBGAL Language Server",
 		serverOptions,
 		clientOptions

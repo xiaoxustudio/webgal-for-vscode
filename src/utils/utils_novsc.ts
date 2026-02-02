@@ -88,7 +88,7 @@ export const fsAccessor: FileAccessor = {
 };
 
 // 获取变量的描述
-export function get_desc_variable(ALL_ARR: string[], _start_line: number) {
+export function getVariableTypeDesc(ALL_ARR: string[], _start_line: number) {
 	let _desc_arr = [];
 	for (let _d_index = _start_line - 2; _d_index > 0; _d_index--) {
 		const _data = ALL_ARR[_d_index];
@@ -102,7 +102,7 @@ export function get_desc_variable(ALL_ARR: string[], _start_line: number) {
 	}
 	return _desc_arr.join("\n");
 }
-export function get_var_type(var_text: string): string {
+export function getVariableType(var_text: string): string {
 	let label;
 	if (["true", "false"].indexOf(var_text) !== -1) {
 		label = "布尔值";

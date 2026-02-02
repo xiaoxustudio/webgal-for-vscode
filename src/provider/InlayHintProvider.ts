@@ -15,7 +15,7 @@ import {
 } from "vscode";
 
 import { getConfig } from "../utils/utils";
-import { get_var_type } from "../utils/utils_novsc";
+import { getVariableType } from "../utils/utils_novsc";
 
 export class XRInlayHintsProvider implements InlayHintsProvider {
 	async provideInlayHints(
@@ -65,7 +65,7 @@ export class XRInlayHintsProvider implements InlayHintsProvider {
 			const start = document.positionAt(_pos);
 			const hint = new InlayHint(
 				start,
-				get_var_type(match[3]),
+				getVariableType(match[3]),
 				InlayHintKind.Type
 			);
 			hints.push(hint);

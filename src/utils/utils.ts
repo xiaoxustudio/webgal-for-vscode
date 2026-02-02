@@ -6,7 +6,8 @@ import * as vscode from "vscode";
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
-export interface _VToken {
+
+export interface IVToken {
 	word: string;
 	type: string;
 	is_global?: boolean;
@@ -15,7 +16,8 @@ export interface _VToken {
 	value?: string;
 	desc: string;
 }
-export type VList = { [key: string]: _VToken };
+
+export type VList = Record<string, IVToken>;
 
 let Game_Data = {}; // 游戏全局配置
 let Game_Connect_Status = 0; // 游戏连接状态

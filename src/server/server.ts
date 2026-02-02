@@ -19,17 +19,35 @@ import {
 	InitializeResult,
 	DocumentDiagnosticReportKind,
 	type DocumentDiagnosticReport,
-	Range,
 	CompletionItemKind,
 	Hover,
-	Position
+	Position,
+	MarkupKind,
+	MarkupContent
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { Warning, message, getDiagnosticInformation } from "../utils/Warnings";
-import { commandSuggestions } from "../provider/completionServerProvider";
-import { CommandNames, globalArgs, WebGALKeywords } from "../utils/provider";
-import { findTokenRange, getWordAtPosition } from "./utils";
+import {
+	CommandNames,
+	globalArgs,
+	WebGALCommandPrefix,
+	WebGALConfigCompletionMap,
+	WebGALConfigMap,
+	WebGALKeywords,
+	WebGALKeywordsKeys
+} from "../utils/provider";
+import {
+	findTokenRange,
+	getPatternAtPosition,
+	getWordAtPosition
+} from "./utils";
+import { IVToken, VList } from "../utils/utils";
+import {
+	getVariableType,
+	getVariableTypeDesc,
+	setGlobalVar
+} from "../utils/utils_novsc";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -282,6 +300,7 @@ connection.onCompletion(
 	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
 		if (!document) return [];
+		const file_name = document.uri;
 		const { token } = findTokenRange(
 			document,
 			_textDocumentPosition.position
@@ -291,7 +310,25 @@ connection.onCompletion(
 			document,
 			Position.create(_textDocumentPosition.position.line, 0)
 		); // 获得当前单词
+
+		console.log(token, wordMeta);
+
 		if (!wordMeta) return [];
+
+		/* 配置文件 */
+		if (file_name.endsWith("/game/config.txt")) {
+			const completionItems = [];
+			for (const key in WebGALConfigCompletionMap) {
+				const keyData = WebGALConfigCompletionMap[key];
+				// 如果输入的文本以关键词开头，则匹配相应的参数
+				if (key.toLowerCase().includes(token.toLowerCase())) {
+					completionItems.push(keyData);
+				}
+			}
+			return completionItems;
+		}
+
+		/* 场景文件 */
 		for (const key in WebGALKeywords) {
 			const keyData = WebGALKeywords[key as CommandNames];
 			// 如果输入的文本以关键词开头，则匹配相应的参数
@@ -321,19 +358,103 @@ connection.onCompletion(
 		) {
 			// 路径
 		}
-		CompletionItemSuggestions.push(...commandSuggestions);
+
+		// 尝试提取
+		CompletionItemSuggestions.push(
+			...WebGALKeywordsKeys.map(
+				(v) =>
+					({
+						label: WebGALKeywords[v]?.label || v,
+						kind:
+							WebGALKeywords[v]?.kind ||
+							CompletionItemKind.Keyword,
+						documentation: {
+							kind: MarkupKind.Markdown,
+							value:
+								(
+									WebGALKeywords[v].documentation as string
+								)?.replace(/\t+/g, "") || WebGALKeywords[v].desc
+						} as MarkupContent,
+						detail:
+							WebGALKeywords[v]?.detail || WebGALKeywords[v].desc
+					}) satisfies CompletionItem
+			)
+		);
 		return CompletionItemSuggestions;
 	}
 );
 
-connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
-	return item;
-});
+connection.onCompletionResolve((item: CompletionItem): CompletionItem => item);
 
 connection.onHover(
 	(_textDocumentPosition: TextDocumentPositionParams): Hover => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
 		if (!document) return { contents: [] };
+		const file_name = document.uri;
+		const documentTextArray = document.getText().split("\n");
+		const lineText = documentTextArray[_textDocumentPosition.position.line];
+		const findWord = getWordAtPosition(
+			document,
+			_textDocumentPosition.position
+		);
+		const findWordWithPattern = getPatternAtPosition(
+			document,
+			_textDocumentPosition.position,
+			/\{(\w+)\}/
+		);
+
+		if (!findWord) return { contents: [] };
+		// 配置文件 hover
+		if (file_name.endsWith("/game/config.txt")) {
+			for (const i in WebGALConfigMap) {
+				const kw_val = WebGALConfigMap[i];
+				if (lineText.startsWith(i)) {
+					let hoverContent = `**${findWord.word}**`;
+					hoverContent += `\n\n${kw_val.desc}`;
+					hoverContent += ` \n <hr>  `;
+					return {
+						contents: {
+							kind: MarkupKind.Markdown,
+							value: hoverContent
+						} as MarkupContent
+					};
+				}
+			}
+			return { contents: [] };
+		}
+
+		// 生成全局映射表
+		const GlobalVariables: VList = {}; // 全局变量
+		for (let index = 0; index < documentTextArray.length; index++) {
+			const currentLine = documentTextArray[index];
+			const matches = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(
+				currentLine
+			);
+			if (matches) {
+				const [, d_word, d_value] = matches;
+				GlobalVariables[d_word] = {
+					word: d_word,
+					value: d_value,
+					input: matches.input,
+					position: Position.create(index, 0),
+					type: getVariableType(d_value)
+				} as IVToken;
+				if (
+					GlobalVariables[d_word] &&
+					GlobalVariables[d_word]?.position
+				) {
+					const _v_pos = GlobalVariables[d_word].position;
+					const _v_line = _v_pos?.line ? _v_pos.line : -1;
+					GlobalVariables[d_word].desc = getVariableTypeDesc(
+						documentTextArray,
+						_v_line
+					);
+				}
+			}
+		}
+		setGlobalVar(GlobalVariables);
+
+		/* 指令 hover */
 		const wordMeta = getWordAtPosition(
 			document,
 			_textDocumentPosition.position
@@ -344,14 +465,43 @@ connection.onHover(
 			// 如果输入的文本以关键词开头，则匹配相应的参数
 			if (wordMeta.word.startsWith(key)) {
 				return {
-					contents: [
-						{
-							language: "markdown",
-							value: keyData.desc
-						}
-					]
+					contents: {
+						kind: MarkupKind.Markdown,
+						value: [
+							`### ${key}`,
+							(keyData.documentation as string)?.replace(
+								/\t+/g,
+								""
+							) || keyData.desc,
+							`${WebGALCommandPrefix}${key}`
+						].join("\n")
+					} as MarkupContent
 				};
 			}
+		}
+
+		/* 引用变量 hover */
+		if (!findWordWithPattern) return { contents: [] };
+		if (`{${findWord.word}}` === findWordWithPattern.text) {
+			let hoverContent = `### 变量 **${findWord.word}** `;
+			const currentVariable = GlobalVariables[findWord.word];
+			if (currentVariable.desc.length > 0) {
+				hoverContent += ` \n <hr>  `;
+				hoverContent += ` \n\n ${currentVariable.desc} `;
+			}
+			hoverContent += ` \n <hr>  `;
+			if (findWord.word in GlobalVariables) {
+				hoverContent += `\n\n\n  类型 : \`${currentVariable.type}\`  `;
+				hoverContent += `\n\n 位置 : 位于第${currentVariable.position?.line}行`;
+			} else {
+				hoverContent += ` \n 未定义变量`;
+			}
+			return {
+				contents: {
+					kind: MarkupKind.Markdown,
+					value: hoverContent
+				} as MarkupContent
+			};
 		}
 		return { contents: [] };
 	}
