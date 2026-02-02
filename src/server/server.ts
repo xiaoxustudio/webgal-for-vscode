@@ -23,7 +23,9 @@ import {
 	Hover,
 	Position,
 	MarkupKind,
-	MarkupContent
+	MarkupContent,
+	InlayHint,
+	InlayHintKind
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -42,20 +44,21 @@ import {
 	getPatternAtPosition,
 	getWordAtPosition
 } from "./utils";
-import { IVToken, VList } from "../utils/utils";
+import { getConfig, IVToken, VList } from "../utils/utils";
 import {
 	getVariableType,
 	getVariableTypeDesc,
 	setGlobalVar
 } from "../utils/utils_novsc";
+import { ServerSettings } from "./types";
 
 const connection = createConnection(ProposedFeatures.all);
 
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
-let hasConfigurationCapability = false;
-let hasWorkspaceFolderCapability = false;
-let hasDiagnosticRelatedInformationCapability = false;
+let hasConfigurationCapability = false; // 是否支持配置能力
+let hasWorkspaceFolderCapability = false; // 是否支持工作区文件夹能力
+let hasDiagnosticRelatedInformationCapability = false; // 是否支持诊断相关信息的能力
 
 connection.onInitialize((params: InitializeParams) => {
 	const capabilities = params.capabilities;
@@ -82,7 +85,8 @@ connection.onInitialize((params: InitializeParams) => {
 			diagnosticProvider: {
 				interFileDependencies: false,
 				workspaceDiagnostics: false
-			}
+			},
+			inlayHintProvider: true
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -109,73 +113,37 @@ connection.onInitialized(() => {
 	}
 });
 
-interface ServerSettings {
-	maxNumberOfProblems: number;
-	isShowWarning: boolean; // 是否显示警告
-	isShowHint: "关闭" | "最前面" | "变量名前" | "变量名后" | "最后面";
-}
-
 const defaultSettings = {
 	maxNumberOfProblems: 1000,
 	isShowWarning: true,
 	isShowHint: "变量名后"
 } satisfies ServerSettings;
+
 let globalSettings: ServerSettings = defaultSettings;
 
 const documentSettings: Map<string, Thenable<ServerSettings>> = new Map();
 
-connection.onDidChangeConfiguration((change) => {
-	if (hasConfigurationCapability) {
-		documentSettings.clear();
-	} else {
-		globalSettings = <ServerSettings>(
-			(change.settings.XRWebGalLanguageServer || defaultSettings)
-		);
-	}
-	connection.languages.diagnostics.refresh();
-});
-
-connection.onDidChangeTextDocument((change) => {});
-
-function getDocumentSettings(resource: string): Thenable<ServerSettings> {
+// 获取文档设置
+function getDocumentSettings(url: string): Thenable<ServerSettings> {
 	if (!hasConfigurationCapability) {
 		return Promise.resolve(globalSettings);
 	}
-	let result = documentSettings.get(resource);
+	let result = documentSettings.get(url);
 	if (!result) {
 		result = connection.workspace.getConfiguration({
-			scopeUri: resource,
+			scopeUri: url,
 			section: "XRWebGalLanguageServer"
 		});
-		documentSettings.set(resource, result);
+		documentSettings.set(url, result);
 	}
 	return result;
 }
 
 documents.onDidClose((e) => {
-	documentSettings.delete(e.document.uri);
+	documentSettings.delete(e.document.uri); // 关闭文档时删除设置缓存
 });
 
-connection.languages.diagnostics.on(async (params) => {
-	const document = documents.get(params.textDocument.uri);
-	if (document !== undefined) {
-		return {
-			kind: DocumentDiagnosticReportKind.Full,
-			items: await validateTextDocument(document)
-		} satisfies DocumentDiagnosticReport;
-	} else {
-		return {
-			kind: DocumentDiagnosticReportKind.Full,
-			items: []
-		} satisfies DocumentDiagnosticReport;
-	}
-});
-
-documents.onDidChangeContent((change) => {
-	validateTextDocument(change.document);
-});
-
-// 警告
+// 校验内容
 async function validateTextDocument(
 	textDocument: TextDocument
 ): Promise<Diagnostic[]> {
@@ -296,6 +264,36 @@ async function validateTextDocument(
 	return diagnostics;
 }
 
+connection.languages.diagnostics.on(async (params) => {
+	const document = documents.get(params.textDocument.uri);
+	if (document !== undefined) {
+		return {
+			kind: DocumentDiagnosticReportKind.Full,
+			items: await validateTextDocument(document)
+		} satisfies DocumentDiagnosticReport;
+	} else {
+		return {
+			kind: DocumentDiagnosticReportKind.Full,
+			items: []
+		} satisfies DocumentDiagnosticReport;
+	}
+});
+
+// 客户端配置改变通知
+connection.onDidChangeConfiguration((change) => {
+	if (hasConfigurationCapability) {
+		// 如果支持 workspace/configuration，我们只是清空缓存，下一次请求会重新通过 getConfiguration 拉取
+		documentSettings.clear();
+	} else {
+		// 客户端不支持 workspace/configuration，settings 值随 didChangeConfiguration 通过参数下发
+		globalSettings = <ServerSettings>(
+			(change.settings.XRWebGalLanguageServer || defaultSettings)
+		);
+	}
+	connection.languages.diagnostics.refresh(); // 重新校验
+});
+
+// 补全
 connection.onCompletion(
 	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
@@ -386,6 +384,7 @@ connection.onCompletion(
 
 connection.onCompletionResolve((item: CompletionItem): CompletionItem => item);
 
+// 悬浮
 connection.onHover(
 	(_textDocumentPosition: TextDocumentPositionParams): Hover => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
@@ -504,6 +503,59 @@ connection.onHover(
 			};
 		}
 		return { contents: [] };
+	}
+);
+
+// 内嵌
+connection.onRequest(
+	"textDocument/inlayHint",
+	async (textDocumentPosition: TextDocumentPositionParams) => {
+		const uri: string = textDocumentPosition.textDocument.uri;
+		const doc = documents.get(uri);
+		if (!doc) return [];
+
+		const text = doc.getText();
+		const hints: InlayHint[] = [];
+		const settings = await getDocumentSettings(uri);
+		if (!settings || settings.isShowHint == "关闭") return hints;
+		const regex = /(?<!\;)(setVar)(\s*:\s*)([\w\d_]+)=(.*);/g;
+
+		let match: RegExpExecArray | null;
+		while ((match = regex.exec(text)) !== null) {
+			if (match[0].startsWith(";")) continue;
+			const index = match.index;
+			let offset: number;
+			const p1 = index; // 行前
+			const p2 =
+				index + match[1].length + match[2].length + match[3].length + 1; // 变量名后
+			const p3 = index + match[1].length + match[2].length; // 变量名前
+			const p4 = index + match[0].length; // 行后
+			switch (settings.isShowHint) {
+				case "最前面":
+					offset = p1 + 1;
+					break;
+				case "变量名前":
+					offset = p3;
+					break;
+				case "变量名后":
+					offset = p2;
+					break;
+				case "最后面":
+					offset = p4;
+					break;
+				default:
+					offset = p2;
+					break;
+			}
+			hints.push({
+				position: doc.positionAt(offset),
+				label: `${getVariableType(match[3])}`,
+				kind: InlayHintKind.Type,
+				paddingLeft: false,
+				paddingRight: true
+			});
+		}
+		return hints;
 	}
 );
 

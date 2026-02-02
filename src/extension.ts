@@ -19,7 +19,6 @@ import { get_files, getWS, selector, selectorConfig } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
-import { XRInlayHintsProvider } from "./provider/InlayHintProvider";
 import { XRDocumentLinkProvider } from "./provider/DocumentLinkProvider";
 import { XRDebugAdapterDescriptorFactory } from "./activeDebug";
 import { XRDebugConfigurationProvider } from "./ws/config";
@@ -35,18 +34,14 @@ function InitPlugin(context: ExtensionContext) {
 	}
 	run_Skip_Check = true;
 	client = create_client(context);
-	context.subscriptions.push(
-		languages.registerInlayHintsProvider(
-			selector,
-			new XRInlayHintsProvider()
-		)
-	);
+
 	context.subscriptions.push(
 		languages.registerDocumentFormattingEditProvider(
 			selector,
 			new GoDocumentFormatter()
 		)
 	);
+
 	context.subscriptions.push(
 		languages.registerDefinitionProvider(
 			selector,
@@ -84,11 +79,13 @@ function InitPlugin(context: ExtensionContext) {
 			new XRDefinitionProvider()
 		);
 	});
+
 	commands.registerCommand("extension.deletePreviousCharacter", (func) => {
 		if (func instanceof Function) {
 			func();
 		}
 	});
+
 	commands.registerCommand("extension.RunLineScript", function () {
 		const _ws = getWS();
 		if (_ws && _ws._readyState === 1) {
