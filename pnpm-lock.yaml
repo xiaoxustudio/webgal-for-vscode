@@ -18,10 +18,10 @@ importers:
         specifier: ^1.65.0
         version: 1.68.0
       acorn:
-        specifier: ^8.11.3
+        specifier: ^8.14.3
         version: 8.15.0
       js-beautify:
-        specifier: ^1.14.3
+        specifier: ^1.15.3
         version: 1.15.4
       vscode-debugadapter:
         specifier: ^1.51.0
