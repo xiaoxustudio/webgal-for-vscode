@@ -386,7 +386,15 @@ export const WebGALKeywords: WebGALKeyWords = {
 			argsMap.center,
 			argsMap.left,
 			argsMap.right
-		]
+		],
+		label: "say",
+		kind: CompletionItemKind.Function,
+		documentation: `对话
+		\`\`\`webgal
+		say:你好;
+		\`\`\``,
+		detail: `say:<content> [...args];`,
+		insertText: "say"
 	},
 	changeBg: {
 		type: commandType.changeBg,
@@ -406,7 +414,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		changeBg:testBG03.jpg -next;
 		\`\`\``,
-		detail: `command changeBg:<fileName> [-next];`,
+		detail: `changeBg:<fileName> [-next];`,
 		insertText: "changeBg"
 	},
 	changeFigure: {
@@ -439,7 +447,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		changeFigure:testFigure03.png -left -next;
 		\`\`\``,
-		detail: `command changeFigure:<fileName> [-left] [-right] [id=figureId] [-next];`,
+		detail: `changeFigure:<fileName> [-left] [-right] [id=figureId] [-next];`,
 		insertText: "changeFigure"
 	},
 	bgm: {
@@ -457,7 +465,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		bgm:夏影.mp3;
 		\`\`\``,
-		detail: `command bgm:<fileName>;`,
+		detail: `bgm:<fileName>;`,
 		insertText: "bgm"
 	},
 	playVideo: {
@@ -470,7 +478,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		playVideo:OP.mp4;
 		\`\`\``,
-		detail: `command playVideo:<fileName>;`,
+		detail: `playVideo:<fileName>;`,
 		insertText: "playVideo"
 	},
 	pixiPerform: {
@@ -481,7 +489,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		kind: CompletionItemKind.Function,
 		documentation: `初始化 Pixi 特效
 		注意：特效作用后，如果没有初始化，特效会一直运行。`,
-		detail: `command pixiPerform:<performName>;`,
+		detail: `pixiPerform:<performName>;`,
 		insertText: "pixiPerform"
 	},
 	pixiInit: {
@@ -493,7 +501,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		documentation: `初始化 Pixi 特效
 		1.如果你要使用特效，那么你必须先运行这个命令来初始化 Pixi。
 		2.如果你想要消除已经作用的效果，你可以使用这个语法来清空效果。`,
-		detail: `command pixiInit;`,
+		detail: `pixiInit;`,
 		insertText: "pixiInit;"
 	},
 	intro: {
@@ -517,7 +525,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		intro:回忆不需要适合的剧本，|反正一说出口，|都成了戏言。;
 		\`\`\``,
-		detail: `command intro:<text> [|<text of line 2>] ...;`,
+		detail: `intro:<text> [|<text of line 2>] ...;`,
 		insertText: "intro:"
 	},
 	miniAvatar: {
@@ -533,7 +541,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		miniAvatar:minipic_test.png;显示
 		miniAvatar:none;关闭
 		\`\`\``,
-		detail: `command miniAvatar:<fileName>;`,
+		detail: `miniAvatar:<fileName>;`,
 		insertText: "miniAvatar"
 	},
 	changeScene: {
@@ -547,7 +555,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		changeScene:Chapter-2.txt;
 		\`\`\``,
-		detail: `command changeScene:<newSceneFileName>;`,
+		detail: `changeScene:<newSceneFileName>;`,
 		insertText: "changeScene"
 	},
 	choose: {
@@ -562,7 +570,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		choose:叫住她:Chapter-2.txt|回家:Chapter-3.txt;
 		\`\`\``,
-		detail: `command choose:<chooseText:newSceneName> [|<chooseText:newSceneName>] ...;`,
+		detail: `choose:<chooseText:newSceneName> [|<chooseText:newSceneName>] ...;`,
 		insertText: "choose: | ;"
 	},
 	end: {
@@ -575,7 +583,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		end;
 		\`\`\``,
-		detail: `command end;`,
+		detail: `end;`,
 		insertText: "end;"
 	},
 	setComplexAnimation: {
@@ -602,7 +610,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		label: "label",
 		kind: CompletionItemKind.Function,
 		documentation: `定义标签`,
-		detail: `command label:<Name>;`,
+		detail: `label:<Name>;`,
 		insertText: "label:"
 	},
 	jumpLabel: {
@@ -612,7 +620,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		label: "jumpLabel",
 		kind: CompletionItemKind.Function,
 		documentation: `跳转到指定标签`,
-		detail: `command jumpLabel:<Laebl Name>;`,
+		detail: `jumpLabel:<Laebl Name>;`,
 		insertText: "jumpLabel:"
 	},
 	setVar: {
@@ -627,7 +635,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		setVar:a=true;可以设置布尔值
 		setVar:a=人物名称;可以设置字符串
 		\`\`\``,
-		detail: `command setVar:<expression>;`,
+		detail: `setVar:<expression>;`,
 		insertText: "setVar:"
 	},
 	callScene: {
@@ -641,13 +649,21 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		callScene:Chapter-2.txt;
 		\`\`\``,
-		detail: `command callScene:<newSceneFileName>;`,
+		detail: `callScene:<newSceneFileName>;`,
 		insertText: "callScene"
 	},
 	showVars: {
 		type: commandType.showVars,
-		desc: "显示变量命令。",
-		args: []
+		desc: "显示所有本地/全局变量值",
+		args: [],
+		label: "showVars",
+		kind: CompletionItemKind.Function,
+		documentation: `在对话框中，显示所有本地变量与全局变量的值。
+		\`\`\`webgal
+		showVars;
+		\`\`\``,
+		detail: `showVars;`,
+		insertText: "showVars"
 	},
 	unlockCg: {
 		type: commandType.unlockCg,
@@ -659,7 +675,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		unlockCg:xgmain.jpeg -name=星光咖啡馆与死神之蝶 -series=1;
 		\`\`\``,
-		detail: `command unlockCg:<fileName> -name=cgName -series=serisId;`,
+		detail: `unlockCg:<fileName> -name=cgName -series=serisId;`,
 		insertText: "unlockCg"
 	},
 	unlockBgm: {
@@ -672,7 +688,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		unlockBgm:s_Title.mp3 -name=Smiling-Swinging!!;
 		\`\`\``,
-		detail: `command unlockBgm:<fileName> -name=bgmName;`,
+		detail: `unlockBgm:<fileName> -name=bgmName;`,
 		insertText: "unlockBgm"
 	},
 	filmMode: {
@@ -701,7 +717,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		setTextbox:hide;关闭文本框
 		setTextbox:on;开启文本框，可以是除 hide 以外的任意值。
 		\`\`\``,
-		detail: `command setTextbox:[hide] [others];`,
+		detail: `setTextbox:[hide] [others];`,
 		insertText: "setTextbox"
 	},
 	setAnimation: {
@@ -714,7 +730,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		setAnimation:enter-from-bottom -target=fig-center -next;为中间立绘设置一个从下方进入的动画，并转到下一句。
 		\`\`\``,
-		detail: `command setAnimation:<animationName> -target=targetId;`,
+		detail: `setAnimation:<animationName> -target=targetId;`,
 		insertText: "setAnimation"
 	},
 	playEffect: {
@@ -727,7 +743,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`webgal
 		playEffect:xxx.mp3;
 		\`\`\``,
-		detail: `command playEffect:<fileName>;`,
+		detail: `playEffect:<fileName>;`,
 		insertText: "playEffect"
 	},
 	setTempAnimation: {
@@ -765,7 +781,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		label: "setTransform",
 		kind: CompletionItemKind.Function,
 		documentation: `设置效果`,
-		detail: `command setTransform:<expression>;`,
+		detail: `setTransform:<expression>;`,
 		insertText: "setTransform:"
 	},
 	setTransition: {

@@ -44,7 +44,7 @@ import {
 	getPatternAtPosition,
 	getWordAtPosition
 } from "./utils";
-import { getConfig, IVToken, VList } from "../utils/utils";
+import { IVToken, VList } from "../utils/utils";
 import {
 	getVariableType,
 	getVariableTypeDesc,
@@ -473,7 +473,7 @@ connection.onHover(
 								""
 							) || keyData.desc,
 							`${WebGALCommandPrefix}${key}`
-						].join("\n")
+						].join("\n\n")
 					} as MarkupContent
 				};
 			}

@@ -15,7 +15,6 @@ import {
 	TextDocument
 } from "vscode";
 import { get_res_dir, ResType_Map } from "../utils/CompletionResources";
-import { currentDirectory } from "../utils/utils";
 import * as vscode from "vscode";
 import { existsSync } from "fs";
 import path from "path";
@@ -25,6 +24,8 @@ export class XRDocumentLinkProvider implements DocumentLinkProvider {
 		document: TextDocument,
 		token: CancellationToken
 	): ProviderResult<DocumentLink[]> {
+		const currentDirectory =
+			vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
 		let _result: DocumentLink[] = [];
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) return _result;

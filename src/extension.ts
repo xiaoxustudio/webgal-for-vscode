@@ -13,9 +13,11 @@ import {
 	window,
 	workspace
 } from "vscode";
+import fs from "fs";
+import path from "path";
 import XColorProvider from "./provider/ColorProvider";
 import GoDocumentFormatter from "./utils/Format";
-import { get_files, getWS, selector, selectorConfig } from "./utils/utils";
+import { getWS, selector, selectorConfig } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
@@ -114,6 +116,31 @@ function InitPlugin(context: ExtensionContext) {
 		}
 	});
 	client.start();
+}
+
+export const currentDirectory =
+	workspace.workspaceFolders?.[0].uri.fsPath || "";
+
+export function get_files(
+	baseDir: string = currentDirectory,
+	find_suffix: string[] = [".png"],
+	absolute_path = true
+) {
+	let _arr: string[] = [];
+	let _list = fs.readdirSync(baseDir);
+	for (let file of _list) {
+		const fullPath = path.join(baseDir, file);
+		if (fs.statSync(fullPath).isDirectory()) {
+			_arr = [
+				..._arr,
+				...get_files(fullPath, find_suffix, absolute_path)
+			];
+		} else if (find_suffix.includes(path.extname(file))) {
+			const RelativePath = workspace.asRelativePath(fullPath);
+			_arr.push(!absolute_path ? RelativePath : fullPath);
+		}
+	}
+	return _arr;
 }
 
 export function activate(context: ExtensionContext) {

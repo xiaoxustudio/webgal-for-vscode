@@ -79,38 +79,3 @@ export function isRgba255(rgba: string): boolean {
 	const values = matches[1].split(",").map(parseFloat);
 	return values.every((value) => value >= 1);
 }
-const fs = require("fs");
-const path = require("path");
-
-// 当前工作目录
-
-export const currentDirectory =
-	vscode.workspace.workspaceFolders?.[0].uri.fsPath || "";
-
-export function get_files(
-	baseDir: string = currentDirectory,
-	find_suffix: string[] = [".png"],
-	absolute_path = true
-) {
-	let _arr: string[] = [];
-	let _list = fs.readdirSync(baseDir);
-	for (let file of _list) {
-		const fullPath = path.join(baseDir, file);
-		if (fs.statSync(fullPath).isDirectory()) {
-			_arr = [
-				..._arr,
-				...get_files(fullPath, find_suffix, absolute_path)
-			];
-		} else if (find_suffix.includes(path.extname(file))) {
-			const RelativePath = vscode.workspace.asRelativePath(fullPath);
-			_arr.push(!absolute_path ? RelativePath : fullPath);
-		}
-	}
-	return _arr;
-}
-export function getConfig(document: vscode.TextDocument) {
-	return vscode.workspace.getConfiguration(
-		"XRWebGalLanguageServer",
-		document.uri
-	);
-}
