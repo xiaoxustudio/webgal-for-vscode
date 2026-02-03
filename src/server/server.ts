@@ -603,8 +603,12 @@ connection.onDocumentLinks(
 					pathArray[pathArray.length - 1] === "config.txt" &&
 					pathArray[pathArray.length - 2] === "game" &&
 					pathName === pathArray[pathArray.length - 3];
-				const dirResources = getTypeDirectory(matchText); // 路径类型
 
+				const command = match.input.substring(
+					0,
+					match.input.indexOf(":")
+				);
+				const dirResources = getTypeDirectory(command, matchText); // 路径类型
 				let targetPath: string;
 				if (isConfig) {
 					targetPath = await connection.sendRequest<string>(

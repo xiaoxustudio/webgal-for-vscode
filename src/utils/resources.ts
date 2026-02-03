@@ -6,45 +6,57 @@
  * @Description: By xuranXYS
  */
 
-const images: string[] = ["png", "webp", "jpg"];
+import { WebGALKeywords } from "./provider";
 
-const vocal: string[] = ["ogg", "wav"];
+enum ResourceType {
+	animation = "animation",
+	background = "background",
+	bgm = "bgm",
+	figure = "figure",
+	scene = "scene",
+	tex = "tex",
+	video = "video",
+	vocal = "vocal"
+}
 
-const bgm: string[] = ["mp3"];
-
-const animation: string[] = ["json"];
-
-const figures: string[] = ["json", "webp", "png"];
-
-const textures: string[] = ["png", "webp"];
-
-const videos: string[] = ["mp4"];
-
-export const resources = {
-	images, // 图片
-	vocal, // 音频
-	bgm, // 背景音乐
-	animation, // 动画
-	figures, // 立绘
-	textures, // 纹理
-	videos // 视频
+export const resourceExtsMap = {
+	animation: ["json"],
+	background: ["png", "jpg", "jpeg", "webp", "mp4", "webm", "mkv"],
+	bgm: ["mp3", "ogg", "wav"],
+	figure: ["png", "jpg", "jpeg", "webp", "json"],
+	scene: ["txt"],
+	tex: ["png", "webp"],
+	video: ["mp4", "webm", "mkv"],
+	vocal: ["mp3", "ogg", "wav"]
 };
 
-export const resources_map: Record<string, string[]> = {
-	animation: resources.animation,
-	background: resources.images,
-	bgm: resources.bgm,
-	figure: resources.figures,
-	tex: resources.textures,
-	video: resources.videos,
-	vocal: resources.vocal
+const resourcesMap = {
+	[WebGALKeywords.changeBg.label!]: ResourceType.background,
+	[WebGALKeywords.changeFigure.label!]: ResourceType.figure,
+	[WebGALKeywords.bgm.label!]: ResourceType.bgm,
+	[WebGALKeywords.playVideo.label!]: ResourceType.video,
+	[WebGALKeywords.miniAvatar.label!]: ResourceType.figure,
+	[WebGALKeywords.unlockCg.label!]: ResourceType.background,
+	[WebGALKeywords.unlockBgm.label!]: ResourceType.bgm,
+	[WebGALKeywords.playEffect.label!]: ResourceType.vocal,
+	[WebGALKeywords.playEffect.label!]: ResourceType.vocal
 };
 
-export function getTypeDirectory(fileName: string) {
+/* 根据指令返回资源目录名称 */
+export function getTypeDirectory(command: string, fileName: string) {
 	const ext = fileName.split(".").pop()!;
-	for (const type in resources_map) {
-		if (resources_map[type].includes(ext)) {
-			return type;
+	/* 精确匹配 */
+	for (const type in resourcesMap) {
+		const current = resourcesMap[type];
+		if (command == type && resourceExtsMap[current].includes(ext)) {
+			return current;
+		}
+	}
+	/* 模糊匹配 */
+	for (const type in resourcesMap) {
+		const current = resourcesMap[type];
+		if (resourceExtsMap[current].includes(ext)) {
+			return current;
 		}
 	}
 	return "scene";
