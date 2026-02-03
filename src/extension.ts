@@ -17,11 +17,10 @@ import fs from "fs";
 import path from "path";
 import XColorProvider from "./provider/ColorProvider";
 import GoDocumentFormatter from "./utils/Format";
-import { getWS, selector, selectorConfig } from "./utils/utils";
+import { getWS, selector } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
-import { XRDocumentLinkProvider } from "./provider/DocumentLinkProvider";
 import { XRDebugAdapterDescriptorFactory } from "./activeDebug";
 import { XRDebugConfigurationProvider } from "./ws/config";
 import { IDebugMessage, DebugCommand } from "./utils/utils_novsc";
@@ -51,12 +50,6 @@ function InitPlugin(context: ExtensionContext) {
 		)
 	);
 
-	context.subscriptions.push(
-		languages.registerDocumentLinkProvider(
-			[selector, selectorConfig],
-			new XRDocumentLinkProvider()
-		)
-	);
 	context.subscriptions.push(
 		debug.registerDebugConfigurationProvider(
 			selector.language,

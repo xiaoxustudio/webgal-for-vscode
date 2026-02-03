@@ -11,9 +11,10 @@ import {
 	ServerOptions,
 	TransportKind
 } from "vscode-languageclient/node";
-import { ExtensionContext, workspace } from "vscode";
+import { ExtensionContext, Uri, workspace } from "vscode";
 import path from "path";
 import { selector, selectorConfig } from "./utils/utils";
+import requests from "./requests";
 
 export function create_client(context: ExtensionContext): LanguageClient {
 	const serverModule = context.asAbsolutePath(
@@ -35,10 +36,16 @@ export function create_client(context: ExtensionContext): LanguageClient {
 		}
 	};
 
-	return new LanguageClient(
+	const client = new LanguageClient(
 		"XR WEBGAL Language Server",
 		"XR WEBGAL Language Server",
 		serverOptions,
 		clientOptions
 	);
+
+	for (const bindingFunction of requests) {
+		bindingFunction(client);
+	}
+
+	return client;
 }

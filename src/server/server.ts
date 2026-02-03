@@ -25,7 +25,11 @@ import {
 	MarkupKind,
 	MarkupContent,
 	InlayHint,
-	InlayHintKind
+	InlayHintKind,
+	DocumentLink,
+	DocumentLinkParams,
+	Range,
+	URI
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -51,6 +55,7 @@ import {
 	setGlobalVar
 } from "../utils/utils_novsc";
 import { ServerSettings } from "./types";
+import { getTypeDirectory } from "../utils/resources";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -86,7 +91,10 @@ connection.onInitialize((params: InitializeParams) => {
 				interFileDependencies: false,
 				workspaceDiagnostics: false
 			},
-			inlayHintProvider: true
+			inlayHintProvider: true,
+			documentLinkProvider: {
+				resolveProvider: true
+			}
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -558,6 +566,88 @@ connection.onRequest(
 		return hints;
 	}
 );
+
+// 链接定义
+connection.onDocumentLinks(
+	async (textDocumentLinkParams: DocumentLinkParams) => {
+		const uri: string = textDocumentLinkParams.textDocument.uri;
+		const doc = documents.get(uri);
+		if (!doc) return [];
+		const documentTextArray = doc.getText().split("\n");
+		const _textDocument = textDocumentLinkParams.textDocument;
+		const pathArray = _textDocument.uri.split("/");
+		const currentDirectory = await connection.sendRequest<string>(
+			"client/currentDirectory"
+		);
+		let documentLinks: DocumentLink[] = [];
+		for (let i = 0; i < documentTextArray.length; i++) {
+			let currentLine = documentTextArray[i];
+			let startText = currentLine.substring(
+				0,
+				currentLine.indexOf(":") !== -1
+					? currentLine.indexOf(":")
+					: currentLine.indexOf(";")
+			);
+			startText = startText.startsWith(";")
+				? startText.substring(1)
+				: startText; // 去除开头的分号
+			let match: RegExpExecArray | null;
+			const regex =
+				/[^:-\s]+?([^;\s:<>/\\\|\?\*\"\']+)\.([^-;\s:<>/\\\|\?\*\"\']+)/g;
+			while ((match = regex.exec(currentLine))) {
+				const matchText = match[0];
+				const pathName =
+					pathArray[
+						pathArray.length - 3 > 0
+							? pathArray.length - 3
+							: pathArray.length - 2
+					];
+				const isConfig =
+					pathArray[pathArray.length - 1] === "config.txt" &&
+					pathArray[pathArray.length - 2] === "game" &&
+					pathName === pathArray[pathArray.length - 3];
+				const dirResources = getTypeDirectory(matchText); // 路径类型
+
+				let targetPath: string;
+				if (isConfig) {
+					targetPath = await connection.sendRequest<string>(
+						"client/FJoin",
+						currentDirectory + "/"
+					);
+				} else {
+					targetPath = await connection.sendRequest<string>(
+						"client/FJoin",
+						currentDirectory + "/" + dirResources
+					);
+				}
+				const basePath = await connection.sendRequest<string>(
+					"client/FJoin",
+					targetPath + "/" + matchText
+				);
+				console.log(targetPath, basePath);
+				const uri = await connection.sendRequest(
+					"client/FStat",
+					basePath
+				);
+				if (uri)
+					documentLinks.push({
+						target: "file:///" + basePath,
+						range: Range.create(
+							Position.create(i, match.index),
+							Position.create(i, match.index + matchText.length)
+						),
+						tooltip: basePath
+					} as DocumentLink);
+				if (regex.lastIndex === match.index) {
+					regex.lastIndex++;
+				}
+			}
+		}
+		return documentLinks;
+	}
+);
+
+connection.onDocumentLinkResolve((documentLink: DocumentLink) => documentLink);
 
 documents.listen(connection);
 
