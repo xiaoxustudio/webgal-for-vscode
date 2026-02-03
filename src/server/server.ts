@@ -28,8 +28,7 @@ import {
 	InlayHintKind,
 	DocumentLink,
 	DocumentLinkParams,
-	Range,
-	URI
+	Range
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -317,8 +316,6 @@ connection.onCompletion(
 			Position.create(_textDocumentPosition.position.line, 0)
 		); // 获得当前单词
 
-		console.log(token, wordMeta);
-
 		if (!wordMeta) return [];
 
 		/* 配置文件 */
@@ -581,7 +578,7 @@ connection.onDocumentLinks(
 		);
 		let documentLinks: DocumentLink[] = [];
 		for (let i = 0; i < documentTextArray.length; i++) {
-			let currentLine = documentTextArray[i];
+			const currentLine = documentTextArray[i];
 			let startText = currentLine.substring(
 				0,
 				currentLine.indexOf(":") !== -1
@@ -624,20 +621,18 @@ connection.onDocumentLinks(
 					"client/FJoin",
 					targetPath + "/" + matchText
 				);
-				console.log(targetPath, basePath);
-				const uri = await connection.sendRequest(
-					"client/FStat",
-					basePath
-				);
-				if (uri)
-					documentLinks.push({
-						target: "file:///" + basePath,
-						range: Range.create(
-							Position.create(i, match.index),
-							Position.create(i, match.index + matchText.length)
-						),
-						tooltip: basePath
-					} as DocumentLink);
+
+				const targetPathFinally = "file:///" + basePath;
+
+				documentLinks.push({
+					target: targetPathFinally,
+					range: Range.create(
+						Position.create(i, match.index),
+						Position.create(i, match.index + matchText.length)
+					),
+					tooltip: basePath
+				} as DocumentLink);
+
 				if (regex.lastIndex === match.index) {
 					regex.lastIndex++;
 				}

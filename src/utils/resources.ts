@@ -47,5 +47,5 @@ export function getTypeDirectory(fileName: string) {
 			return type;
 		}
 	}
-	return "";
+	return "scene";
 }

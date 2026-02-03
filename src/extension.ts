@@ -15,7 +15,6 @@ import {
 } from "vscode";
 import fs from "fs";
 import path from "path";
-import XColorProvider from "./provider/ColorProvider";
 import GoDocumentFormatter from "./utils/Format";
 import { getWS, selector } from "./utils/utils";
 import { create_client } from "./client";
@@ -55,10 +54,6 @@ function InitPlugin(context: ExtensionContext) {
 			selector.language,
 			new XRDebugConfigurationProvider()
 		)
-	);
-
-	context.subscriptions.push(
-		languages.registerColorProvider(selector, new XColorProvider())
 	);
 
 	context.subscriptions.push(
