@@ -894,7 +894,7 @@ export const WebGALConfigMap: Record<string, WebGALConfigToken> = {
 export const WebGALConfigCompletionMap = Object.fromEntries(
 	Object.entries(WebGALConfigMap).map(([key, token]) => {
 		const label = key;
-		const documentation = token.desc ?? "";
+		const documentation = token?.documentation ?? token?.desc ?? "";
 		const detail = `${key}:<value>;`;
 		const insertText = `${key}:$1`;
 

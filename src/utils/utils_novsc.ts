@@ -62,21 +62,45 @@ export interface IDebugMessage {
 		stageSyncMsg: any;
 	};
 }
-// 上一次全局变量表
-export let GlobalVar: {
-	[key: PropertyKey]: any;
-} = {};
-export const setGlobalVar = (_gv: object) => {
-	GlobalVar = _gv;
+
+export interface IVToken {
+	word: string; // 名称
+	type: string; // 类型
+	is_global?: boolean; // 是否是全局
+	position?: any; // 位置
+	input?: string; // 原始文本
+	value?: string; // 值
+	desc: string; // 描述
+}
+
+export type VList = Record<string, IVToken>;
+
+// 全局映射表
+export interface IDefinetionMap {
+	label: VList;
+	setVar: VList;
+}
+// 上一次全局映射表
+export const GlobalMap: IDefinetionMap = {
+	label: {},
+	setVar: {}
 };
-export const getGlobalVar = () => {
-	// to key:value
-	let _o: Record<string, any> = {};
-	Object.keys(GlobalVar).forEach(() => {
-		_o[GlobalVar.word] = GlobalVar.value;
-	});
-	return _o;
+export const setGlobalMap = (
+	key: keyof IDefinetionMap,
+	value: Record<string, any>
+) => {
+	GlobalMap[key] = value;
 };
+export const getGlobalMap = (group: keyof IDefinetionMap = "setVar") => {
+	return GlobalMap[group];
+};
+export const getGlobalMapAll = () => {
+	return [
+		...Object.values(GlobalMap.label),
+		...Object.values(GlobalMap.setVar)
+	];
+};
+
 export const fsAccessor: FileAccessor = {
 	isWindows: process.platform === "win32",
 	readFile(path: string): Promise<Buffer> {
@@ -102,6 +126,7 @@ export function getVariableTypeDesc(ALL_ARR: string[], _start_line: number) {
 	}
 	return _desc_arr.join("\n");
 }
+
 export function getVariableType(var_text: string): string {
 	let label;
 	if (["true", "false"].indexOf(var_text) !== -1) {
@@ -109,7 +134,7 @@ export function getVariableType(var_text: string): string {
 	} else {
 		try {
 			const __val_real = new Function("return " + var_text).bind(
-				getGlobalVar()
+				getGlobalMap()
 			);
 			switch (typeof __val_real) {
 				case "number":

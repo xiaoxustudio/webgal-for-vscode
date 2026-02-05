@@ -19,7 +19,6 @@ import GoDocumentFormatter from "./utils/Format";
 import { getWS, selector } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
-import { XRDefinitionProvider } from "./provider/XRDefinitionProvider";
 import { XRDebugAdapterDescriptorFactory } from "./activeDebug";
 import { XRDebugConfigurationProvider } from "./ws/config";
 import { IDebugMessage, DebugCommand } from "./utils/utils_novsc";
@@ -43,13 +42,6 @@ function InitPlugin(context: ExtensionContext) {
 	);
 
 	context.subscriptions.push(
-		languages.registerDefinitionProvider(
-			selector,
-			new XRDefinitionProvider()
-		)
-	);
-
-	context.subscriptions.push(
 		debug.registerDebugConfigurationProvider(
 			selector.language,
 			new XRDebugConfigurationProvider()
@@ -63,12 +55,7 @@ function InitPlugin(context: ExtensionContext) {
 		)
 	);
 
-	commands.registerCommand("extension.goToDefinition", () => {
-		languages.registerDefinitionProvider(
-			selector,
-			new XRDefinitionProvider()
-		);
-	});
+	commands.registerCommand("extension.goToDefinition", () => {});
 
 	commands.registerCommand("extension.deletePreviousCharacter", (func) => {
 		if (func instanceof Function) {

@@ -47,11 +47,16 @@ import {
 	getPatternAtPosition,
 	getWordAtPosition
 } from "./utils";
-import { IVToken, VList } from "../utils/utils";
+
 import {
+	getGlobalMap,
+	getGlobalMapAll,
 	getVariableType,
 	getVariableTypeDesc,
-	setGlobalVar
+	IDefinetionMap,
+	IVToken,
+	setGlobalMap,
+	source
 } from "../utils/utils_novsc";
 import { ServerSettings } from "./types";
 import { getTypeDirectory } from "../utils/resources";
@@ -146,6 +151,51 @@ function getDocumentSettings(url: string): Thenable<ServerSettings> {
 	return result;
 }
 
+// 更新全局映射表
+function updateGlobalMap(documentTextArray: string[]) {
+	// 生成全局映射表
+	const GlobalVariables: IDefinetionMap = {
+		label: {},
+		setVar: {}
+	}; // 全局变量
+	for (let index = 0; index < documentTextArray.length; index++) {
+		const currentLine = documentTextArray[index];
+		const setVarExec = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(
+			currentLine
+		);
+		const labelExec = /label:\s*(\S+);/g.exec(currentLine);
+		if (setVarExec != null) {
+			GlobalVariables.setVar[setVarExec[1]] = {
+				word: setVarExec[1],
+				value: setVarExec[2],
+				input: setVarExec.input,
+				position: Position.create(index, 0),
+				type: getVariableType(setVarExec[2])
+			} as IVToken;
+			/* 获取变量描述 */
+			if (
+				GlobalVariables.setVar[setVarExec[1]] &&
+				GlobalVariables.setVar[setVarExec[1]]?.position
+			) {
+				const _v_pos = GlobalVariables.setVar[setVarExec[1]].position;
+				const _v_line = _v_pos?.line ? _v_pos.line : -1;
+				GlobalVariables.setVar[setVarExec[1]].desc =
+					getVariableTypeDesc(documentTextArray, _v_line);
+			}
+		} else if (labelExec !== null) {
+			GlobalVariables.label[labelExec[1]] = {
+				word: labelExec[1],
+				value: labelExec.input,
+				input: labelExec.input,
+				position: Position.create(index, 6),
+				type: labelExec.input.substring(0, labelExec.input.indexOf(":"))
+			} as IVToken;
+		}
+	}
+	setGlobalMap("setVar", GlobalVariables.setVar);
+	setGlobalMap("label", GlobalVariables.label);
+}
+
 documents.onDidClose((e) => {
 	documentSettings.delete(e.document.uri); // 关闭文档时删除设置缓存
 });
@@ -194,7 +244,7 @@ async function validateTextDocument(
 				severity: DiagnosticSeverity.Warning,
 				range,
 				message: message(i, m[0].trim()),
-				source: "WebGal Script"
+				source
 			};
 			if (hasDiagnosticRelatedInformationCapability) {
 				diagnostic.relatedInformation = [
@@ -427,36 +477,7 @@ connection.onHover(
 			return { contents: [] };
 		}
 
-		// 生成全局映射表
-		const GlobalVariables: VList = {}; // 全局变量
-		for (let index = 0; index < documentTextArray.length; index++) {
-			const currentLine = documentTextArray[index];
-			const matches = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(
-				currentLine
-			);
-			if (matches) {
-				const [, d_word, d_value] = matches;
-				GlobalVariables[d_word] = {
-					word: d_word,
-					value: d_value,
-					input: matches.input,
-					position: Position.create(index, 0),
-					type: getVariableType(d_value)
-				} as IVToken;
-				if (
-					GlobalVariables[d_word] &&
-					GlobalVariables[d_word]?.position
-				) {
-					const _v_pos = GlobalVariables[d_word].position;
-					const _v_line = _v_pos?.line ? _v_pos.line : -1;
-					GlobalVariables[d_word].desc = getVariableTypeDesc(
-						documentTextArray,
-						_v_line
-					);
-				}
-			}
-		}
-		setGlobalVar(GlobalVariables);
+		updateGlobalMap(documentTextArray);
 
 		/* 指令 hover */
 		const wordMeta = getWordAtPosition(
@@ -483,6 +504,10 @@ connection.onHover(
 				};
 			}
 		}
+
+		updateGlobalMap(documentTextArray);
+
+		const GlobalVariables = getGlobalMap();
 
 		/* 引用变量 hover */
 		if (!findWordWithPattern) return { contents: [] };
@@ -642,7 +667,35 @@ connection.onDocumentLinks(
 				}
 			}
 		}
-		return documentLinks;
+
+		/* 定义 */
+		updateGlobalMap(documentTextArray);
+		const jumpLabelMap = getGlobalMap("label");
+
+		for (let index = 0; index < documentTextArray.length; index++) {
+			const currentLine = documentTextArray[index];
+			const jumpLabelExec = /jumpLabel:\s*(\S+);/.exec(currentLine);
+			if (jumpLabelExec != null) {
+				const fullMatch = jumpLabelExec[0];
+				const jumpLabel = jumpLabelExec[1];
+				const startChar =
+					jumpLabelExec.index + fullMatch.indexOf(jumpLabel);
+				const endChar = startChar + jumpLabel.length;
+
+				const map = jumpLabelMap[jumpLabel];
+
+				documentLinks.push({
+					range: Range.create(
+						Position.create(index, startChar),
+						Position.create(index, endChar)
+					),
+					target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
+					tooltip: `跳转标签 ${jumpLabel}`
+				} as DocumentLink);
+			}
+		}
+
+		return [...documentLinks];
 	}
 );
 

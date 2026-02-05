@@ -7,18 +7,6 @@ import * as vscode from "vscode";
  * @Description: By xuranXYS
  */
 
-export interface IVToken {
-	word: string;
-	type: string;
-	is_global?: boolean;
-	position?: vscode.Position;
-	input?: string;
-	value?: string;
-	desc: string;
-}
-
-export type VList = Record<string, IVToken>;
-
 let Game_Data = {}; // 游戏全局配置
 let Game_Connect_Status = 0; // 游戏连接状态
 let WS: any = null;

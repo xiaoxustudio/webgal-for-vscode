@@ -11,10 +11,10 @@ import {
 	ServerOptions,
 	TransportKind
 } from "vscode-languageclient/node";
-import { ExtensionContext, Uri, workspace } from "vscode";
 import path from "path";
-import { selector, selectorConfig } from "./utils/utils";
 import requests from "./requests";
+import { ExtensionContext, workspace } from "vscode";
+import { selector, selectorConfig } from "./utils/utils";
 
 export function create_client(context: ExtensionContext): LanguageClient {
 	const serverModule = context.asAbsolutePath(
