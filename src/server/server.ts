@@ -646,15 +646,25 @@ connection.onDocumentLinks(
 						currentDirectory + "/" + dirResources
 					);
 				}
-				const basePath = await connection.sendRequest<string>(
+				let basePath = await connection.sendRequest<string>(
 					"client/FJoin",
 					targetPath + "/" + matchText
 				);
 
-				const targetPathFinally = "file:///" + basePath;
+				const stat = await connection.sendRequest<string>(
+					"client/FStat",
+					basePath
+				);
+				// 如果文件找不到，则尝试全局搜索
+				if (!stat) {
+					basePath = await connection.sendRequest<string>(
+						"client/findFile",
+						[currentDirectory, matchText]
+					);
+				}
 
 				documentLinks.push({
-					target: targetPathFinally,
+					target: "file:///" + basePath,
 					range: Range.create(
 						Position.create(i, match.index),
 						Position.create(i, match.index + matchText.length)

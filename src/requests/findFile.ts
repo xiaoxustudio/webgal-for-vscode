@@ -37,15 +37,12 @@ const searchFileRecursive = async (
 };
 
 const findFile = (client: LanguageClient) =>
-	client.onRequest(
-		"client/findFile",
-		async (startPath: string, targetName: string) => {
-			try {
-				return searchFileRecursive(targetName, startPath);
-			} catch (error) {
-				return null;
-			}
+	client.onRequest("client/findFile", async ([startPath, targetName]) => {
+		try {
+			return searchFileRecursive(targetName, startPath);
+		} catch (error) {
+			return null;
 		}
-	);
+	});
 
 export default findFile;
