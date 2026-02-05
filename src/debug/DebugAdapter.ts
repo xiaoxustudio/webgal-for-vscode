@@ -6,9 +6,9 @@
  * @Description: By xuranXYS
  */
 import * as Net from "net";
-import { XRDebugSession } from "./DebugSession";
 import * as vscode from "vscode";
-import { fsAccessor } from "./utils/utils_novsc";
+import { fsAccessor } from "../utils/utils_novsc";
+import { XRDebugSession } from "./DebugSession";
 
 let port = 0;
 const args = process.argv.slice(2);

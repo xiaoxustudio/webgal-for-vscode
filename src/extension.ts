@@ -19,7 +19,7 @@ import GoDocumentFormatter from "./utils/Format";
 import { getWS, selector } from "./utils/utils";
 import { create_client } from "./client";
 import { LanguageClient } from "vscode-languageclient/node";
-import { XRDebugAdapterDescriptorFactory } from "./activeDebug";
+import { XRDebugAdapterDescriptorFactory } from "./debug/activeDebug";
 import { XRDebugConfigurationProvider } from "./ws/config";
 import { IDebugMessage, DebugCommand } from "./utils/utils_novsc";
 
