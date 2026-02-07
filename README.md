@@ -121,7 +121,7 @@ Official documentation: [Document](https://docs.openwebgal.com/)
 
 Author: [Xu Ran](https://github.com/xiaoxustudio) 
 
-Contact Information: [xugame@qq.com](mailto:xugame@qq.com) 
+Contact Information: [xiaoxustudio@foxmail.com](mailto:xiaoxustudio@foxmail.com) 
 
 Please feel free to raise your valuable **issue**. We will handle it. 
 
