@@ -28,7 +28,10 @@ import {
 	InlayHintKind,
 	DocumentLink,
 	DocumentLinkParams,
-	Range
+	Range,
+	FoldingRangeParams,
+	FoldingRange,
+	FoldingRangeKind
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -50,7 +53,6 @@ import {
 
 import {
 	getGlobalMap,
-	getGlobalMapAll,
 	getVariableType,
 	getVariableTypeDesc,
 	IDefinetionMap,
@@ -98,7 +100,8 @@ connection.onInitialize((params: InitializeParams) => {
 			inlayHintProvider: true,
 			documentLinkProvider: {
 				resolveProvider: true
-			}
+			},
+			foldingRangeProvider: true
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -144,7 +147,7 @@ function getDocumentSettings(url: string): Thenable<ServerSettings> {
 	if (!result) {
 		result = connection.workspace.getConfiguration({
 			scopeUri: url,
-			section: "XRWebGalLanguageServer"
+			section: "WEBGAL Language Server"
 		});
 		documentSettings.set(url, result);
 	}
@@ -205,7 +208,7 @@ async function validateTextDocument(
 	textDocument: TextDocument
 ): Promise<Diagnostic[]> {
 	const settings = await getDocumentSettings(textDocument.uri);
-	if (!settings.isShowWarning) {
+	if (!settings?.isShowWarning) {
 		return [];
 	}
 	const text = textDocument.getText();
@@ -514,6 +517,7 @@ connection.onHover(
 		if (`{${findWord.word}}` === findWordWithPattern.text) {
 			let hoverContent = `### 变量 **${findWord.word}** `;
 			const currentVariable = GlobalVariables[findWord.word];
+			if (!currentVariable) return { contents: [] };
 			if (currentVariable.desc.length > 0) {
 				hoverContent += ` \n <hr>  `;
 				hoverContent += ` \n\n ${currentVariable.desc} `;
@@ -680,36 +684,77 @@ connection.onDocumentLinks(
 
 		/* 定义 */
 		updateGlobalMap(documentTextArray);
-		const jumpLabelMap = getGlobalMap("label");
+		// const jumpLabelMap = getGlobalMap("label");
 
-		for (let index = 0; index < documentTextArray.length; index++) {
-			const currentLine = documentTextArray[index];
-			const jumpLabelExec = /jumpLabel:\s*(\S+);/.exec(currentLine);
-			if (jumpLabelExec != null) {
-				const fullMatch = jumpLabelExec[0];
-				const jumpLabel = jumpLabelExec[1];
-				const startChar =
-					jumpLabelExec.index + fullMatch.indexOf(jumpLabel);
-				const endChar = startChar + jumpLabel.length;
+		// for (let index = 0; index < documentTextArray.length; index++) {
+		// 	const currentLine = documentTextArray[index];
+		// 	const jumpLabelExec = /jumpLabel:\s*(\S+);/.exec(currentLine);
+		// 	if (jumpLabelExec != null) {
+		// 		const fullMatch = jumpLabelExec[0];
+		// 		const jumpLabel = jumpLabelExec[1];
+		// 		const startChar =
+		// 			jumpLabelExec.index + fullMatch.indexOf(jumpLabel);
+		// 		const endChar = startChar + jumpLabel.length;
 
-				const map = jumpLabelMap[jumpLabel];
+		// 		const map = jumpLabelMap[jumpLabel];
 
-				documentLinks.push({
-					range: Range.create(
-						Position.create(index, startChar),
-						Position.create(index, endChar)
-					),
-					target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
-					tooltip: `跳转标签 ${jumpLabel}`
-				} as DocumentLink);
-			}
-		}
+		// 		documentLinks.push({
+		// 			range: Range.create(
+		// 				Position.create(index, startChar),
+		// 				Position.create(index, endChar)
+		// 			),
+		// 			target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
+		// 			tooltip: `跳转标签 ${jumpLabel}`
+		// 		} as DocumentLink);
+		// 	}
+		// }
 
 		return [...documentLinks];
 	}
 );
 
 connection.onDocumentLinkResolve((documentLink: DocumentLink) => documentLink);
+
+connection.onFoldingRanges((params) => {
+	const doc = documents.get(params.textDocument.uri);
+	if (!doc) return [];
+
+	const docText = doc.getText();
+	const foldingRanges = [];
+
+	const regex = /label:([\s\S]*?)(?=(?:\r?\n|^)end|(?:\r?\n|^)label:|$)/g;
+
+	let match: RegExpExecArray | null;
+	while ((match = regex.exec(docText))) {
+		if (match != null) {
+			const startLine = doc.positionAt(match.index).line;
+
+			// match[0] 包含了从 label: 到结束标记之前的内容
+			// 这里的 match[0] 结束位置正好指向结束标记（如 label:）的前面
+			const endPos = doc.positionAt(match.index + match[0].length);
+
+			let endLine = endPos.line;
+
+			// 如果结束标记正好在行首（character === 0），说明内容在上一行结束
+			if (endPos.character === 0) {
+				endLine = endPos.line - 1;
+			}
+
+			if (endLine > startLine) {
+				foldingRanges.push({
+					startLine: startLine,
+					endLine: endLine,
+					collapsedText:
+						match[1].split("\n")[0].replace(/;/g, "").trim() ||
+						"...",
+					kind: FoldingRangeKind.Region
+				});
+			}
+		}
+	}
+
+	return foldingRanges;
+});
 
 documents.listen(connection);
 
