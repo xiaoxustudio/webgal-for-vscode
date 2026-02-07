@@ -28,11 +28,9 @@
 		"languages": [
 			{
 				"id": "webgal",
-				"extensions": [
-					".txt"
-				],
+				"extensions": [],
 				"filenamePatterns": [
-					"**/game/scene/*.txt"
+					"**/game/scene/**/*.txt"
 				],
 				"aliases": [
 					"webgal",
@@ -49,9 +47,7 @@
 			},
 			{
 				"id": "webgal-config",
-				"extensions": [
-					".txt"
-				],
+				"extensions": [],
 				"aliases": [
 					"webgalConfig",
 					"webgalconfig",
