@@ -715,12 +715,12 @@ connection.onDocumentLinks(
 
 connection.onDocumentLinkResolve((documentLink: DocumentLink) => documentLink);
 
-connection.onFoldingRanges((params) => {
+connection.onFoldingRanges((params: FoldingRangeParams) => {
 	const doc = documents.get(params.textDocument.uri);
 	if (!doc) return [];
 
 	const docText = doc.getText();
-	const foldingRanges = [];
+	const foldingRanges: FoldingRange[] = [];
 
 	const regex = /label:([\s\S]*?)(?=(?:\r?\n|^)end|(?:\r?\n|^)label:|$)/g;
 
