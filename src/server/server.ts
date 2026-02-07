@@ -31,7 +31,9 @@ import {
 	Range,
 	FoldingRangeParams,
 	FoldingRange,
-	FoldingRangeKind
+	FoldingRangeKind,
+	DefinitionLink,
+	LocationLink
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -52,12 +54,11 @@ import {
 } from "./utils";
 
 import {
-	getGlobalMap,
+	cleartGlobalMapAll,
 	getVariableType,
 	getVariableTypeDesc,
-	IDefinetionMap,
+	GlobalMap,
 	IVToken,
-	setGlobalMap,
 	source
 } from "../utils/utils_novsc";
 import { ServerSettings } from "./types";
@@ -85,7 +86,6 @@ connection.onInitialize((params: InitializeParams) => {
 		capabilities.textDocument.publishDiagnostics &&
 		capabilities.textDocument.publishDiagnostics.relatedInformation
 	);
-
 	const result: InitializeResult = {
 		capabilities: {
 			textDocumentSync: TextDocumentSyncKind.Incremental,
@@ -101,7 +101,8 @@ connection.onInitialize((params: InitializeParams) => {
 			documentLinkProvider: {
 				resolveProvider: true
 			},
-			foldingRangeProvider: true
+			foldingRangeProvider: true,
+			definitionProvider: true
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -157,10 +158,7 @@ function getDocumentSettings(url: string): Thenable<ServerSettings> {
 // 更新全局映射表
 function updateGlobalMap(documentTextArray: string[]) {
 	// 生成全局映射表
-	const GlobalVariables: IDefinetionMap = {
-		label: {},
-		setVar: {}
-	}; // 全局变量
+	cleartGlobalMapAll();
 	for (let index = 0; index < documentTextArray.length; index++) {
 		const currentLine = documentTextArray[index];
 		const setVarExec = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(
@@ -168,35 +166,38 @@ function updateGlobalMap(documentTextArray: string[]) {
 		);
 		const labelExec = /label:\s*(\S+);/g.exec(currentLine);
 		if (setVarExec != null) {
-			GlobalVariables.setVar[setVarExec[1]] = {
+			const currentVariablePool = (GlobalMap.setVar[setVarExec[1]] ??=
+				[]);
+			currentVariablePool.push({
 				word: setVarExec[1],
 				value: setVarExec[2],
 				input: setVarExec.input,
 				position: Position.create(index, setVarExec.index + 7),
 				type: getVariableType(setVarExec[2])
-			} as IVToken;
+			} as IVToken);
+
 			/* 获取变量描述 */
-			if (
-				GlobalVariables.setVar[setVarExec[1]] &&
-				GlobalVariables.setVar[setVarExec[1]]?.position
-			) {
-				const _v_pos = GlobalVariables.setVar[setVarExec[1]].position;
+			const currentVariableLatest =
+				currentVariablePool[currentVariablePool.length - 1];
+			if (currentVariableLatest && currentVariableLatest?.position) {
+				const _v_pos = currentVariableLatest.position;
 				const _v_line = _v_pos?.line ? _v_pos.line : -1;
-				GlobalVariables.setVar[setVarExec[1]].desc =
-					getVariableTypeDesc(documentTextArray, _v_line);
+				currentVariableLatest.desc = getVariableTypeDesc(
+					documentTextArray,
+					_v_line
+				);
 			}
-		} else if (labelExec !== null) {
-			GlobalVariables.label[labelExec[1]] = {
+		}
+		if (labelExec !== null) {
+			(GlobalMap.label[labelExec[1]] ??= []).push({
 				word: labelExec[1],
 				value: labelExec.input,
 				input: labelExec.input,
 				position: Position.create(index, 6),
 				type: labelExec.input.substring(0, labelExec.input.indexOf(":"))
-			} as IVToken;
+			} as IVToken);
 		}
 	}
-	setGlobalMap("setVar", GlobalVariables.setVar);
-	setGlobalMap("label", GlobalVariables.label);
 }
 
 documents.onDidClose((e) => {
@@ -439,15 +440,15 @@ connection.onCompletion(
 
 		// 变量
 		updateGlobalMap(document.getText().split("\n"));
-
-		const GlobalVariables = getGlobalMap();
-
-		for (const key in GlobalVariables) {
-			if (key.startsWith(token)) {
+		const currentPool = GlobalMap.setVar;
+		for (const key in currentPool) {
+			if (key.includes(token)) {
+				const latest =
+					GlobalMap.setVar[key][GlobalMap.setVar[key].length - 1];
 				CompletionItemSuggestions.push({
 					label: key,
 					kind: CompletionItemKind.Variable,
-					documentation: GlobalVariables[key].desc
+					documentation: latest.desc
 				} satisfies CompletionItem);
 			}
 		}
@@ -516,25 +517,27 @@ connection.onHover(
 
 		updateGlobalMap(documentTextArray);
 
-		const GlobalVariables = getGlobalMap();
 		const findWordWithPattern = getPatternAtPosition(
 			document,
 			_textDocumentPosition.position,
 			/\{([^}]*)\}/
 		);
+
 		/* 引用变量 hover */
-		console.log(findWord, findWordWithPattern);
 		if (!findWordWithPattern) return { contents: [] };
+
 		if (`{${findWord.word}}` === findWordWithPattern.text) {
+			const current = GlobalMap.setVar[findWord.word];
+			if (!current || current.length <= 0) return { contents: [] };
+			const currentVariable = current[current.length - 1];
 			let hoverContent = `### 变量 **${findWord.word}** `;
-			const currentVariable = GlobalVariables[findWord.word];
 			if (!currentVariable) return { contents: [] };
 			if (currentVariable.desc.length > 0) {
 				hoverContent += ` \n <hr>  `;
 				hoverContent += ` \n\n ${currentVariable.desc} `;
 			}
 			hoverContent += ` \n <hr>  `;
-			if (findWord.word in GlobalVariables) {
+			if (findWord.word in GlobalMap.setVar) {
 				hoverContent += `\n\n\n  类型 : \`${currentVariable.type}\`  `;
 				hoverContent += `\n\n 位置 : 位于第${currentVariable.position?.line}行`;
 			} else {
@@ -694,60 +697,70 @@ connection.onDocumentLinks(
 			}
 		}
 
-		/* 定义 */
-		updateGlobalMap(documentTextArray);
-		const jumpLabelMap = getGlobalMap("label");
-
-		for (let index = 0; index < documentTextArray.length; index++) {
-			const currentLine = documentTextArray[index];
-			const jumpLabelExec = /jumpLabel:\s*(\S+);/.exec(currentLine);
-			if (jumpLabelExec != null) {
-				const fullMatch = jumpLabelExec[0];
-				const jumpLabel = jumpLabelExec[1];
-				const startChar =
-					jumpLabelExec.index + fullMatch.indexOf(jumpLabel);
-				const endChar = startChar + jumpLabel.length;
-
-				const map = jumpLabelMap[jumpLabel];
-				if (!map) continue;
-
-				documentLinks.push({
-					range: Range.create(
-						Position.create(index, startChar),
-						Position.create(index, endChar)
-					),
-					target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
-					tooltip: `跳转标签 ${jumpLabel}`
-				} as DocumentLink);
-			}
-
-			// 变量
-			let match: RegExpExecArray | null;
-			const regex = /\{([^}]*)\}/g;
-			while ((match = regex.exec(currentLine))) {
-				const variableName = match[1];
-				const map = getGlobalMap()[variableName];
-				if (map) {
-					documentLinks.push({
-						target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
-						tooltip: `变量 ${variableName}`,
-						range: Range.create(
-							Position.create(index, match.index),
-							Position.create(
-								index,
-								match.index + match[0].length
-							)
-						)
-					} as DocumentLink);
-				}
-			}
-		}
-
 		return [...documentLinks];
 	}
 );
 
 connection.onDocumentLinkResolve((documentLink: DocumentLink) => documentLink);
+
+connection.onDefinition(
+	async (textDocumentPosition: TextDocumentPositionParams) => {
+		const uri: string = textDocumentPosition.textDocument.uri;
+		const doc = documents.get(uri);
+		if (!doc) return [];
+		const text = doc.getText();
+		const findWord = getWordAtPosition(doc, textDocumentPosition.position);
+		let definitionLinks: DefinitionLink[] = [];
+		if (!findWord) return definitionLinks;
+		const documentTextArray = text.split("\n");
+		const currentLine =
+			documentTextArray[textDocumentPosition.position.line];
+
+		const commandType = currentLine.substring(
+			0,
+			currentLine.indexOf(":") !== -1
+				? currentLine.indexOf(":")
+				: currentLine.indexOf(";")
+		);
+
+		updateGlobalMap(documentTextArray);
+		const jumpLabelMap = GlobalMap.label;
+		const setVarMap = GlobalMap.setVar;
+
+		const targetPool =
+			commandType === "jumpLabel" ? jumpLabelMap : setVarMap;
+		if (!targetPool) return definitionLinks;
+		const targetPoolArray = targetPool[findWord.word];
+		// 变量未定义
+		if (!targetPoolArray) return definitionLinks;
+		// 在池中找对应变量
+		for (const current of targetPoolArray) {
+			if (current.word === findWord.word) {
+				definitionLinks.push(
+					LocationLink.create(
+						uri,
+						Range.create(
+							Position.create(
+								textDocumentPosition.position.line,
+								findWord.start
+							),
+							Position.create(
+								textDocumentPosition.position.line,
+								findWord.end
+							)
+						),
+						Range.create(current.position, current.position),
+						Range.create(
+							Position.create(0, 0),
+							Position.create(0, 0)
+						)
+					)
+				);
+			}
+		}
+		return definitionLinks;
+	}
+);
 
 // 折叠
 connection.onFoldingRanges((params: FoldingRangeParams) => {
