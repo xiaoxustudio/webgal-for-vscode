@@ -684,30 +684,31 @@ connection.onDocumentLinks(
 
 		/* 定义 */
 		updateGlobalMap(documentTextArray);
-		// const jumpLabelMap = getGlobalMap("label");
+		const jumpLabelMap = getGlobalMap("label");
 
-		// for (let index = 0; index < documentTextArray.length; index++) {
-		// 	const currentLine = documentTextArray[index];
-		// 	const jumpLabelExec = /jumpLabel:\s*(\S+);/.exec(currentLine);
-		// 	if (jumpLabelExec != null) {
-		// 		const fullMatch = jumpLabelExec[0];
-		// 		const jumpLabel = jumpLabelExec[1];
-		// 		const startChar =
-		// 			jumpLabelExec.index + fullMatch.indexOf(jumpLabel);
-		// 		const endChar = startChar + jumpLabel.length;
+		for (let index = 0; index < documentTextArray.length; index++) {
+			const currentLine = documentTextArray[index];
+			const jumpLabelExec = /jumpLabel:\s*(\S+);/.exec(currentLine);
+			if (jumpLabelExec != null) {
+				const fullMatch = jumpLabelExec[0];
+				const jumpLabel = jumpLabelExec[1];
+				const startChar =
+					jumpLabelExec.index + fullMatch.indexOf(jumpLabel);
+				const endChar = startChar + jumpLabel.length;
 
-		// 		const map = jumpLabelMap[jumpLabel];
+				const map = jumpLabelMap[jumpLabel];
+				if (!map) continue;
 
-		// 		documentLinks.push({
-		// 			range: Range.create(
-		// 				Position.create(index, startChar),
-		// 				Position.create(index, endChar)
-		// 			),
-		// 			target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
-		// 			tooltip: `跳转标签 ${jumpLabel}`
-		// 		} as DocumentLink);
-		// 	}
-		// }
+				documentLinks.push({
+					range: Range.create(
+						Position.create(index, startChar),
+						Position.create(index, endChar)
+					),
+					target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
+					tooltip: `跳转标签 ${jumpLabel}`
+				} as DocumentLink);
+			}
+		}
 
 		return [...documentLinks];
 	}
