@@ -466,14 +466,10 @@ connection.onHover(
 		const file_name = document.uri;
 		const documentTextArray = document.getText().split("\n");
 		const lineText = documentTextArray[_textDocumentPosition.position.line];
+
 		const findWord = getWordAtPosition(
 			document,
 			_textDocumentPosition.position
-		);
-		const findWordWithPattern = getPatternAtPosition(
-			document,
-			_textDocumentPosition.position,
-			/\{(\w+)\}/
 		);
 
 		if (!findWord) return { contents: [] };
@@ -482,13 +478,13 @@ connection.onHover(
 			for (const i in WebGALConfigMap) {
 				const kw_val = WebGALConfigMap[i];
 				if (lineText.startsWith(i)) {
-					let hoverContent = `**${findWord.word}**`;
-					hoverContent += `\n\n${kw_val.desc}`;
-					hoverContent += ` \n <hr>  `;
 					return {
 						contents: {
 							kind: MarkupKind.Markdown,
-							value: hoverContent
+							value: [
+								`**${findWord.word}**`,
+								`\n${kw_val.desc}`
+							].join("\n")
 						} as MarkupContent
 					};
 				}
@@ -499,15 +495,9 @@ connection.onHover(
 		updateGlobalMap(documentTextArray);
 
 		/* 指令 hover */
-		const wordMeta = getWordAtPosition(
-			document,
-			_textDocumentPosition.position
-		); // 获得当前单词
-		if (!wordMeta) return { contents: [] };
 		for (const key in WebGALKeywords) {
 			const keyData = WebGALKeywords[key as CommandNames];
-			// 如果输入的文本以关键词开头，则匹配相应的参数
-			if (wordMeta.word.startsWith(key)) {
+			if (findWord.word === key) {
 				return {
 					contents: {
 						kind: MarkupKind.Markdown,
@@ -527,8 +517,13 @@ connection.onHover(
 		updateGlobalMap(documentTextArray);
 
 		const GlobalVariables = getGlobalMap();
-
+		const findWordWithPattern = getPatternAtPosition(
+			document,
+			_textDocumentPosition.position,
+			/\{([^}]*)\}/
+		);
 		/* 引用变量 hover */
+		console.log(findWord, findWordWithPattern);
 		if (!findWordWithPattern) return { contents: [] };
 		if (`{${findWord.word}}` === findWordWithPattern.text) {
 			let hoverContent = `### 变量 **${findWord.word}** `;
@@ -754,6 +749,7 @@ connection.onDocumentLinks(
 
 connection.onDocumentLinkResolve((documentLink: DocumentLink) => documentLink);
 
+// 折叠
 connection.onFoldingRanges((params: FoldingRangeParams) => {
 	const doc = documents.get(params.textDocument.uri);
 	if (!doc) return [];

@@ -15,7 +15,7 @@ export function getWordAtPosition(
 
 	// 如果没有提供 charRegex，使用默认
 	const testChar = (ch: string) => {
-		if (!charRegex) return /\p{L}|\p{N}|_/u.test(ch);
+		if (!charRegex) return /[\p{L}\p{N}_]_?[\p{L}\p{N}_]*/u.test(ch);
 		// 为避免全局标志的问题，使用新的无 g 的正则来测试单个字符
 		const flags = (charRegex.flags || "").replace("g", "");
 		const r = new RegExp(charRegex.source, flags);
@@ -50,9 +50,8 @@ export function getPatternAtPosition(
 	const offset = doc.offsetAt(pos);
 	if (offset < 0 || offset > text.length) return null;
 
-	// 去掉 g 标志，因为我们在循环中自己控制 exec
-	const flags = (pattern.flags || "").replace("g", "");
-	const re = new RegExp(pattern.source, flags);
+	const cleanFlags = (pattern.flags || "").replace(/[gy]/g, "");
+	const re = new RegExp(pattern.source, cleanFlags + "g");
 
 	// 限定搜索窗口，避免对大文件全匹配
 	const startSearch = Math.max(0, offset - maxRadius);
@@ -60,16 +59,23 @@ export function getPatternAtPosition(
 	const substr = text.slice(startSearch, endSearch);
 
 	let m: RegExpExecArray | null;
+	// 循环会自动在 re.exec 返回 null 时停止（因为有 'g' 标志）
 	while ((m = re.exec(substr)) !== null) {
+		// 计算在整个文档中的绝对位置
 		const matchStart = startSearch + m.index;
 		const matchEnd = matchStart + m[0].length;
+
+		// 检查光标是否在匹配范围内
 		if (offset >= matchStart && offset <= matchEnd) {
-			return { text: m[0], start: matchStart, end: matchEnd, groups: m };
+			return {
+				text: m[0],
+				start: matchStart,
+				end: matchEnd,
+				groups: m
+			};
 		}
-		// 如果没有全局标志，手动退出以免死循环
-		if (!pattern.global && !pattern.sticky) break;
-		// 继续循环（re.exec 对于没有 g 会重复同一 match，所以上面要 break）
 	}
+
 	return null;
 }
 
