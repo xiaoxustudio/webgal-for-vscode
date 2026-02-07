@@ -467,6 +467,15 @@ connection.onHover(
 		const file_name = document.uri;
 		const documentTextArray = document.getText().split("\n");
 		const lineText = documentTextArray[_textDocumentPosition.position.line];
+		const currentLine =
+			documentTextArray[_textDocumentPosition.position.line];
+
+		const commandType = currentLine.substring(
+			0,
+			currentLine.indexOf(":") !== -1
+				? currentLine.indexOf(":")
+				: currentLine.indexOf(";")
+		);
 
 		const findWord = getWordAtPosition(
 			document,
@@ -498,7 +507,7 @@ connection.onHover(
 		/* 指令 hover */
 		for (const key in WebGALKeywords) {
 			const keyData = WebGALKeywords[key as CommandNames];
-			if (findWord.word === key) {
+			if (findWord.word === key && commandType === key) {
 				return {
 					contents: {
 						kind: MarkupKind.Markdown,
