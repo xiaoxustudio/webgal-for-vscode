@@ -436,6 +436,22 @@ connection.onCompletion(
 					}) satisfies CompletionItem
 			)
 		);
+
+		// 变量
+		updateGlobalMap(document.getText().split("\n"));
+
+		const GlobalVariables = getGlobalMap();
+
+		for (const key in GlobalVariables) {
+			if (key.startsWith(token)) {
+				CompletionItemSuggestions.push({
+					label: key,
+					kind: CompletionItemKind.Variable,
+					documentation: GlobalVariables[key].desc
+				} satisfies CompletionItem);
+			}
+		}
+
 		return CompletionItemSuggestions;
 	}
 );

@@ -14,7 +14,8 @@
 	"categories": [
 		"Programming Languages",
 		"Formatters",
-		"Debuggers"
+		"Debuggers",
+		"Snippets"
 	],
 	"activationEvents": [
 		"workspaceContains:**/game/config.txt"
