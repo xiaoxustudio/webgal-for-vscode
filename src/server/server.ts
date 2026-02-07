@@ -172,7 +172,7 @@ function updateGlobalMap(documentTextArray: string[]) {
 				word: setVarExec[1],
 				value: setVarExec[2],
 				input: setVarExec.input,
-				position: Position.create(index, 0),
+				position: Position.create(index, setVarExec.index + 7),
 				type: getVariableType(setVarExec[2])
 			} as IVToken;
 			/* 获取变量描述 */
@@ -615,7 +615,8 @@ connection.onDocumentLinks(
 		const uri: string = textDocumentLinkParams.textDocument.uri;
 		const doc = documents.get(uri);
 		if (!doc) return [];
-		const documentTextArray = doc.getText().split("\n");
+		const text = doc.getText();
+		const documentTextArray = text.split("\n");
 		const _textDocument = textDocumentLinkParams.textDocument;
 		const pathArray = _textDocument.uri.split("/");
 		const currentDirectory = await connection.sendRequest<string>(
@@ -723,6 +724,32 @@ connection.onDocumentLinks(
 					target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
 					tooltip: `跳转标签 ${jumpLabel}`
 				} as DocumentLink);
+			}
+			const variableExec = /\{([^}]*)\}/.exec(currentLine);
+			if (variableExec != null) {
+				const variableName = variableExec[1];
+				const map = getGlobalMap()[variableName];
+				if (!map) continue;
+			}
+			// 变量
+			let match: RegExpExecArray | null;
+			const regex = /\{([^}]*)\}/g;
+			while ((match = regex.exec(currentLine))) {
+				const variableName = match[1];
+				const map = getGlobalMap()[variableName];
+				if (map) {
+					documentLinks.push({
+						target: `${uri}#L${map.position.line + 1},${map.position.character + 1}`,
+						tooltip: `变量 ${variableName}`,
+						range: Range.create(
+							Position.create(index, match.index),
+							Position.create(
+								index,
+								match.index + match[0].length
+							)
+						)
+					} as DocumentLink);
+				}
 			}
 		}
 
