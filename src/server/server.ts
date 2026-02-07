@@ -725,12 +725,7 @@ connection.onDocumentLinks(
 					tooltip: `跳转标签 ${jumpLabel}`
 				} as DocumentLink);
 			}
-			const variableExec = /\{([^}]*)\}/.exec(currentLine);
-			if (variableExec != null) {
-				const variableName = variableExec[1];
-				const map = getGlobalMap()[variableName];
-				if (!map) continue;
-			}
+
 			// 变量
 			let match: RegExpExecArray | null;
 			const regex = /\{([^}]*)\}/g;
