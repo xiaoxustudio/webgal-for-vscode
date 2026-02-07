@@ -25,7 +25,6 @@ webgal for VScode
 - Interpolation variable prompt | Variable Hover prompt, type embedding, variable description (markdown)
 - Formatting
 - Jump to definition (resource, variable)
-- Color picker
 - Area collapse
 - Debugging function 
 ```txt
@@ -43,7 +42,13 @@ The resource folder contains:
 animation, background, bgm, figure, tex, video, vocal 
 ```
 
-# Usage 
+## Installation
+
+search plugin name in VSCode: `webgal for VSCode`
+
+VSCode MarketLink: [Marketplace](https://marketplace.visualstudio.com/items?itemName=xiaoxustudio.webgal-for-vscode)
+
+## Usage 
 When the current working directory is **game** and it contains **config.txt**, the plugin will automatically start. 
 
 Or you can start the plugin by using the startup command yourself. 
@@ -53,7 +58,7 @@ Can be edited in conjunction with the vs browser
 
 ![Work](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/work.png)
 
-# Debugging 
+## Debugging 
 Run - Add Configuration - Select `webgal Debug` to create the `launch.json` file 
 
 Please modify the ws address yourself: The address can be seen in the console by pressing F12. The port number is usually the same as that of the web page URL. 
@@ -81,7 +86,7 @@ Special:
 
 ![Debugging](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/debug.png) 
 
-# Partial Function Display 
+## Partial Function Display 
 ##### Hover Tip 
 ![Hover Tooltip](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/hover.png) 
 
@@ -106,16 +111,13 @@ Special:
 ##### Formatting 
 ![Format](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/format.png) 
 
-##### Color Selector 
-![Color Selector](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/color.png) 
-
-# Official Link of WebGal 
+## Official Link of WebGal 
 
 Official Repository: [Repository](https://github.com/MakinoharaShoko/WebGAL) 
 
 Official documentation: [Document](https://docs.openwebgal.com/) 
 
-# Regarding 
+## Regarding 
 
 Author: [Xu Ran](https://github.com/xiaoxustudio) 
 
@@ -123,6 +125,6 @@ Contact Information: [xugame@qq.com](mailto:xugame@qq.com)
 
 Please feel free to raise your valuable **issue**. We will handle it. 
 
-# LICENSE
+## LICENSE
 
 [You can see this](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/LICENSE)

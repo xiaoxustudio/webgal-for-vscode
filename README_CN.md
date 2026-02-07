@@ -18,7 +18,7 @@
 
 [webgal-devtool](https://github.com/xiaoxustudio/webgal-devtool)：一款用于调试WebGal游戏的浏览器devtools扩展。
 
-# 功能
+## 功能
 
 - 语言高亮
 - Hover提示
@@ -27,7 +27,6 @@
 - 插值变量提示|变量Hover提示、类型镶嵌、变量描述（markdown）
 - 格式化
 - 跳转定义（资源、变量）
-- 颜色选择器
 - 区域折叠
 - 调试功能
 
@@ -49,7 +48,14 @@
 
 ```
 
-# 使用
+## 安装
+
+vscode 搜索插件名称：`webgal for VSCode`
+
+vscode市场链接：[Marketplace](https://marketplace.visualstudio.com/items?itemName=xiaoxustudio.webgal-for-vscode)
+
+## 使用
+
 
 当前工作目录**game**只要包含**config.txt**时，插件就会自动启动
 
@@ -61,7 +67,7 @@
 
 ![Work](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/work.png)  
 
-# 调试  
+## 调试  
 
 运行-添加配置-选择`webgal Debug`创建`launch.json`文件  
 
@@ -94,7 +100,7 @@
 
 ![调试](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/debug.png)
 
-# 部分功能展示
+## 部分功能展示
 
 ##### Hover提示
 
@@ -128,17 +134,13 @@
 
 ![格式化](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/format.png)
 
-##### 颜色选择器  
-
-![颜色选择器](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/resources/test/color.png)
-
-# WebGal官方链接
+## WebGal官方链接
 
 官方仓库：[仓库](https://github.com/MakinoharaShoko/WebGAL)  
 
 官方文档：[文档](https://docs.openwebgal.com/)
 
-# 关于
+## 关于
 
 作者：[徐然](https://github.com/xiaoxustudio)  
 
@@ -146,6 +148,6 @@
 
 欢迎提出您宝贵的 **issue**，我们将会处理。
 
-# LICENSE
+## LICENSE
 
 [You can see this](https://raw.githubusercontent.com/xiaoxustudio/webgal-for-vscode/master/LICENSE)
