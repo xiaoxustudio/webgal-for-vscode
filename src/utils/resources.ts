@@ -39,7 +39,10 @@ const resourcesMap = {
 	[WebGALKeywords.unlockCg.label!]: ResourceType.background,
 	[WebGALKeywords.unlockBgm.label!]: ResourceType.bgm,
 	[WebGALKeywords.playEffect.label!]: ResourceType.vocal,
-	[WebGALKeywords.playEffect.label!]: ResourceType.vocal
+	[WebGALKeywords.playEffect.label!]: ResourceType.vocal,
+	[WebGALKeywords.changeScene.label!]: ResourceType.scene,
+	[WebGALKeywords.callScene.label!]: ResourceType.scene,
+	[WebGALKeywords.choose.label!]: ResourceType.scene
 };
 
 /* 根据指令返回资源目录名称 */
