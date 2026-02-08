@@ -571,12 +571,15 @@ connection.onHover(
 		findWordWithPattern = getPatternAtPosition(
 			document,
 			_textDocumentPosition.position,
-			/\$stage(?:\.[\w-]+)+/
+			/\$(stage|userData)(?:\.[\w-]+)*/
 		);
 		if (findWordWithPattern) {
+			const strArray = findWordWithPattern.text.slice(1).split(".");
 			const info = await connection.sendRequest<StateMap>(
-				"client/goPropertyDoc",
-				findWordWithPattern.text.slice(1).split(".")
+				strArray[0] === "userData"
+					? "client/goPropertyDocUserData"
+					: "client/goPropertyDoc",
+				strArray
 			);
 			if (info)
 				return {
