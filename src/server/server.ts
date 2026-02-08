@@ -33,8 +33,7 @@ import {
 	FoldingRange,
 	FoldingRangeKind,
 	DefinitionLink,
-	LocationLink,
-	Location
+	LocationLink
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -60,7 +59,6 @@ import {
 	getVariableTypeDesc,
 	GlobalMap,
 	IVToken,
-	SCHEME,
 	source
 } from "../utils/utils_novsc";
 import { ServerSettings } from "./types";
@@ -93,7 +91,8 @@ connection.onInitialize((params: InitializeParams) => {
 		capabilities: {
 			textDocumentSync: TextDocumentSyncKind.Incremental,
 			completionProvider: {
-				resolveProvider: true
+				resolveProvider: true,
+				triggerCharacters: [".", ":", "-"]
 			},
 			hoverProvider: true,
 			diagnosticProvider: {
@@ -369,7 +368,7 @@ connection.onCompletion(
 			document,
 			_textDocumentPosition.position
 		);
-		const CompletionItemSuggestions = [];
+		const CompletionItemSuggestions: CompletionItem[] = [];
 		const wordMeta = getWordAtPosition(
 			document,
 			Position.create(_textDocumentPosition.position.line, 0)
@@ -388,6 +387,65 @@ connection.onCompletion(
 				}
 			}
 			return completionItems;
+		}
+
+		/* 舞台状态 */
+		const findWordWithPattern = getPatternAtPosition(
+			document,
+			_textDocumentPosition.position,
+			/\$(stage|userData)(?:\.[\w-]*)*/
+		);
+		const isStateMap = (
+			value: StateMap | Record<string, StateMap>
+		): value is StateMap => {
+			return (
+				typeof (value as StateMap).key === "string" &&
+				typeof (value as StateMap).description === "string"
+			);
+		};
+		if (findWordWithPattern) {
+			const rawText = findWordWithPattern.text;
+			const normalized = rawText.startsWith("$")
+				? rawText.slice(1)
+				: rawText;
+			const rawSegments = normalized.split(".");
+			const fullSegments = rawSegments.filter((part) => part);
+			const hasTrailingDot = normalized.endsWith(".");
+			const prefix = hasTrailingDot
+				? ""
+				: rawSegments[rawSegments.length - 1] || "";
+			const querySegments = hasTrailingDot
+				? fullSegments
+				: fullSegments.slice(0, -1);
+			const info = await connection.sendRequest<
+				StateMap | Record<string, StateMap>
+			>(
+				"client/goPropertyDoc",
+				querySegments.length ? querySegments : fullSegments
+			);
+			if (info) {
+				if (!isStateMap(info)) {
+					for (const key in info) {
+						if (prefix && !key.includes(prefix)) continue;
+						const current = info[key] as StateMap;
+						CompletionItemSuggestions.push({
+							label: key,
+							kind: CompletionItemKind.Constant,
+							documentation: current.description
+						} satisfies CompletionItem);
+					}
+				} else {
+					if (prefix && !info.key.includes(prefix)) {
+						return CompletionItemSuggestions;
+					}
+					CompletionItemSuggestions.push({
+						label: info.key,
+						kind: CompletionItemKind.Constant,
+						documentation: info.description
+					} satisfies CompletionItem);
+				}
+			}
+			return CompletionItemSuggestions;
 		}
 
 		/* 场景文件 */
@@ -455,30 +513,6 @@ connection.onCompletion(
 					kind: CompletionItemKind.Variable,
 					documentation: latest.desc
 				} satisfies CompletionItem);
-			}
-		}
-
-		/* 舞台状态 */
-		const findWordWithPattern = getPatternAtPosition(
-			document,
-			_textDocumentPosition.position,
-			/\$(stage|userData)(?:\.[\w-]+)*/
-		);
-		if (findWordWithPattern) {
-			const strArray = findWordWithPattern.text.slice(1).split(".");
-			const info = await connection.sendRequest<StateMap>(
-				"client/goPropertyDoc",
-				strArray
-			);
-			if (info && info.value && !("key" in (info.value as any))) {
-				for (const key in info.value as any) {
-					const current = (info.value as any)[key];
-					CompletionItemSuggestions.push({
-						label: key,
-						kind: CompletionItemKind.Constant,
-						documentation: current.description
-					} satisfies CompletionItem);
-				}
 			}
 		}
 
