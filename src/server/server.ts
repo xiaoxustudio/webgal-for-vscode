@@ -359,7 +359,9 @@ connection.onDidChangeConfiguration((change) => {
 
 // 补全
 connection.onCompletion(
-	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+	async (
+		_textDocumentPosition: TextDocumentPositionParams
+	): Promise<CompletionItem[]> => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
 		if (!document) return [];
 		const file_name = document.uri;
@@ -453,6 +455,30 @@ connection.onCompletion(
 					kind: CompletionItemKind.Variable,
 					documentation: latest.desc
 				} satisfies CompletionItem);
+			}
+		}
+
+		/* 舞台状态 */
+		const findWordWithPattern = getPatternAtPosition(
+			document,
+			_textDocumentPosition.position,
+			/\$(stage|userData)(?:\.[\w-]+)*/
+		);
+		if (findWordWithPattern) {
+			const strArray = findWordWithPattern.text.slice(1).split(".");
+			const info = await connection.sendRequest<StateMap>(
+				"client/goPropertyDoc",
+				strArray
+			);
+			if (info && info.value && !("key" in (info.value as any))) {
+				for (const key in info.value as any) {
+					const current = (info.value as any)[key];
+					CompletionItemSuggestions.push({
+						label: key,
+						kind: CompletionItemKind.Constant,
+						documentation: current.description
+					} satisfies CompletionItem);
+				}
 			}
 		}
 
@@ -571,14 +597,12 @@ connection.onHover(
 		findWordWithPattern = getPatternAtPosition(
 			document,
 			_textDocumentPosition.position,
-			/\$(stage|userData)(?:\.[\w-]+)*/
+			/\$(stage|userData)((?:\.[\w-]+)+|\b)/
 		);
 		if (findWordWithPattern) {
 			const strArray = findWordWithPattern.text.slice(1).split(".");
 			const info = await connection.sendRequest<StateMap>(
-				strArray[0] === "userData"
-					? "client/goPropertyDocUserData"
-					: "client/goPropertyDoc",
+				"client/goPropertyDoc",
 				strArray
 			);
 			if (info)
@@ -588,7 +612,7 @@ connection.onHover(
 						value: [
 							`### ${info.key}`,
 							`\`${findWordWithPattern.text}\``,
-							`${info.description}`
+							`${info?.description}`
 						].join("\n\n")
 					} as MarkupContent,
 					range: Range.create(
