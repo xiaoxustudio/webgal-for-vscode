@@ -17,9 +17,9 @@ const getAllTextWithScene = (client: LanguageClient) =>
 
 			for (const dirent of dirents) {
 				const fullPath = path.join(dir, dirent.name);
-				if (dirent.isFile() && dirent.path.endsWith(".txt")) {
+				if (dirent.isFile() && dirent.name.endsWith(".txt")) {
 					map[dirent.name] = {
-						path: dirent.path,
+						path: fullPath,
 						name: dirent.name,
 						text: readFileSync(fullPath, "utf-8"),
 						fullPath
