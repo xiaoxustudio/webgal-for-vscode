@@ -9,7 +9,11 @@
 
 <h4 align="center">WebGal Script 工具</h4>
 
-<h5 align="center"><img src="https://img.shields.io/badge/documentation-yes-brightgreen" alt="Documentation"> <img src="https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode" alt="github license"> <img src="https://img.shields.io/badge/language-webgal-brightgreen" alt="Language"></h5>
+<h5 align="center">
+<img src="https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode" alt="github license"> 
+<img src="https://img.shields.io/badge/language-webgal-brightgreen" alt="Language">
+<img alt="VSX Downloads" src="https://img.shields.io/visual-studio-marketplace/d/Xuran1783558957.webgal-for-vscode.svg">
+</h5>
 
 
 - [简体中文](./README_CN.md)
@@ -52,7 +56,7 @@
 
 vscode 搜索插件名称：`webgal for VSCode`
 
-vscode市场链接：[Marketplace](https://marketplace.visualstudio.com/items?itemName=xiaoxustudio.webgal-for-vscode)
+vscode市场链接：[Marketplace](https://marketplace.visualstudio.com/items?itemName=Xuran1783558957.webgal-for-vscode)
 
 ## 使用
 
@@ -136,7 +140,7 @@ vscode市场链接：[Marketplace](https://marketplace.visualstudio.com/items?it
 
 ## WebGal官方链接
 
-官方仓库：[仓库](https://github.com/MakinoharaShoko/WebGAL)  
+官方仓库：[仓库](https://github.com/OpenWebGAL/WebGAL)  
 
 官方文档：[文档](https://docs.openwebgal.com/)
 

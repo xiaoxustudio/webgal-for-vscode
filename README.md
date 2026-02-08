@@ -8,7 +8,13 @@ webgal for VScode
 </h1>
 
 <h4 align="center">WebGal Script Tool</h4> 
-<h5 align="center"><img src="https://img.shields.io/badge/documentation-yes-brightgreen" alt="Documentation"> <img src="https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode" alt="github license"> <img src="https://img.shields.io/badge/language-webgal-brightgreen" alt="Language"></h5>
+
+<h5 align="center">
+<img src="https://img.shields.io/github/license/xiaoxustudio/webgal-for-vscode" alt="github license"> 
+<img src="https://img.shields.io/badge/language-webgal-brightgreen" alt="Language">
+<img alt="VSX Downloads" src="https://img.shields.io/visual-studio-marketplace/d/Xuran1783558957.webgal-for-vscode.svg">
+</h5>
+
 
 
 - [简体中文](./README_CN.md)
@@ -46,7 +52,7 @@ animation, background, bgm, figure, tex, video, vocal
 
 search plugin name in VSCode: `webgal for VSCode`
 
-VSCode MarketLink: [Marketplace](https://marketplace.visualstudio.com/items?itemName=xiaoxustudio.webgal-for-vscode)
+VSCode MarketLink: [Marketplace](https://marketplace.visualstudio.com/items?itemName=Xuran1783558957.webgal-for-vscode)
 
 ## Usage 
 When the current working directory is **game** and it contains **config.txt**, the plugin will automatically start. 
@@ -113,7 +119,7 @@ Special:
 
 ## Official Link of WebGal 
 
-Official Repository: [Repository](https://github.com/MakinoharaShoko/WebGAL) 
+Official Repository: [Repository](https://github.com/OpenWebGAL/WebGAL) 
 
 Official documentation: [Document](https://docs.openwebgal.com/) 
 
