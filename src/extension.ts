@@ -17,11 +17,11 @@ import fs from "fs";
 import path from "path";
 import GoDocumentFormatter from "./utils/Format";
 import { getWS, selector } from "./utils/utils";
-import { create_client } from "./client";
+import { create_client } from "./client/client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDebugAdapterDescriptorFactory } from "./debug/activeDebug";
 import { XRDebugConfigurationProvider } from "./ws/config";
-import { IDebugMessage, DebugCommand } from "./utils/utils_novsc";
+import { IDebugMessage, DebugCommand, SCHEME } from "./utils/utils_novsc";
 
 let client: LanguageClient;
 let run_Skip_Check = false;
@@ -33,6 +33,14 @@ function InitPlugin(context: ExtensionContext) {
 	}
 	run_Skip_Check = true;
 	client = create_client(context);
+
+	context.subscriptions.push(
+		workspace.onDidOpenTextDocument(async (document) => {
+			if (document.uri.scheme === SCHEME) {
+				await languages.setTextDocumentLanguage(document, "markdown");
+			}
+		})
+	);
 
 	context.subscriptions.push(
 		languages.registerDocumentFormattingEditProvider(

@@ -33,7 +33,8 @@ import {
 	FoldingRange,
 	FoldingRangeKind,
 	DefinitionLink,
-	LocationLink
+	LocationLink,
+	Location
 } from "vscode-languageserver/node";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -59,10 +60,12 @@ import {
 	getVariableTypeDesc,
 	GlobalMap,
 	IVToken,
+	SCHEME,
 	source
 } from "../utils/utils_novsc";
 import { ServerSettings } from "./types";
 import { getTypeDirectory } from "../utils/resources";
+import { StateMap } from "../utils/providerState";
 
 const connection = createConnection(ProposedFeatures.all);
 
@@ -461,11 +464,14 @@ connection.onCompletionResolve((item: CompletionItem): CompletionItem => item);
 
 // 悬浮
 connection.onHover(
-	(_textDocumentPosition: TextDocumentPositionParams): Hover => {
+	async (
+		_textDocumentPosition: TextDocumentPositionParams
+	): Promise<Hover> => {
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
 		if (!document) return { contents: [] };
 		const file_name = document.uri;
-		const documentTextArray = document.getText().split("\n");
+		const text = document.getText();
+		const documentTextArray = text.split("\n");
 		const lineText = documentTextArray[_textDocumentPosition.position.line];
 		const currentLine =
 			documentTextArray[_textDocumentPosition.position.line];
@@ -526,16 +532,17 @@ connection.onHover(
 
 		updateGlobalMap(documentTextArray);
 
-		const findWordWithPattern = getPatternAtPosition(
+		let findWordWithPattern = getPatternAtPosition(
 			document,
 			_textDocumentPosition.position,
 			/\{([^}]*)\}/
 		);
 
 		/* 引用变量 hover */
-		if (!findWordWithPattern) return { contents: [] };
-
-		if (`{${findWord.word}}` === findWordWithPattern.text) {
+		if (
+			findWordWithPattern &&
+			`{${findWord.word}}` === findWordWithPattern.text
+		) {
 			const current = GlobalMap.setVar[findWord.word];
 			if (!current || current.length <= 0) return { contents: [] };
 			const currentVariable = current[current.length - 1];
@@ -559,6 +566,35 @@ connection.onHover(
 				} as MarkupContent
 			};
 		}
+
+		/* 舞台状态 */
+		findWordWithPattern = getPatternAtPosition(
+			document,
+			_textDocumentPosition.position,
+			/\$stage(?:\.[\w-]+)+/
+		);
+		if (findWordWithPattern) {
+			const info = await connection.sendRequest<StateMap>(
+				"client/goPropertyDoc",
+				findWordWithPattern.text.slice(1).split(".")
+			);
+			if (info)
+				return {
+					contents: {
+						kind: MarkupKind.Markdown,
+						value: [
+							`### ${info.key}`,
+							`\`${findWordWithPattern.text}\``,
+							`${info.description}`
+						].join("\n\n")
+					} as MarkupContent,
+					range: Range.create(
+						findWordWithPattern.startPos,
+						findWordWithPattern.endPos
+					)
+				};
+		}
+
 		return { contents: [] };
 	}
 );
@@ -642,9 +678,10 @@ connection.onDocumentLinks(
 				? startText.substring(1)
 				: startText; // 去除开头的分号
 			let match: RegExpExecArray | null;
-			const regex =
-				/[^:-\s]+?([^;\s:<>/\\\|\?\*\"\']+)\.([^-;\s:<>/\\\|\?\*\"\']+)/g;
+			const regex = /\$?\{?(\w+)\.(\w+)\}?/g;
+
 			while ((match = regex.exec(currentLine))) {
+				if (match[0].startsWith("$")) continue;
 				const matchText = match[0];
 				const pathName =
 					pathArray[

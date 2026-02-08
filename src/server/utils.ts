@@ -44,6 +44,8 @@ export function getPatternAtPosition(
 	text: string;
 	start: number;
 	end: number;
+	startPos: Position;
+	endPos: Position;
 	groups?: RegExpExecArray;
 } | null {
 	const text = doc.getText();
@@ -53,13 +55,24 @@ export function getPatternAtPosition(
 	const cleanFlags = (pattern.flags || "").replace(/[gy]/g, "");
 	const re = new RegExp(pattern.source, cleanFlags + "g");
 
-	// 限定搜索窗口，避免对大文件全匹配
-	const startSearch = Math.max(0, offset - maxRadius);
+	let startSearch = Math.max(0, offset - maxRadius);
+	const lookBehindLimit = Math.max(0, offset - maxRadius - 2048);
+
+	for (let i = offset - 1; i >= lookBehindLimit; i--) {
+		const char = text[i];
+		// 如果遇到，则认为这很可能是单词的边界
+		if (/[\s\{\[\(\;\,\>]/.test(char)) {
+			startSearch = i + 1;
+			break;
+		}
+	}
+
 	const endSearch = Math.min(text.length, offset + maxRadius);
 	const substr = text.slice(startSearch, endSearch);
 
 	let m: RegExpExecArray | null;
-	// 循环会自动在 re.exec 返回 null 时停止（因为有 'g' 标志）
+	re.lastIndex = 0;
+
 	while ((m = re.exec(substr)) !== null) {
 		// 计算在整个文档中的绝对位置
 		const matchStart = startSearch + m.index;
@@ -67,10 +80,15 @@ export function getPatternAtPosition(
 
 		// 检查光标是否在匹配范围内
 		if (offset >= matchStart && offset <= matchEnd) {
+			const startPos = doc.positionAt(matchStart);
+			const endPos = doc.positionAt(matchEnd);
+
 			return {
 				text: m[0],
 				start: matchStart,
 				end: matchEnd,
+				startPos: startPos,
+				endPos: endPos,
 				groups: m
 			};
 		}

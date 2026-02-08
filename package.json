@@ -182,7 +182,6 @@
 		]
 	},
 	"capabilities": {
-		"colorProvider": "true",
 		"documentFormattingProvider": "true",
 		"untrustedWorkspaces": {
 			"supported": "limited",

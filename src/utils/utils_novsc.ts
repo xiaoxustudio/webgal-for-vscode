@@ -6,8 +6,10 @@
  * @Description: By xuranXYS
  */
 import acorn from "acorn";
-export const source = "WebGal Script";
 import { promises as fs } from "fs";
+
+export const source = "WebGal Script";
+export const SCHEME = "webgal-virtual-doc";
 
 export interface FileAccessor {
 	isWindows: boolean;
