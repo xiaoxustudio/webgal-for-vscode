@@ -62,7 +62,7 @@ import {
 	source
 } from "../utils/utils_novsc";
 import { ServerSettings } from "./types";
-import { getTypeDirectory } from "../utils/resources";
+import { getTypeDirectory, resourcesMap } from "../utils/resources";
 import { StateMap } from "../utils/providerState";
 
 const connection = createConnection(ProposedFeatures.all);
@@ -92,7 +92,7 @@ connection.onInitialize((params: InitializeParams) => {
 			textDocumentSync: TextDocumentSyncKind.Incremental,
 			completionProvider: {
 				resolveProvider: true,
-				triggerCharacters: [".", ":", "-"]
+				triggerCharacters: [".", ":", "-", "/"]
 			},
 			hoverProvider: true,
 			diagnosticProvider: {
@@ -407,16 +407,16 @@ connection.onCompletion(
 			const rawText = findWordWithPattern.text;
 			const normalized = rawText.startsWith("$")
 				? rawText.slice(1)
-				: rawText;
+				: rawText; // 去掉开头的 $
 			const rawSegments = normalized.split(".");
-			const fullSegments = rawSegments.filter((part) => part);
-			const hasTrailingDot = normalized.endsWith(".");
+			const fullSegments = rawSegments.filter((part) => part); // 去掉空字符串
+			const hasTrailingDot = normalized.endsWith("."); // 是否以 . 结尾
 			const prefix = hasTrailingDot
 				? ""
 				: rawSegments[rawSegments.length - 1] || "";
 			const querySegments = hasTrailingDot
 				? fullSegments
-				: fullSegments.slice(0, -1);
+				: fullSegments.slice(0, -1); // 去掉最后一个部分
 			const info = await connection.sendRequest<
 				StateMap | Record<string, StateMap>
 			>(
@@ -469,14 +469,36 @@ connection.onCompletion(
 			}
 		}
 
-		if (
-			token.startsWith("./") ||
-			token.startsWith("../") ||
-			token.startsWith("/") ||
-			token.startsWith("~") ||
-			token.includes("/")
-		) {
+		const currentLine = document.getText().split("\n")[
+			_textDocumentPosition.position.line
+		];
+		const commandType = currentLine.substring(
+			0,
+			currentLine.indexOf(":") !== -1
+				? currentLine.indexOf(":")
+				: currentLine.indexOf(";")
+		);
+
+		if (token.startsWith("./")) {
 			// 路径
+			if (resourcesMap[commandType]) {
+				const resourceBaseDir = resourcesMap[commandType];
+				const dirs = await connection.sendRequest<any>(
+					"client/getResourceDirectory",
+					resourceBaseDir
+				);
+				if (dirs) {
+					for (const dir of dirs) {
+						CompletionItemSuggestions.push({
+							label: dir.name,
+							kind: dir.isDirectory
+								? CompletionItemKind.Folder
+								: CompletionItemKind.File
+						} satisfies CompletionItem);
+					}
+				}
+			}
+			return CompletionItemSuggestions;
 		}
 
 		// 尝试提取

@@ -30,7 +30,7 @@ export const resourceExtsMap = {
 	vocal: ["mp3", "ogg", "wav"]
 };
 
-const resourcesMap = {
+export const resourcesMap = {
 	[WebGALKeywords.changeBg.label!]: ResourceType.background,
 	[WebGALKeywords.changeFigure.label!]: ResourceType.figure,
 	[WebGALKeywords.bgm.label!]: ResourceType.bgm,
