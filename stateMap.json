@@ -1,0 +1,3070 @@
+{
+  "ISceneEntry": {
+    "sceneName": {
+      "key": "sceneName",
+      "description": "场景名称",
+      "type": {
+        "key": "string",
+        "description": "场景名称"
+      },
+      "value": "string"
+    },
+    "sceneUrl": {
+      "key": "sceneUrl",
+      "description": "场景url",
+      "type": {
+        "key": "string",
+        "description": "场景url"
+      },
+      "value": "string"
+    },
+    "continueLine": {
+      "key": "continueLine",
+      "description": "继续原场景的行号",
+      "type": {
+        "key": "number",
+        "description": "继续原场景的行号"
+      },
+      "value": "number"
+    }
+  },
+  "arg": {
+    "key": {
+      "key": "key",
+      "description": "参数键",
+      "type": {
+        "key": "string",
+        "description": "参数键"
+      },
+      "value": "string"
+    },
+    "value": {
+      "key": "value",
+      "description": "参数值",
+      "type": {
+        "key": "string | boolean | number",
+        "description": "参数值"
+      },
+      "value": "@U:string | boolean | number"
+    }
+  },
+  "IAsset": {
+    "name": {
+      "key": "name",
+      "description": "资源名称",
+      "type": {
+        "key": "string",
+        "description": "资源名称"
+      },
+      "value": "string"
+    },
+    "type": {
+      "key": "type",
+      "description": "资源类型",
+      "type": {
+        "key": "fileType",
+        "description": "资源类型"
+      },
+      "value": "fileType"
+    },
+    "url": {
+      "key": "url",
+      "description": "资源url",
+      "type": {
+        "key": "string",
+        "description": "资源url"
+      },
+      "value": "string"
+    },
+    "lineNumber": {
+      "key": "lineNumber",
+      "description": "触发资源语句的行号",
+      "type": {
+        "key": "number",
+        "description": "触发资源语句的行号"
+      },
+      "value": "number"
+    }
+  },
+  "ISentence": {
+    "command": {
+      "key": "command",
+      "description": "语句类型",
+      "type": {
+        "key": "commandType",
+        "description": "语句类型"
+      },
+      "value": "commandType"
+    },
+    "commandRaw": {
+      "key": "commandRaw",
+      "description": "命令的原始内容，方便调试",
+      "type": {
+        "key": "string",
+        "description": "命令的原始内容，方便调试"
+      },
+      "value": "string"
+    },
+    "content": {
+      "key": "content",
+      "description": "语句内容",
+      "type": {
+        "key": "string",
+        "description": "语句内容"
+      },
+      "value": "string"
+    },
+    "args": {
+      "key": "args",
+      "description": "参数列表",
+      "type": {
+        "key": "Array<arg>",
+        "description": "参数列表"
+      },
+      "value": "Array<arg>"
+    },
+    "sentenceAssets": {
+      "key": "sentenceAssets",
+      "description": "语句携带的资源列表",
+      "type": {
+        "key": "Array<IAsset>",
+        "description": "语句携带的资源列表"
+      },
+      "value": "Array<IAsset>"
+    },
+    "subScene": {
+      "key": "subScene",
+      "description": "语句包含子场景列表",
+      "type": {
+        "key": "Array<string>",
+        "description": "语句包含子场景列表"
+      },
+      "value": "Array<string>"
+    },
+    "inlineComment": {
+      "key": "inlineComment",
+      "description": "行内注释",
+      "type": {
+        "key": "string",
+        "description": "行内注释"
+      },
+      "value": "string"
+    }
+  },
+  "IScene": {
+    "sceneName": {
+      "key": "sceneName",
+      "description": "场景名称",
+      "type": {
+        "key": "string",
+        "description": "场景名称"
+      },
+      "value": "string"
+    },
+    "sceneUrl": {
+      "key": "sceneUrl",
+      "description": "场景url",
+      "type": {
+        "key": "string",
+        "description": "场景url"
+      },
+      "value": "string"
+    },
+    "sentenceList": {
+      "key": "sentenceList",
+      "description": "语句列表",
+      "type": {
+        "key": "Array<ISentence>",
+        "description": "语句列表"
+      },
+      "value": "Array<ISentence>"
+    },
+    "assetsList": {
+      "key": "assetsList",
+      "description": "资源列表",
+      "type": {
+        "key": "Array<IAsset>",
+        "description": "资源列表"
+      },
+      "value": "Array<IAsset>"
+    },
+    "subSceneList": {
+      "key": "subSceneList",
+      "description": "子场景的url列表",
+      "type": {
+        "key": "Array<string>",
+        "description": "子场景的url列表"
+      },
+      "value": "Array<string>"
+    }
+  },
+  "ISceneData": {
+    "currentSentenceId": {
+      "key": "currentSentenceId",
+      "description": "当前语句ID",
+      "type": {
+        "key": "number",
+        "description": "当前语句ID"
+      },
+      "value": "number"
+    },
+    "sceneStack": {
+      "key": "sceneStack",
+      "description": "场景栈",
+      "type": {
+        "key": "Array<ISceneEntry>",
+        "description": "场景栈"
+      },
+      "value": "Array<ISceneEntry>"
+    },
+    "currentScene": {
+      "key": "currentScene",
+      "description": "当前场景数据",
+      "type": {
+        "key": "IScene",
+        "description": "当前场景数据"
+      },
+      "value": {
+        "sceneName": {
+          "key": "sceneName",
+          "description": "场景名称",
+          "type": {
+            "key": "string",
+            "description": "场景名称"
+          },
+          "value": "string"
+        },
+        "sceneUrl": {
+          "key": "sceneUrl",
+          "description": "场景url",
+          "type": {
+            "key": "string",
+            "description": "场景url"
+          },
+          "value": "string"
+        },
+        "sentenceList": {
+          "key": "sentenceList",
+          "description": "语句列表",
+          "type": {
+            "key": "Array<ISentence>",
+            "description": "语句列表"
+          },
+          "value": "Array<ISentence>"
+        },
+        "assetsList": {
+          "key": "assetsList",
+          "description": "资源列表",
+          "type": {
+            "key": "Array<IAsset>",
+            "description": "资源列表"
+          },
+          "value": "Array<IAsset>"
+        },
+        "subSceneList": {
+          "key": "subSceneList",
+          "description": "子场景的url列表",
+          "type": {
+            "key": "Array<string>",
+            "description": "子场景的url列表"
+          },
+          "value": "Array<string>"
+        }
+      }
+    }
+  },
+  "parsedCommand": {
+    "type": {
+      "key": "type",
+      "description": "",
+      "type": {
+        "key": "commandType",
+        "description": ""
+      },
+      "value": "commandType"
+    },
+    "additionalArgs": {
+      "key": "additionalArgs",
+      "description": "",
+      "type": {
+        "key": "Array<arg>",
+        "description": ""
+      },
+      "value": "Array<arg>"
+    }
+  },
+  "IGameVar": {},
+  "ISetGameVar": {
+    "key": {
+      "key": "key",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "value": {
+      "key": "value",
+      "description": "",
+      "type": {
+        "key": "string | boolean | number",
+        "description": ""
+      },
+      "value": "@U:string | boolean | number"
+    }
+  },
+  "IChooseItem": {
+    "key": {
+      "key": "key",
+      "description": "选项名称",
+      "type": {
+        "key": "string",
+        "description": "选项名称"
+      },
+      "value": "string"
+    },
+    "targetScene": {
+      "key": "targetScene",
+      "description": "选项target",
+      "type": {
+        "key": "string",
+        "description": "选项target"
+      },
+      "value": "string"
+    },
+    "isSubScene": {
+      "key": "isSubScene",
+      "description": "是否是子场景调用",
+      "type": {
+        "key": "boolean",
+        "description": "是否是子场景调用"
+      },
+      "value": "boolean"
+    }
+  },
+  "ITransform": {
+    "alpha": {
+      "key": "alpha",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "scale": {
+      "key": "scale",
+      "description": "",
+      "type": {
+        "key": "{\r\n\t\tx: number;\r\n\t\ty: number;\r\n\t}",
+        "description": ""
+      },
+      "value": {
+        "x": {
+          "key": "x",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "y": {
+          "key": "y",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        }
+      }
+    },
+    "position": {
+      "key": "position",
+      "description": "",
+      "type": {
+        "key": "{\r\n\t\tx: number;\r\n\t\ty: number;\r\n\t}",
+        "description": ""
+      },
+      "value": {
+        "x": {
+          "key": "x",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "y": {
+          "key": "y",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        }
+      }
+    },
+    "rotation": {
+      "key": "rotation",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "blur": {
+      "key": "blur",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "brightness": {
+      "key": "brightness",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "contrast": {
+      "key": "contrast",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "saturation": {
+      "key": "saturation",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "gamma": {
+      "key": "gamma",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "colorRed": {
+      "key": "colorRed",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "colorGreen": {
+      "key": "colorGreen",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "colorBlue": {
+      "key": "colorBlue",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bevel": {
+      "key": "bevel",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bevelThickness": {
+      "key": "bevelThickness",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bevelRotation": {
+      "key": "bevelRotation",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bevelSoftness": {
+      "key": "bevelSoftness",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bevelRed": {
+      "key": "bevelRed",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bevelGreen": {
+      "key": "bevelGreen",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bevelBlue": {
+      "key": "bevelBlue",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bloom": {
+      "key": "bloom",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bloomBrightness": {
+      "key": "bloomBrightness",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bloomBlur": {
+      "key": "bloomBlur",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "bloomThreshold": {
+      "key": "bloomThreshold",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "shockwaveFilter": {
+      "key": "shockwaveFilter",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "radiusAlphaFilter": {
+      "key": "radiusAlphaFilter",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    }
+  },
+  "IEffect": {
+    "target": {
+      "key": "target",
+      "description": "作用目标",
+      "type": {
+        "key": "string",
+        "description": "作用目标"
+      },
+      "value": "string"
+    },
+    "transform": {
+      "key": "transform",
+      "description": "变换",
+      "type": {
+        "key": "ITransform",
+        "description": "变换"
+      },
+      "value": {
+        "alpha": {
+          "key": "alpha",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "scale": {
+          "key": "scale",
+          "description": "",
+          "type": {
+            "key": "{\r\n\t\tx: number;\r\n\t\ty: number;\r\n\t}",
+            "description": ""
+          },
+          "value": {
+            "x": {
+              "key": "x",
+              "description": "",
+              "type": {
+                "key": "number",
+                "description": ""
+              },
+              "value": "number"
+            },
+            "y": {
+              "key": "y",
+              "description": "",
+              "type": {
+                "key": "number",
+                "description": ""
+              },
+              "value": "number"
+            }
+          }
+        },
+        "position": {
+          "key": "position",
+          "description": "",
+          "type": {
+            "key": "{\r\n\t\tx: number;\r\n\t\ty: number;\r\n\t}",
+            "description": ""
+          },
+          "value": {
+            "x": {
+              "key": "x",
+              "description": "",
+              "type": {
+                "key": "number",
+                "description": ""
+              },
+              "value": "number"
+            },
+            "y": {
+              "key": "y",
+              "description": "",
+              "type": {
+                "key": "number",
+                "description": ""
+              },
+              "value": "number"
+            }
+          }
+        },
+        "rotation": {
+          "key": "rotation",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "blur": {
+          "key": "blur",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "brightness": {
+          "key": "brightness",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "contrast": {
+          "key": "contrast",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "saturation": {
+          "key": "saturation",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "gamma": {
+          "key": "gamma",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "colorRed": {
+          "key": "colorRed",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "colorGreen": {
+          "key": "colorGreen",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "colorBlue": {
+          "key": "colorBlue",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bevel": {
+          "key": "bevel",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bevelThickness": {
+          "key": "bevelThickness",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bevelRotation": {
+          "key": "bevelRotation",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bevelSoftness": {
+          "key": "bevelSoftness",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bevelRed": {
+          "key": "bevelRed",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bevelGreen": {
+          "key": "bevelGreen",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bevelBlue": {
+          "key": "bevelBlue",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bloom": {
+          "key": "bloom",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bloomBrightness": {
+          "key": "bloomBrightness",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bloomBlur": {
+          "key": "bloomBlur",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "bloomThreshold": {
+          "key": "bloomThreshold",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "shockwaveFilter": {
+          "key": "shockwaveFilter",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "radiusAlphaFilter": {
+          "key": "radiusAlphaFilter",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        }
+      }
+    }
+  },
+  "IStageAnimationSetting": {
+    "target": {
+      "key": "target",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "enterAnimationName": {
+      "key": "enterAnimationName",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "exitAnimationName": {
+      "key": "exitAnimationName",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "enterDuration": {
+      "key": "enterDuration",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "exitDuration": {
+      "key": "exitDuration",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    }
+  },
+  "IUpdateAnimationSettingPayload": {
+    "target": {
+      "key": "target",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "key": {
+      "key": "key",
+      "description": "",
+      "type": {
+        "key": "StageAnimationSettingUpdatableKey",
+        "description": ""
+      },
+      "value": "@N"
+    },
+    "value": {
+      "key": "value",
+      "description": "",
+      "type": {
+        "key": "IStageAnimationSetting[StageAnimationSettingUpdatableKey]",
+        "description": ""
+      },
+      "value": "IStageAnimationSetting[StageAnimationSettingUpdatableKey]"
+    }
+  },
+  "IFreeFigure": {
+    "basePosition": {
+      "key": "basePosition",
+      "description": "",
+      "type": {
+        "key": "\"left\" | \"center\" | \"right\"",
+        "description": ""
+      },
+      "value": "@U:\"left\" | \"center\" | \"right\""
+    },
+    "name": {
+      "key": "name",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "key": {
+      "key": "key",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    }
+  },
+  "IFigureAssociatedAnimation": {
+    "mouthAnimation": {
+      "key": "mouthAnimation",
+      "description": "",
+      "type": {
+        "key": "IMouthAnimationFile",
+        "description": ""
+      },
+      "value": {
+        "open": {
+          "key": "open",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "close": {
+          "key": "close",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "halfOpen": {
+          "key": "halfOpen",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        }
+      }
+    },
+    "blinkAnimation": {
+      "key": "blinkAnimation",
+      "description": "",
+      "type": {
+        "key": "IEyesAnimationFile",
+        "description": ""
+      },
+      "value": {
+        "open": {
+          "key": "open",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "close": {
+          "key": "close",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        }
+      }
+    },
+    "targetId": {
+      "key": "targetId",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "animationFlag": {
+      "key": "animationFlag",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    }
+  },
+  "IMouthAnimationFile": {
+    "open": {
+      "key": "open",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "close": {
+      "key": "close",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "halfOpen": {
+      "key": "halfOpen",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    }
+  },
+  "IEyesAnimationFile": {
+    "open": {
+      "key": "open",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "close": {
+      "key": "close",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    }
+  },
+  "IRunPerform": {
+    "id": {
+      "key": "id",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "isHoldOn": {
+      "key": "isHoldOn",
+      "description": "演出类型",
+      "type": {
+        "key": "boolean",
+        "description": "演出类型"
+      },
+      "value": "boolean"
+    },
+    "script": {
+      "key": "script",
+      "description": "演出脚本",
+      "type": {
+        "key": "ISentence",
+        "description": "演出脚本"
+      },
+      "value": {
+        "command": {
+          "key": "command",
+          "description": "语句类型",
+          "type": {
+            "key": "commandType",
+            "description": "语句类型"
+          },
+          "value": "commandType"
+        },
+        "commandRaw": {
+          "key": "commandRaw",
+          "description": "命令的原始内容，方便调试",
+          "type": {
+            "key": "string",
+            "description": "命令的原始内容，方便调试"
+          },
+          "value": "string"
+        },
+        "content": {
+          "key": "content",
+          "description": "语句内容",
+          "type": {
+            "key": "string",
+            "description": "语句内容"
+          },
+          "value": "string"
+        },
+        "args": {
+          "key": "args",
+          "description": "参数列表",
+          "type": {
+            "key": "Array<arg>",
+            "description": "参数列表"
+          },
+          "value": "Array<arg>"
+        },
+        "sentenceAssets": {
+          "key": "sentenceAssets",
+          "description": "语句携带的资源列表",
+          "type": {
+            "key": "Array<IAsset>",
+            "description": "语句携带的资源列表"
+          },
+          "value": "Array<IAsset>"
+        },
+        "subScene": {
+          "key": "subScene",
+          "description": "语句包含子场景列表",
+          "type": {
+            "key": "Array<string>",
+            "description": "语句包含子场景列表"
+          },
+          "value": "Array<string>"
+        },
+        "inlineComment": {
+          "key": "inlineComment",
+          "description": "行内注释",
+          "type": {
+            "key": "string",
+            "description": "行内注释"
+          },
+          "value": "string"
+        }
+      }
+    }
+  },
+  "ILive2DMotion": {
+    "target": {
+      "key": "target",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "motion": {
+      "key": "motion",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "overrideBounds": {
+      "key": "overrideBounds",
+      "description": "",
+      "type": {
+        "key": "[number, number, number, number]",
+        "description": ""
+      },
+      "value": "[number, number, number, number]"
+    }
+  },
+  "ILive2DExpression": {
+    "target": {
+      "key": "target",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "expression": {
+      "key": "expression",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    }
+  },
+  "FocusParam": {
+    "x": {
+      "key": "x",
+      "description": "焦点X位置",
+      "type": {
+        "key": "number",
+        "description": "焦点X位置"
+      },
+      "value": "number"
+    },
+    "y": {
+      "key": "y",
+      "description": "焦点Y位置",
+      "type": {
+        "key": "number",
+        "description": "焦点Y位置"
+      },
+      "value": "number"
+    },
+    "instant": {
+      "key": "instant",
+      "description": "是否瞬间切换焦点",
+      "type": {
+        "key": "boolean",
+        "description": "是否瞬间切换焦点"
+      },
+      "value": "boolean"
+    }
+  },
+  "BlinkParam": {
+    "blinkInterval": {
+      "key": "blinkInterval",
+      "description": "眨眼间隔",
+      "type": {
+        "key": "number",
+        "description": "眨眼间隔"
+      },
+      "value": "number"
+    },
+    "blinkIntervalRandom": {
+      "key": "blinkIntervalRandom",
+      "description": "眨眼间隔随机范围",
+      "type": {
+        "key": "number",
+        "description": "眨眼间隔随机范围"
+      },
+      "value": "number"
+    },
+    "closingDuration": {
+      "key": "closingDuration",
+      "description": "闭眼",
+      "type": {
+        "key": "number",
+        "description": "闭眼"
+      },
+      "value": "number"
+    },
+    "closedDuration": {
+      "key": "closedDuration",
+      "description": "保持闭眼",
+      "type": {
+        "key": "number",
+        "description": "保持闭眼"
+      },
+      "value": "number"
+    },
+    "openingDuration": {
+      "key": "openingDuration",
+      "description": "睁眼",
+      "type": {
+        "key": "number",
+        "description": "睁眼"
+      },
+      "value": "number"
+    }
+  },
+  "ILive2DBlink": {
+    "target": {
+      "key": "target",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "blink": {
+      "key": "blink",
+      "description": "",
+      "type": {
+        "key": "BlinkParam",
+        "description": ""
+      },
+      "value": {
+        "blinkInterval": {
+          "key": "blinkInterval",
+          "description": "眨眼间隔",
+          "type": {
+            "key": "number",
+            "description": "眨眼间隔"
+          },
+          "value": "number"
+        },
+        "blinkIntervalRandom": {
+          "key": "blinkIntervalRandom",
+          "description": "眨眼间隔随机范围",
+          "type": {
+            "key": "number",
+            "description": "眨眼间隔随机范围"
+          },
+          "value": "number"
+        },
+        "closingDuration": {
+          "key": "closingDuration",
+          "description": "闭眼",
+          "type": {
+            "key": "number",
+            "description": "闭眼"
+          },
+          "value": "number"
+        },
+        "closedDuration": {
+          "key": "closedDuration",
+          "description": "保持闭眼",
+          "type": {
+            "key": "number",
+            "description": "保持闭眼"
+          },
+          "value": "number"
+        },
+        "openingDuration": {
+          "key": "openingDuration",
+          "description": "睁眼",
+          "type": {
+            "key": "number",
+            "description": "睁眼"
+          },
+          "value": "number"
+        }
+      }
+    }
+  },
+  "ILive2DFocus": {
+    "target": {
+      "key": "target",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "focus": {
+      "key": "focus",
+      "description": "",
+      "type": {
+        "key": "FocusParam",
+        "description": ""
+      },
+      "value": {
+        "x": {
+          "key": "x",
+          "description": "焦点X位置",
+          "type": {
+            "key": "number",
+            "description": "焦点X位置"
+          },
+          "value": "number"
+        },
+        "y": {
+          "key": "y",
+          "description": "焦点Y位置",
+          "type": {
+            "key": "number",
+            "description": "焦点Y位置"
+          },
+          "value": "number"
+        },
+        "instant": {
+          "key": "instant",
+          "description": "是否瞬间切换焦点",
+          "type": {
+            "key": "boolean",
+            "description": "是否瞬间切换焦点"
+          },
+          "value": "boolean"
+        }
+      }
+    }
+  },
+  "IFigureMetadata": {
+    "zIndex": {
+      "key": "zIndex",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "blendMode": {
+      "key": "blendMode",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    }
+  },
+  "ISetStagePayload": {
+    "key": {
+      "key": "key",
+      "description": "",
+      "type": {
+        "key": "keyof IStageState",
+        "description": ""
+      },
+      "value": "keyof IStageState"
+    },
+    "value": {
+      "key": "value",
+      "description": "",
+      "type": {
+        "key": "any",
+        "description": ""
+      },
+      "value": "any"
+    }
+  },
+  "IOptionData": {
+    "volumeMain": {
+      "key": "volumeMain",
+      "description": "主音量",
+      "type": {
+        "key": "number",
+        "description": "主音量"
+      },
+      "value": "number"
+    },
+    "textSpeed": {
+      "key": "textSpeed",
+      "description": "文字速度",
+      "type": {
+        "key": "number",
+        "description": "文字速度"
+      },
+      "value": "number"
+    },
+    "autoSpeed": {
+      "key": "autoSpeed",
+      "description": "自动播放速度",
+      "type": {
+        "key": "number",
+        "description": "自动播放速度"
+      },
+      "value": "number"
+    },
+    "textSize": {
+      "key": "textSize",
+      "description": "",
+      "type": {
+        "key": "textSize",
+        "description": ""
+      },
+      "value": "textSize"
+    },
+    "vocalVolume": {
+      "key": "vocalVolume",
+      "description": "语音音量",
+      "type": {
+        "key": "number",
+        "description": "语音音量"
+      },
+      "value": "number"
+    },
+    "bgmVolume": {
+      "key": "bgmVolume",
+      "description": "背景音乐音量",
+      "type": {
+        "key": "number",
+        "description": "背景音乐音量"
+      },
+      "value": "number"
+    },
+    "seVolume": {
+      "key": "seVolume",
+      "description": "音效音量",
+      "type": {
+        "key": "number",
+        "description": "音效音量"
+      },
+      "value": "number"
+    },
+    "uiSeVolume": {
+      "key": "uiSeVolume",
+      "description": "用户界面音效音量",
+      "type": {
+        "key": "number",
+        "description": "用户界面音效音量"
+      },
+      "value": "number"
+    },
+    "slPage": {
+      "key": "slPage",
+      "description": "存读档界面所在页面",
+      "type": {
+        "key": "number",
+        "description": "存读档界面所在页面"
+      },
+      "value": "number"
+    },
+    "textboxFont": {
+      "key": "textboxFont",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "textboxOpacity": {
+      "key": "textboxOpacity",
+      "description": "",
+      "type": {
+        "key": "number",
+        "description": ""
+      },
+      "value": "number"
+    },
+    "language": {
+      "key": "language",
+      "description": "",
+      "type": {
+        "key": "language",
+        "description": ""
+      },
+      "value": "language"
+    },
+    "voiceInterruption": {
+      "key": "voiceInterruption",
+      "description": "是否中断语音",
+      "type": {
+        "key": "voiceOption",
+        "description": "是否中断语音"
+      },
+      "value": "voiceOption"
+    },
+    "fullScreen": {
+      "key": "fullScreen",
+      "description": "",
+      "type": {
+        "key": "fullScreenOption",
+        "description": ""
+      },
+      "value": "fullScreenOption"
+    }
+  },
+  "ISaveScene": {
+    "currentSentenceId": {
+      "key": "currentSentenceId",
+      "description": "当前语句ID",
+      "type": {
+        "key": "number",
+        "description": "当前语句ID"
+      },
+      "value": "number"
+    },
+    "sceneStack": {
+      "key": "sceneStack",
+      "description": "场景栈",
+      "type": {
+        "key": "Array<ISceneEntry>",
+        "description": "场景栈"
+      },
+      "value": "Array<ISceneEntry>"
+    },
+    "sceneName": {
+      "key": "sceneName",
+      "description": "场景名称",
+      "type": {
+        "key": "string",
+        "description": "场景名称"
+      },
+      "value": "string"
+    },
+    "sceneUrl": {
+      "key": "sceneUrl",
+      "description": "场景url",
+      "type": {
+        "key": "string",
+        "description": "场景url"
+      },
+      "value": "string"
+    }
+  },
+  "IBacklogItem": {
+    "currentStageState": {
+      "key": "currentStageState",
+      "description": "",
+      "type": {
+        "key": "IStageState",
+        "description": ""
+      },
+      "value": {
+        "oldBgName": {
+          "key": "oldBgName",
+          "description": "旧背景的文件路径",
+          "type": {
+            "key": "string",
+            "description": "旧背景的文件路径"
+          },
+          "value": "string"
+        },
+        "bgName": {
+          "key": "bgName",
+          "description": "背景文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "背景文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "figName": {
+          "key": "figName",
+          "description": "立绘_中 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "立绘_中 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "figNameLeft": {
+          "key": "figNameLeft",
+          "description": "立绘_左 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "立绘_左 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "figNameRight": {
+          "key": "figNameRight",
+          "description": "立绘_右 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "立绘_右 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "freeFigure": {
+          "key": "freeFigure",
+          "description": "",
+          "type": {
+            "key": "Array<IFreeFigure>",
+            "description": ""
+          },
+          "value": "Array<IFreeFigure>"
+        },
+        "figureAssociatedAnimation": {
+          "key": "figureAssociatedAnimation",
+          "description": "",
+          "type": {
+            "key": "Array<IFigureAssociatedAnimation>",
+            "description": ""
+          },
+          "value": "Array<IFigureAssociatedAnimation>"
+        },
+        "showText": {
+          "key": "showText",
+          "description": "文字",
+          "type": {
+            "key": "string",
+            "description": "文字"
+          },
+          "value": "string"
+        },
+        "showTextSize": {
+          "key": "showTextSize",
+          "description": "文字",
+          "type": {
+            "key": "number",
+            "description": "文字"
+          },
+          "value": "number"
+        },
+        "showName": {
+          "key": "showName",
+          "description": "人物名",
+          "type": {
+            "key": "string",
+            "description": "人物名"
+          },
+          "value": "string"
+        },
+        "command": {
+          "key": "command",
+          "description": "语句指令",
+          "type": {
+            "key": "string",
+            "description": "语句指令"
+          },
+          "value": "string"
+        },
+        "choose": {
+          "key": "choose",
+          "description": "选项列表",
+          "type": {
+            "key": "Array<IChooseItem>",
+            "description": "选项列表"
+          },
+          "value": "Array<IChooseItem>"
+        },
+        "vocal": {
+          "key": "vocal",
+          "description": "语音 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "语音 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "playVocal": {
+          "key": "playVocal",
+          "description": "真实播放语音",
+          "type": {
+            "key": "string",
+            "description": "真实播放语音"
+          },
+          "value": "string"
+        },
+        "vocalVolume": {
+          "key": "vocalVolume",
+          "description": "语音 音量调整（0 - 100）",
+          "type": {
+            "key": "number",
+            "description": "语音 音量调整（0 - 100）"
+          },
+          "value": "number"
+        },
+        "bgm": {
+          "key": "bgm",
+          "description": "",
+          "type": {
+            "key": "{\r\n\t\t// 背景音乐\r\n\t\tsrc: string; // 背景音乐 文件地址（相对或绝对）\r\n\t\tenter: number; // 背景音乐 淡入或淡出的毫秒数\r\n\t\tvolume: number; // 背景音乐 音量调整（0 - 100）\r\n\t}",
+            "description": ""
+          },
+          "value": {
+            "src": {
+              "key": "src",
+              "description": "背景音乐 文件地址（相对或绝对）",
+              "type": {
+                "key": "string",
+                "description": "背景音乐 文件地址（相对或绝对）"
+              },
+              "value": "string"
+            },
+            "enter": {
+              "key": "enter",
+              "description": "背景音乐 淡入或淡出的毫秒数",
+              "type": {
+                "key": "number",
+                "description": "背景音乐 淡入或淡出的毫秒数"
+              },
+              "value": "number"
+            },
+            "volume": {
+              "key": "volume",
+              "description": "背景音乐 音量调整（0 - 100）",
+              "type": {
+                "key": "number",
+                "description": "背景音乐 音量调整（0 - 100）"
+              },
+              "value": "number"
+            }
+          }
+        },
+        "uiSe": {
+          "key": "uiSe",
+          "description": "用户界面音效 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "用户界面音效 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "miniAvatar": {
+          "key": "miniAvatar",
+          "description": "小头像 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "小头像 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "GameVar": {
+          "key": "GameVar",
+          "description": "游戏内变量",
+          "type": {
+            "key": "IGameVar",
+            "description": "游戏内变量"
+          },
+          "value": {}
+        },
+        "effects": {
+          "key": "effects",
+          "description": "应用的变换",
+          "type": {
+            "key": "Array<IEffect>",
+            "description": "应用的变换"
+          },
+          "value": "Array<IEffect>"
+        },
+        "animationSettings": {
+          "key": "animationSettings",
+          "description": "",
+          "type": {
+            "key": "Array<IStageAnimationSetting>",
+            "description": ""
+          },
+          "value": "Array<IStageAnimationSetting>"
+        },
+        "bgTransform": {
+          "key": "bgTransform",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "bgFilter": {
+          "key": "bgFilter",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "PerformList": {
+          "key": "PerformList",
+          "description": "要启动的演出列表",
+          "type": {
+            "key": "Array<IRunPerform>",
+            "description": "要启动的演出列表"
+          },
+          "value": "Array<IRunPerform>"
+        },
+        "currentDialogKey": {
+          "key": "currentDialogKey",
+          "description": "当前对话的key",
+          "type": {
+            "key": "string",
+            "description": "当前对话的key"
+          },
+          "value": "string"
+        },
+        "live2dMotion": {
+          "key": "live2dMotion",
+          "description": "",
+          "type": {
+            "key": "ILive2DMotion[]",
+            "description": ""
+          },
+          "value": "@T:ILive2DMotion[]"
+        },
+        "live2dExpression": {
+          "key": "live2dExpression",
+          "description": "",
+          "type": {
+            "key": "ILive2DExpression[]",
+            "description": ""
+          },
+          "value": "@T:ILive2DExpression[]"
+        },
+        "live2dBlink": {
+          "key": "live2dBlink",
+          "description": "",
+          "type": {
+            "key": "ILive2DBlink[]",
+            "description": ""
+          },
+          "value": "@T:ILive2DBlink[]"
+        },
+        "live2dFocus": {
+          "key": "live2dFocus",
+          "description": "",
+          "type": {
+            "key": "ILive2DFocus[]",
+            "description": ""
+          },
+          "value": "@T:ILive2DFocus[]"
+        },
+        "currentConcatDialogPrev": {
+          "key": "currentConcatDialogPrev",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "enableFilm": {
+          "key": "enableFilm",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "isDisableTextbox": {
+          "key": "isDisableTextbox",
+          "description": "",
+          "type": {
+            "key": "boolean",
+            "description": ""
+          },
+          "value": "boolean"
+        },
+        "replacedUIlable": {
+          "key": "replacedUIlable",
+          "description": "",
+          "type": {
+            "key": "Record<string, string>",
+            "description": ""
+          },
+          "value": "Record<string, string>"
+        },
+        "figureMetaData": {
+          "key": "figureMetaData",
+          "description": "",
+          "type": {
+            "key": "figureMetaData",
+            "description": ""
+          },
+          "value": "@N"
+        }
+      }
+    },
+    "saveScene": {
+      "key": "saveScene",
+      "description": "",
+      "type": {
+        "key": "ISaveScene",
+        "description": ""
+      },
+      "value": {
+        "currentSentenceId": {
+          "key": "currentSentenceId",
+          "description": "当前语句ID",
+          "type": {
+            "key": "number",
+            "description": "当前语句ID"
+          },
+          "value": "number"
+        },
+        "sceneStack": {
+          "key": "sceneStack",
+          "description": "场景栈",
+          "type": {
+            "key": "Array<ISceneEntry>",
+            "description": "场景栈"
+          },
+          "value": "Array<ISceneEntry>"
+        },
+        "sceneName": {
+          "key": "sceneName",
+          "description": "场景名称",
+          "type": {
+            "key": "string",
+            "description": "场景名称"
+          },
+          "value": "string"
+        },
+        "sceneUrl": {
+          "key": "sceneUrl",
+          "description": "场景url",
+          "type": {
+            "key": "string",
+            "description": "场景url"
+          },
+          "value": "string"
+        }
+      }
+    }
+  },
+  "ISaveData": {
+    "nowStageState": {
+      "key": "nowStageState",
+      "description": "",
+      "type": {
+        "key": "IStageState",
+        "description": ""
+      },
+      "value": {
+        "oldBgName": {
+          "key": "oldBgName",
+          "description": "旧背景的文件路径",
+          "type": {
+            "key": "string",
+            "description": "旧背景的文件路径"
+          },
+          "value": "string"
+        },
+        "bgName": {
+          "key": "bgName",
+          "description": "背景文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "背景文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "figName": {
+          "key": "figName",
+          "description": "立绘_中 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "立绘_中 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "figNameLeft": {
+          "key": "figNameLeft",
+          "description": "立绘_左 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "立绘_左 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "figNameRight": {
+          "key": "figNameRight",
+          "description": "立绘_右 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "立绘_右 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "freeFigure": {
+          "key": "freeFigure",
+          "description": "",
+          "type": {
+            "key": "Array<IFreeFigure>",
+            "description": ""
+          },
+          "value": "Array<IFreeFigure>"
+        },
+        "figureAssociatedAnimation": {
+          "key": "figureAssociatedAnimation",
+          "description": "",
+          "type": {
+            "key": "Array<IFigureAssociatedAnimation>",
+            "description": ""
+          },
+          "value": "Array<IFigureAssociatedAnimation>"
+        },
+        "showText": {
+          "key": "showText",
+          "description": "文字",
+          "type": {
+            "key": "string",
+            "description": "文字"
+          },
+          "value": "string"
+        },
+        "showTextSize": {
+          "key": "showTextSize",
+          "description": "文字",
+          "type": {
+            "key": "number",
+            "description": "文字"
+          },
+          "value": "number"
+        },
+        "showName": {
+          "key": "showName",
+          "description": "人物名",
+          "type": {
+            "key": "string",
+            "description": "人物名"
+          },
+          "value": "string"
+        },
+        "command": {
+          "key": "command",
+          "description": "语句指令",
+          "type": {
+            "key": "string",
+            "description": "语句指令"
+          },
+          "value": "string"
+        },
+        "choose": {
+          "key": "choose",
+          "description": "选项列表",
+          "type": {
+            "key": "Array<IChooseItem>",
+            "description": "选项列表"
+          },
+          "value": "Array<IChooseItem>"
+        },
+        "vocal": {
+          "key": "vocal",
+          "description": "语音 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "语音 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "playVocal": {
+          "key": "playVocal",
+          "description": "真实播放语音",
+          "type": {
+            "key": "string",
+            "description": "真实播放语音"
+          },
+          "value": "string"
+        },
+        "vocalVolume": {
+          "key": "vocalVolume",
+          "description": "语音 音量调整（0 - 100）",
+          "type": {
+            "key": "number",
+            "description": "语音 音量调整（0 - 100）"
+          },
+          "value": "number"
+        },
+        "bgm": {
+          "key": "bgm",
+          "description": "",
+          "type": {
+            "key": "{\r\n\t\t// 背景音乐\r\n\t\tsrc: string; // 背景音乐 文件地址（相对或绝对）\r\n\t\tenter: number; // 背景音乐 淡入或淡出的毫秒数\r\n\t\tvolume: number; // 背景音乐 音量调整（0 - 100）\r\n\t}",
+            "description": ""
+          },
+          "value": {
+            "src": {
+              "key": "src",
+              "description": "背景音乐 文件地址（相对或绝对）",
+              "type": {
+                "key": "string",
+                "description": "背景音乐 文件地址（相对或绝对）"
+              },
+              "value": "string"
+            },
+            "enter": {
+              "key": "enter",
+              "description": "背景音乐 淡入或淡出的毫秒数",
+              "type": {
+                "key": "number",
+                "description": "背景音乐 淡入或淡出的毫秒数"
+              },
+              "value": "number"
+            },
+            "volume": {
+              "key": "volume",
+              "description": "背景音乐 音量调整（0 - 100）",
+              "type": {
+                "key": "number",
+                "description": "背景音乐 音量调整（0 - 100）"
+              },
+              "value": "number"
+            }
+          }
+        },
+        "uiSe": {
+          "key": "uiSe",
+          "description": "用户界面音效 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "用户界面音效 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "miniAvatar": {
+          "key": "miniAvatar",
+          "description": "小头像 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "小头像 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "GameVar": {
+          "key": "GameVar",
+          "description": "游戏内变量",
+          "type": {
+            "key": "IGameVar",
+            "description": "游戏内变量"
+          },
+          "value": {}
+        },
+        "effects": {
+          "key": "effects",
+          "description": "应用的变换",
+          "type": {
+            "key": "Array<IEffect>",
+            "description": "应用的变换"
+          },
+          "value": "Array<IEffect>"
+        },
+        "animationSettings": {
+          "key": "animationSettings",
+          "description": "",
+          "type": {
+            "key": "Array<IStageAnimationSetting>",
+            "description": ""
+          },
+          "value": "Array<IStageAnimationSetting>"
+        },
+        "bgTransform": {
+          "key": "bgTransform",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "bgFilter": {
+          "key": "bgFilter",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "PerformList": {
+          "key": "PerformList",
+          "description": "要启动的演出列表",
+          "type": {
+            "key": "Array<IRunPerform>",
+            "description": "要启动的演出列表"
+          },
+          "value": "Array<IRunPerform>"
+        },
+        "currentDialogKey": {
+          "key": "currentDialogKey",
+          "description": "当前对话的key",
+          "type": {
+            "key": "string",
+            "description": "当前对话的key"
+          },
+          "value": "string"
+        },
+        "live2dMotion": {
+          "key": "live2dMotion",
+          "description": "",
+          "type": {
+            "key": "ILive2DMotion[]",
+            "description": ""
+          },
+          "value": "@T:ILive2DMotion[]"
+        },
+        "live2dExpression": {
+          "key": "live2dExpression",
+          "description": "",
+          "type": {
+            "key": "ILive2DExpression[]",
+            "description": ""
+          },
+          "value": "@T:ILive2DExpression[]"
+        },
+        "live2dBlink": {
+          "key": "live2dBlink",
+          "description": "",
+          "type": {
+            "key": "ILive2DBlink[]",
+            "description": ""
+          },
+          "value": "@T:ILive2DBlink[]"
+        },
+        "live2dFocus": {
+          "key": "live2dFocus",
+          "description": "",
+          "type": {
+            "key": "ILive2DFocus[]",
+            "description": ""
+          },
+          "value": "@T:ILive2DFocus[]"
+        },
+        "currentConcatDialogPrev": {
+          "key": "currentConcatDialogPrev",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "enableFilm": {
+          "key": "enableFilm",
+          "description": "",
+          "type": {
+            "key": "string",
+            "description": ""
+          },
+          "value": "string"
+        },
+        "isDisableTextbox": {
+          "key": "isDisableTextbox",
+          "description": "",
+          "type": {
+            "key": "boolean",
+            "description": ""
+          },
+          "value": "boolean"
+        },
+        "replacedUIlable": {
+          "key": "replacedUIlable",
+          "description": "",
+          "type": {
+            "key": "Record<string, string>",
+            "description": ""
+          },
+          "value": "Record<string, string>"
+        },
+        "figureMetaData": {
+          "key": "figureMetaData",
+          "description": "",
+          "type": {
+            "key": "figureMetaData",
+            "description": ""
+          },
+          "value": "@N"
+        }
+      }
+    },
+    "backlog": {
+      "key": "backlog",
+      "description": "舞台数据",
+      "type": {
+        "key": "Array<IBacklogItem>",
+        "description": "舞台数据"
+      },
+      "value": "Array<IBacklogItem>"
+    },
+    "index": {
+      "key": "index",
+      "description": "存档的序号",
+      "type": {
+        "key": "number",
+        "description": "存档的序号"
+      },
+      "value": "number"
+    },
+    "saveTime": {
+      "key": "saveTime",
+      "description": "保存时间",
+      "type": {
+        "key": "string",
+        "description": "保存时间"
+      },
+      "value": "string"
+    },
+    "sceneData": {
+      "key": "sceneData",
+      "description": "场景数据",
+      "type": {
+        "key": "ISaveScene",
+        "description": "场景数据"
+      },
+      "value": {
+        "currentSentenceId": {
+          "key": "currentSentenceId",
+          "description": "当前语句ID",
+          "type": {
+            "key": "number",
+            "description": "当前语句ID"
+          },
+          "value": "number"
+        },
+        "sceneStack": {
+          "key": "sceneStack",
+          "description": "场景栈",
+          "type": {
+            "key": "Array<ISceneEntry>",
+            "description": "场景栈"
+          },
+          "value": "Array<ISceneEntry>"
+        },
+        "sceneName": {
+          "key": "sceneName",
+          "description": "场景名称",
+          "type": {
+            "key": "string",
+            "description": "场景名称"
+          },
+          "value": "string"
+        },
+        "sceneUrl": {
+          "key": "sceneUrl",
+          "description": "场景url",
+          "type": {
+            "key": "string",
+            "description": "场景url"
+          },
+          "value": "string"
+        }
+      }
+    },
+    "previewImage": {
+      "key": "previewImage",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    }
+  },
+  "IAppreciationAsset": {
+    "name": {
+      "key": "name",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "url": {
+      "key": "url",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "series": {
+      "key": "series",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    }
+  },
+  "IAppreciation": {
+    "bgm": {
+      "key": "bgm",
+      "description": "",
+      "type": {
+        "key": "Array<IAppreciationAsset>",
+        "description": ""
+      },
+      "value": "Array<IAppreciationAsset>"
+    },
+    "cg": {
+      "key": "cg",
+      "description": "",
+      "type": {
+        "key": "Array<IAppreciationAsset>",
+        "description": ""
+      },
+      "value": "Array<IAppreciationAsset>"
+    }
+  },
+  "stage": {
+    "oldBgName": {
+      "key": "oldBgName",
+      "description": "旧背景的文件路径",
+      "type": {
+        "key": "string",
+        "description": "旧背景的文件路径"
+      },
+      "value": "string"
+    },
+    "bgName": {
+      "key": "bgName",
+      "description": "背景文件地址（相对或绝对）",
+      "type": {
+        "key": "string",
+        "description": "背景文件地址（相对或绝对）"
+      },
+      "value": "string"
+    },
+    "figName": {
+      "key": "figName",
+      "description": "立绘_中 文件地址（相对或绝对）",
+      "type": {
+        "key": "string",
+        "description": "立绘_中 文件地址（相对或绝对）"
+      },
+      "value": "string"
+    },
+    "figNameLeft": {
+      "key": "figNameLeft",
+      "description": "立绘_左 文件地址（相对或绝对）",
+      "type": {
+        "key": "string",
+        "description": "立绘_左 文件地址（相对或绝对）"
+      },
+      "value": "string"
+    },
+    "figNameRight": {
+      "key": "figNameRight",
+      "description": "立绘_右 文件地址（相对或绝对）",
+      "type": {
+        "key": "string",
+        "description": "立绘_右 文件地址（相对或绝对）"
+      },
+      "value": "string"
+    },
+    "freeFigure": {
+      "key": "freeFigure",
+      "description": "",
+      "type": {
+        "key": "Array<IFreeFigure>",
+        "description": ""
+      },
+      "value": "Array<IFreeFigure>"
+    },
+    "figureAssociatedAnimation": {
+      "key": "figureAssociatedAnimation",
+      "description": "",
+      "type": {
+        "key": "Array<IFigureAssociatedAnimation>",
+        "description": ""
+      },
+      "value": "Array<IFigureAssociatedAnimation>"
+    },
+    "showText": {
+      "key": "showText",
+      "description": "文字",
+      "type": {
+        "key": "string",
+        "description": "文字"
+      },
+      "value": "string"
+    },
+    "showTextSize": {
+      "key": "showTextSize",
+      "description": "文字",
+      "type": {
+        "key": "number",
+        "description": "文字"
+      },
+      "value": "number"
+    },
+    "showName": {
+      "key": "showName",
+      "description": "人物名",
+      "type": {
+        "key": "string",
+        "description": "人物名"
+      },
+      "value": "string"
+    },
+    "command": {
+      "key": "command",
+      "description": "语句指令",
+      "type": {
+        "key": "string",
+        "description": "语句指令"
+      },
+      "value": "string"
+    },
+    "choose": {
+      "key": "choose",
+      "description": "选项列表",
+      "type": {
+        "key": "Array<IChooseItem>",
+        "description": "选项列表"
+      },
+      "value": "Array<IChooseItem>"
+    },
+    "vocal": {
+      "key": "vocal",
+      "description": "语音 文件地址（相对或绝对）",
+      "type": {
+        "key": "string",
+        "description": "语音 文件地址（相对或绝对）"
+      },
+      "value": "string"
+    },
+    "playVocal": {
+      "key": "playVocal",
+      "description": "真实播放语音",
+      "type": {
+        "key": "string",
+        "description": "真实播放语音"
+      },
+      "value": "string"
+    },
+    "vocalVolume": {
+      "key": "vocalVolume",
+      "description": "语音 音量调整（0 - 100）",
+      "type": {
+        "key": "number",
+        "description": "语音 音量调整（0 - 100）"
+      },
+      "value": "number"
+    },
+    "bgm": {
+      "key": "bgm",
+      "description": "",
+      "type": {
+        "key": "{\r\n\t\t// 背景音乐\r\n\t\tsrc: string; // 背景音乐 文件地址（相对或绝对）\r\n\t\tenter: number; // 背景音乐 淡入或淡出的毫秒数\r\n\t\tvolume: number; // 背景音乐 音量调整（0 - 100）\r\n\t}",
+        "description": ""
+      },
+      "value": {
+        "src": {
+          "key": "src",
+          "description": "背景音乐 文件地址（相对或绝对）",
+          "type": {
+            "key": "string",
+            "description": "背景音乐 文件地址（相对或绝对）"
+          },
+          "value": "string"
+        },
+        "enter": {
+          "key": "enter",
+          "description": "背景音乐 淡入或淡出的毫秒数",
+          "type": {
+            "key": "number",
+            "description": "背景音乐 淡入或淡出的毫秒数"
+          },
+          "value": "number"
+        },
+        "volume": {
+          "key": "volume",
+          "description": "背景音乐 音量调整（0 - 100）",
+          "type": {
+            "key": "number",
+            "description": "背景音乐 音量调整（0 - 100）"
+          },
+          "value": "number"
+        }
+      }
+    },
+    "uiSe": {
+      "key": "uiSe",
+      "description": "用户界面音效 文件地址（相对或绝对）",
+      "type": {
+        "key": "string",
+        "description": "用户界面音效 文件地址（相对或绝对）"
+      },
+      "value": "string"
+    },
+    "miniAvatar": {
+      "key": "miniAvatar",
+      "description": "小头像 文件地址（相对或绝对）",
+      "type": {
+        "key": "string",
+        "description": "小头像 文件地址（相对或绝对）"
+      },
+      "value": "string"
+    },
+    "GameVar": {
+      "key": "GameVar",
+      "description": "游戏内变量",
+      "type": {
+        "key": "IGameVar",
+        "description": "游戏内变量"
+      },
+      "value": {}
+    },
+    "effects": {
+      "key": "effects",
+      "description": "应用的变换",
+      "type": {
+        "key": "Array<IEffect>",
+        "description": "应用的变换"
+      },
+      "value": "Array<IEffect>"
+    },
+    "animationSettings": {
+      "key": "animationSettings",
+      "description": "",
+      "type": {
+        "key": "Array<IStageAnimationSetting>",
+        "description": ""
+      },
+      "value": "Array<IStageAnimationSetting>"
+    },
+    "bgTransform": {
+      "key": "bgTransform",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "bgFilter": {
+      "key": "bgFilter",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "PerformList": {
+      "key": "PerformList",
+      "description": "要启动的演出列表",
+      "type": {
+        "key": "Array<IRunPerform>",
+        "description": "要启动的演出列表"
+      },
+      "value": "Array<IRunPerform>"
+    },
+    "currentDialogKey": {
+      "key": "currentDialogKey",
+      "description": "当前对话的key",
+      "type": {
+        "key": "string",
+        "description": "当前对话的key"
+      },
+      "value": "string"
+    },
+    "live2dMotion": {
+      "key": "live2dMotion",
+      "description": "",
+      "type": {
+        "key": "ILive2DMotion[]",
+        "description": ""
+      },
+      "value": "@T:ILive2DMotion[]"
+    },
+    "live2dExpression": {
+      "key": "live2dExpression",
+      "description": "",
+      "type": {
+        "key": "ILive2DExpression[]",
+        "description": ""
+      },
+      "value": "@T:ILive2DExpression[]"
+    },
+    "live2dBlink": {
+      "key": "live2dBlink",
+      "description": "",
+      "type": {
+        "key": "ILive2DBlink[]",
+        "description": ""
+      },
+      "value": "@T:ILive2DBlink[]"
+    },
+    "live2dFocus": {
+      "key": "live2dFocus",
+      "description": "",
+      "type": {
+        "key": "ILive2DFocus[]",
+        "description": ""
+      },
+      "value": "@T:ILive2DFocus[]"
+    },
+    "currentConcatDialogPrev": {
+      "key": "currentConcatDialogPrev",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "enableFilm": {
+      "key": "enableFilm",
+      "description": "",
+      "type": {
+        "key": "string",
+        "description": ""
+      },
+      "value": "string"
+    },
+    "isDisableTextbox": {
+      "key": "isDisableTextbox",
+      "description": "",
+      "type": {
+        "key": "boolean",
+        "description": ""
+      },
+      "value": "boolean"
+    },
+    "replacedUIlable": {
+      "key": "replacedUIlable",
+      "description": "",
+      "type": {
+        "key": "Record<string, string>",
+        "description": ""
+      },
+      "value": "Record<string, string>"
+    },
+    "figureMetaData": {
+      "key": "figureMetaData",
+      "description": "",
+      "type": {
+        "key": "figureMetaData",
+        "description": ""
+      },
+      "value": "@N"
+    }
+  },
+  "userData": {
+    "scriptManagedGlobalVar": {
+      "key": "scriptManagedGlobalVar",
+      "description": "",
+      "type": {
+        "key": "string[]",
+        "description": ""
+      },
+      "value": "@T:string[]"
+    },
+    "globalGameVar": {
+      "key": "globalGameVar",
+      "description": "不跟随存档的全局变量",
+      "type": {
+        "key": "IGameVar",
+        "description": "不跟随存档的全局变量"
+      },
+      "value": {}
+    },
+    "optionData": {
+      "key": "optionData",
+      "description": "用户设置选项数据",
+      "type": {
+        "key": "IOptionData",
+        "description": "用户设置选项数据"
+      },
+      "value": {
+        "volumeMain": {
+          "key": "volumeMain",
+          "description": "主音量",
+          "type": {
+            "key": "number",
+            "description": "主音量"
+          },
+          "value": "number"
+        },
+        "textSpeed": {
+          "key": "textSpeed",
+          "description": "文字速度",
+          "type": {
+            "key": "number",
+            "description": "文字速度"
+          },
+          "value": "number"
+        },
+        "autoSpeed": {
+          "key": "autoSpeed",
+          "description": "自动播放速度",
+          "type": {
+            "key": "number",
+            "description": "自动播放速度"
+          },
+          "value": "number"
+        },
+        "textSize": {
+          "key": "textSize",
+          "description": "",
+          "type": {
+            "key": "textSize",
+            "description": ""
+          },
+          "value": "textSize"
+        },
+        "vocalVolume": {
+          "key": "vocalVolume",
+          "description": "语音音量",
+          "type": {
+            "key": "number",
+            "description": "语音音量"
+          },
+          "value": "number"
+        },
+        "bgmVolume": {
+          "key": "bgmVolume",
+          "description": "背景音乐音量",
+          "type": {
+            "key": "number",
+            "description": "背景音乐音量"
+          },
+          "value": "number"
+        },
+        "seVolume": {
+          "key": "seVolume",
+          "description": "音效音量",
+          "type": {
+            "key": "number",
+            "description": "音效音量"
+          },
+          "value": "number"
+        },
+        "uiSeVolume": {
+          "key": "uiSeVolume",
+          "description": "用户界面音效音量",
+          "type": {
+            "key": "number",
+            "description": "用户界面音效音量"
+          },
+          "value": "number"
+        },
+        "slPage": {
+          "key": "slPage",
+          "description": "存读档界面所在页面",
+          "type": {
+            "key": "number",
+            "description": "存读档界面所在页面"
+          },
+          "value": "number"
+        },
+        "textboxFont": {
+          "key": "textboxFont",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "textboxOpacity": {
+          "key": "textboxOpacity",
+          "description": "",
+          "type": {
+            "key": "number",
+            "description": ""
+          },
+          "value": "number"
+        },
+        "language": {
+          "key": "language",
+          "description": "",
+          "type": {
+            "key": "language",
+            "description": ""
+          },
+          "value": "language"
+        },
+        "voiceInterruption": {
+          "key": "voiceInterruption",
+          "description": "是否中断语音",
+          "type": {
+            "key": "voiceOption",
+            "description": "是否中断语音"
+          },
+          "value": "voiceOption"
+        },
+        "fullScreen": {
+          "key": "fullScreen",
+          "description": "",
+          "type": {
+            "key": "fullScreenOption",
+            "description": ""
+          },
+          "value": "fullScreenOption"
+        }
+      }
+    },
+    "appreciationData": {
+      "key": "appreciationData",
+      "description": "",
+      "type": {
+        "key": "IAppreciation",
+        "description": ""
+      },
+      "value": {
+        "bgm": {
+          "key": "bgm",
+          "description": "",
+          "type": {
+            "key": "Array<IAppreciationAsset>",
+            "description": ""
+          },
+          "value": "Array<IAppreciationAsset>"
+        },
+        "cg": {
+          "key": "cg",
+          "description": "",
+          "type": {
+            "key": "Array<IAppreciationAsset>",
+            "description": ""
+          },
+          "value": "Array<IAppreciationAsset>"
+        }
+      }
+    },
+    "gameConfigInit": {
+      "key": "gameConfigInit",
+      "description": "",
+      "type": {
+        "key": "IGameVar",
+        "description": ""
+      },
+      "value": {}
+    }
+  }
+}

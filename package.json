@@ -196,12 +196,15 @@
 		"lint": "eslint src --ext ts",
 		"format": "prettier --write \"src/**/*.ts\"",
 		"test": "vscode-test",
-		"publish": "vsce publish --yarn"
+		"publish": "vsce publish --yarn",
+		"gen": "tsx ./scripts/gen.ts"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.30",
+		"@types/node": "^25.2.2",
 		"@types/ws": "^8.5.10",
-		"prettier": "^3.8.1"
+		"prettier": "^3.8.1",
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3"
 	},
 	"dependencies": {
 		"@types/js-beautify": "^1.14.3",
