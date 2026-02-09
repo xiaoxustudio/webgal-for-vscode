@@ -5,6 +5,7 @@ import FStat from "./FStat";
 import getResourceDirectory from "./getResourceDirectory";
 import goPropertyDoc from "./goPropertyDoc";
 import readDirectory from "./readDirectory";
+import showTip from "./showTip";
 
 export default [
 	readDirectory,
@@ -13,5 +14,6 @@ export default [
 	FJoin,
 	findFile,
 	goPropertyDoc,
-	getResourceDirectory
+	getResourceDirectory,
+	showTip
 ];

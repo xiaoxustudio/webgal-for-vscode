@@ -128,6 +128,8 @@ connection.onInitialized(() => {
 			connection.console.log("Workspace folder change event received.");
 		});
 	}
+
+	connection.sendRequest("client/showTip", "WebGal LSP Started");
 });
 
 const defaultSettings = {
