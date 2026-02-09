@@ -45,7 +45,7 @@ import {
 	WebGALConfigCompletionMap,
 	WebGALConfigMap,
 	WebGALKeywords,
-	WebGALKeywordsKeys
+	WebgGALKeywordsCompletionMap
 } from "../utils/provider";
 import {
 	findTokenRange,
@@ -410,9 +410,22 @@ connection.onCompletion(
 			document,
 			_textDocumentPosition.position
 		);
+
 		const CompletionItemSuggestions: CompletionItem[] = [];
 
-		/* 舞台状态 */
+		/* 配置文件 */
+		if (file_name.endsWith("/game/config.txt")) {
+			const completionItems = [];
+			for (const key in WebGALConfigCompletionMap) {
+				const keyData = WebGALConfigCompletionMap[key];
+				// 如果输入的文本以关键词开头，则匹配相应的参数
+				if (key.toLowerCase().includes(token.toLowerCase())) {
+					completionItems.push(keyData);
+				}
+			}
+			return completionItems;
+		}
+
 		const findWordWithPattern = getPatternAtPosition(
 			document,
 			_textDocumentPosition.position,
@@ -427,6 +440,7 @@ connection.onCompletion(
 			);
 		};
 
+		/* 舞台状态 */
 		if (findWordWithPattern) {
 			const { replaceRange, fullSegments, querySegments, prefix } =
 				getStageCompletionContext(
@@ -476,19 +490,6 @@ connection.onCompletion(
 			return CompletionItemSuggestions;
 		}
 
-		/* 配置文件 */
-		if (file_name.endsWith("/game/config.txt")) {
-			const completionItems = [];
-			for (const key in WebGALConfigCompletionMap) {
-				const keyData = WebGALConfigCompletionMap[key];
-				// 如果输入的文本以关键词开头，则匹配相应的参数
-				if (key.toLowerCase().includes(token.toLowerCase())) {
-					completionItems.push(keyData);
-				}
-			}
-			return completionItems;
-		}
-
 		const wordMeta = getWordAtPosition(
 			document,
 			Position.create(_textDocumentPosition.position.line, 0)
@@ -498,8 +499,9 @@ connection.onCompletion(
 		if (wordMeta) {
 			for (const key in WebGALKeywords) {
 				const keyData = WebGALKeywords[key as CommandNames];
+				console.log("徐然", keyData);
 				// 如果输入的文本以关键词开头，则匹配相应的参数
-				if (token.startsWith("-") && wordMeta.word === key) {
+				if (token.startsWith("-")) {
 					const data = [...keyData.args, ...globalArgs].map((arg) => {
 						return {
 							label: arg.arg,
@@ -527,8 +529,8 @@ connection.onCompletion(
 				: currentLine.indexOf(";")
 		);
 
+		// 路径
 		if (token.startsWith("./")) {
-			// 路径
 			if (resourcesMap[commandType]) {
 				const resourceBaseDir = resourcesMap[commandType];
 				const dirs = await connection.sendRequest<any>(
@@ -549,42 +551,28 @@ connection.onCompletion(
 			return CompletionItemSuggestions;
 		}
 
-		// 尝试提取
-		CompletionItemSuggestions.push(
-			...WebGALKeywordsKeys.map(
-				(v) =>
-					({
-						label: WebGALKeywords[v]?.label || v,
-						kind:
-							WebGALKeywords[v]?.kind ||
-							CompletionItemKind.Keyword,
-						documentation: {
-							kind: MarkupKind.Markdown,
-							value:
-								(
-									WebGALKeywords[v].documentation as string
-								)?.replace(/\t+/g, "") || WebGALKeywords[v].desc
-						} as MarkupContent,
-						detail:
-							WebGALKeywords[v]?.detail || WebGALKeywords[v].desc
-					}) satisfies CompletionItem
-			)
-		);
-
 		// 变量
-		updateGlobalMap(document.getText().split("\n"));
 
-		const currentPool = GlobalMap.setVar;
-		for (const key in currentPool) {
-			if (key.includes(token)) {
-				const latest =
-					GlobalMap.setVar[key][GlobalMap.setVar[key].length - 1];
-				CompletionItemSuggestions.push({
-					label: key,
-					kind: CompletionItemKind.Variable,
-					documentation: latest.desc
-				} satisfies CompletionItem);
+		if (token) {
+			updateGlobalMap(document.getText().split("\n"));
+
+			const currentPool = GlobalMap.setVar;
+			for (const key in currentPool) {
+				if (key.includes(token)) {
+					const latest =
+						GlobalMap.setVar[key][GlobalMap.setVar[key].length - 1];
+					CompletionItemSuggestions.push({
+						label: key,
+						kind: CompletionItemKind.Variable,
+						documentation: latest.desc
+					} satisfies CompletionItem);
+				}
 			}
+		}
+
+		/* 新行无内容 */
+		if (!wordMeta && _textDocumentPosition.position.character === 0) {
+			CompletionItemSuggestions.push(...WebgGALKeywordsCompletionMap);
 		}
 
 		return CompletionItemSuggestions;

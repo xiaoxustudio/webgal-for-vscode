@@ -1,4 +1,9 @@
-import { CompletionItem, CompletionItemKind } from "vscode-languageserver";
+import {
+	CompletionItem,
+	CompletionItemKind,
+	MarkupContent,
+	MarkupKind
+} from "vscode-languageserver";
 
 export enum commandType {
 	say, // 对话
@@ -807,7 +812,19 @@ export const WebGALKeywords: WebGALKeyWords = {
 	getUserInput: {
 		type: commandType.getUserInput,
 		desc: "获取用户输入命令。",
-		args: [argsMap.title, argsMap.buttonText, argsMap.defaultValue]
+		label: "getUserInput",
+		args: [argsMap.title, argsMap.buttonText, argsMap.defaultValue],
+		kind: CompletionItemKind.Function,
+		documentation: `获取用户输入
+		\`\`\`webgal
+		填写变量名称，用户输入的值将保存在该变量中。
+		角色B:真的是太感谢您了，能告诉我您的名字吗？;
+		getUserInput:player_name -title=您的名字 -buttonText=确认 -defaultValue=Bob;
+		角色B:{player_name}，我记住了。;
+		\`\`\`
+`,
+		detail: `getUserInput:[...args];`,
+		insertText: "getUserInput:"
 	},
 	applyStyle: {
 		type: commandType.applyStyle,
@@ -851,6 +868,24 @@ export const WebGALKeywords: WebGALKeyWords = {
 	}
 };
 export const WebGALKeywordsKeys = Object.keys(WebGALKeywords);
+
+/* server可用补全Map */
+export const WebgGALKeywordsCompletionMap = WebGALKeywordsKeys.map(
+	(v) =>
+		({
+			label: WebGALKeywords[v]?.label || v,
+			kind: WebGALKeywords[v]?.kind || CompletionItemKind.Keyword,
+			documentation: {
+				kind: MarkupKind.Markdown,
+				value:
+					(WebGALKeywords[v].documentation as string)?.replace(
+						/\t+/g,
+						""
+					) || WebGALKeywords[v].desc
+			} as MarkupContent,
+			detail: WebGALKeywords[v]?.detail || WebGALKeywords[v].desc
+		}) satisfies CompletionItem
+);
 
 export interface WebGALConfigToken extends Partial<CompletionItem> {
 	desc: string; // 描述
