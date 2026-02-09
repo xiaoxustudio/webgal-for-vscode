@@ -934,7 +934,7 @@ export const WebGALConfigCompletionMap = Object.fromEntries(
 		const label = key;
 		const documentation = token?.documentation ?? token?.desc ?? "";
 		const detail = `${key}:<value>;`;
-		const insertText = `${key}:$1`;
+		const insertText = `${key}:$1;`;
 
 		const completion: CompletionItem = {
 			...token,
@@ -942,7 +942,8 @@ export const WebGALConfigCompletionMap = Object.fromEntries(
 			kind: CompletionItemKind.Function,
 			documentation,
 			detail,
-			insertText
+			insertText,
+			insertTextFormat: InsertTextFormat.Snippet
 		};
 		return [key, completion];
 	})

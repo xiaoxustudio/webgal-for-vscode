@@ -518,6 +518,41 @@ connection.onHover(
 				: currentLine.indexOf(";")
 		);
 
+		let findWordWithPattern = getPatternAtPosition(
+			document,
+			_textDocumentPosition.position,
+			/\{([^}]*)\}/
+		);
+
+		/* 舞台状态 */
+		findWordWithPattern = getPatternAtPosition(
+			document,
+			_textDocumentPosition.position,
+			/\$(stage|userData)((?:\.[\w-]+)+|\b)/
+		);
+		if (findWordWithPattern) {
+			const strArray = findWordWithPattern.text.slice(1).split(".");
+			const info = await connection.sendRequest<StateMap>(
+				"client/goPropertyDoc",
+				strArray
+			);
+			if (info)
+				return {
+					contents: {
+						kind: MarkupKind.Markdown,
+						value: [
+							`### ${info.key}`,
+							`\`${findWordWithPattern.text}\``,
+							`${info?.description}`
+						].join("\n\n")
+					} as MarkupContent,
+					range: Range.create(
+						findWordWithPattern.startPos,
+						findWordWithPattern.endPos
+					)
+				};
+		}
+
 		const findWord = getWordAtPosition(
 			document,
 			_textDocumentPosition.position
@@ -528,14 +563,11 @@ connection.onHover(
 		if (file_name.endsWith("/game/config.txt")) {
 			for (const i in WebGALConfigMap) {
 				const kw_val = WebGALConfigMap[i];
-				if (lineText.startsWith(i)) {
+				if (findWord.word === i) {
 					return {
 						contents: {
 							kind: MarkupKind.Markdown,
-							value: [
-								`**${findWord.word}**`,
-								`\n${kw_val.desc}`
-							].join("\n")
+							value: [`**${i}**`, `\n${kw_val.desc}`].join("\n")
 						} as MarkupContent
 					};
 				}
@@ -567,12 +599,6 @@ connection.onHover(
 
 		updateGlobalMap(documentTextArray);
 
-		let findWordWithPattern = getPatternAtPosition(
-			document,
-			_textDocumentPosition.position,
-			/\{([^}]*)\}/
-		);
-
 		/* 引用变量 hover */
 		if (
 			findWordWithPattern &&
@@ -603,35 +629,6 @@ connection.onHover(
 					value: hoverContent.join("\n\n")
 				} as MarkupContent
 			};
-		}
-
-		/* 舞台状态 */
-		findWordWithPattern = getPatternAtPosition(
-			document,
-			_textDocumentPosition.position,
-			/\$(stage|userData)((?:\.[\w-]+)+|\b)/
-		);
-		if (findWordWithPattern) {
-			const strArray = findWordWithPattern.text.slice(1).split(".");
-			const info = await connection.sendRequest<StateMap>(
-				"client/goPropertyDoc",
-				strArray
-			);
-			if (info)
-				return {
-					contents: {
-						kind: MarkupKind.Markdown,
-						value: [
-							`### ${info.key}`,
-							`\`${findWordWithPattern.text}\``,
-							`${info?.description}`
-						].join("\n\n")
-					} as MarkupContent,
-					range: Range.create(
-						findWordWithPattern.startPos,
-						findWordWithPattern.endPos
-					)
-				};
 		}
 
 		return { contents: [] };
