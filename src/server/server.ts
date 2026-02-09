@@ -91,7 +91,6 @@ connection.onInitialize((params: InitializeParams) => {
 		capabilities: {
 			textDocumentSync: TextDocumentSyncKind.Incremental,
 			completionProvider: {
-				resolveProvider: true,
 				triggerCharacters: [".", ":", "-", "/"]
 			},
 			hoverProvider: true,
@@ -140,6 +139,47 @@ const defaultSettings = {
 let globalSettings: ServerSettings = defaultSettings;
 
 const documentSettings: Map<string, Thenable<ServerSettings>> = new Map();
+
+//  获取补全上下文
+function getStageCompletionContext(
+	document: TextDocument,
+	cursorPos: Position,
+	match: { text: string; start: number }
+): {
+	replaceRange: Range;
+	fullSegments: string[];
+	querySegments: string[];
+	prefix: string;
+} {
+	const cursorOffset = document.offsetAt(cursorPos);
+	const relCursor = Math.max(
+		0,
+		Math.min(cursorOffset - match.start, match.text.length)
+	);
+	const rawBeforeCursor = match.text.slice(0, relCursor);
+	const lastDotIndex = rawBeforeCursor.lastIndexOf(".");
+	const replaceStartOffset =
+		match.start + (lastDotIndex === -1 ? 0 : lastDotIndex + 1);
+	const replaceRange = Range.create(
+		document.positionAt(replaceStartOffset),
+		cursorPos
+	);
+
+	const normalizedBeforeCursor = rawBeforeCursor.startsWith("$")
+		? rawBeforeCursor.slice(1)
+		: rawBeforeCursor;
+	const rawSegments = normalizedBeforeCursor.split(".");
+	const fullSegments = rawSegments.filter((part) => part);
+	const hasTrailingDot = normalizedBeforeCursor.endsWith(".");
+	const prefix = hasTrailingDot
+		? ""
+		: rawSegments[rawSegments.length - 1] || "";
+	const querySegments = hasTrailingDot
+		? fullSegments
+		: fullSegments.slice(0, -1);
+
+	return { replaceRange, fullSegments, querySegments, prefix };
+}
 
 // 获取文档设置
 function getDocumentSettings(url: string): Thenable<ServerSettings> {
@@ -369,25 +409,6 @@ connection.onCompletion(
 			_textDocumentPosition.position
 		);
 		const CompletionItemSuggestions: CompletionItem[] = [];
-		const wordMeta = getWordAtPosition(
-			document,
-			Position.create(_textDocumentPosition.position.line, 0)
-		); // 获得当前单词
-
-		if (!wordMeta) return [];
-
-		/* 配置文件 */
-		if (file_name.endsWith("/game/config.txt")) {
-			const completionItems = [];
-			for (const key in WebGALConfigCompletionMap) {
-				const keyData = WebGALConfigCompletionMap[key];
-				// 如果输入的文本以关键词开头，则匹配相应的参数
-				if (key.toLowerCase().includes(token.toLowerCase())) {
-					completionItems.push(keyData);
-				}
-			}
-			return completionItems;
-		}
 
 		/* 舞台状态 */
 		const findWordWithPattern = getPatternAtPosition(
@@ -403,26 +424,21 @@ connection.onCompletion(
 				typeof (value as StateMap).description === "string"
 			);
 		};
+
 		if (findWordWithPattern) {
-			const rawText = findWordWithPattern.text;
-			const normalized = rawText.startsWith("$")
-				? rawText.slice(1)
-				: rawText; // 去掉开头的 $
-			const rawSegments = normalized.split(".");
-			const fullSegments = rawSegments.filter((part) => part); // 去掉空字符串
-			const hasTrailingDot = normalized.endsWith("."); // 是否以 . 结尾
-			const prefix = hasTrailingDot
-				? ""
-				: rawSegments[rawSegments.length - 1] || "";
-			const querySegments = hasTrailingDot
-				? fullSegments
-				: fullSegments.slice(0, -1); // 去掉最后一个部分
+			const { replaceRange, fullSegments, querySegments, prefix } =
+				getStageCompletionContext(
+					document,
+					_textDocumentPosition.position,
+					findWordWithPattern
+				);
 			const info = await connection.sendRequest<
 				StateMap | Record<string, StateMap>
 			>(
 				"client/goPropertyDoc",
 				querySegments.length ? querySegments : fullSegments
 			);
+
 			if (info) {
 				if (!isStateMap(info)) {
 					for (const key in info) {
@@ -431,7 +447,12 @@ connection.onCompletion(
 						CompletionItemSuggestions.push({
 							label: key,
 							kind: CompletionItemKind.Constant,
-							documentation: current.description
+							documentation: current.description,
+							filterText: key,
+							textEdit: {
+								range: replaceRange,
+								newText: key
+							}
 						} satisfies CompletionItem);
 					}
 				} else {
@@ -441,34 +462,59 @@ connection.onCompletion(
 					CompletionItemSuggestions.push({
 						label: info.key,
 						kind: CompletionItemKind.Constant,
-						documentation: info.description
+						documentation: info.description,
+						filterText: info.key,
+						textEdit: {
+							range: replaceRange,
+							newText: info.key
+						}
 					} satisfies CompletionItem);
 				}
 			}
 			return CompletionItemSuggestions;
 		}
 
-		/* 场景文件 */
-		for (const key in WebGALKeywords) {
-			const keyData = WebGALKeywords[key as CommandNames];
-			// 如果输入的文本以关键词开头，则匹配相应的参数
-			if (token.startsWith("-") && wordMeta.word === key) {
-				const data = [...keyData.args, ...globalArgs].map((arg) => {
-					return {
-						label: arg.arg,
-						kind: CompletionItemKind.Constant,
-						documentation: arg.desc,
-						detail: arg.desc
-					};
-				}) as CompletionItem[];
-				return data.filter((item, index, self) => {
-					return (
-						self.findIndex((t) => t.label === item.label) === index
-					);
-				});
+		/* 配置文件 */
+		if (file_name.endsWith("/game/config.txt")) {
+			const completionItems = [];
+			for (const key in WebGALConfigCompletionMap) {
+				const keyData = WebGALConfigCompletionMap[key];
+				// 如果输入的文本以关键词开头，则匹配相应的参数
+				if (key.toLowerCase().includes(token.toLowerCase())) {
+					completionItems.push(keyData);
+				}
 			}
+			return completionItems;
 		}
 
+		const wordMeta = getWordAtPosition(
+			document,
+			Position.create(_textDocumentPosition.position.line, 0)
+		); // 获得当前单词
+
+		/* 场景文件 */
+		if (wordMeta) {
+			for (const key in WebGALKeywords) {
+				const keyData = WebGALKeywords[key as CommandNames];
+				// 如果输入的文本以关键词开头，则匹配相应的参数
+				if (token.startsWith("-") && wordMeta.word === key) {
+					const data = [...keyData.args, ...globalArgs].map((arg) => {
+						return {
+							label: arg.arg,
+							kind: CompletionItemKind.Constant,
+							documentation: arg.desc,
+							detail: arg.desc
+						};
+					}) as CompletionItem[];
+					return data.filter((item, index, self) => {
+						return (
+							self.findIndex((t) => t.label === item.label) ===
+							index
+						);
+					});
+				}
+			}
+		}
 		const currentLine = document.getText().split("\n")[
 			_textDocumentPosition.position.line
 		];
@@ -525,6 +571,7 @@ connection.onCompletion(
 
 		// 变量
 		updateGlobalMap(document.getText().split("\n"));
+
 		const currentPool = GlobalMap.setVar;
 		for (const key in currentPool) {
 			if (key.includes(token)) {
@@ -541,8 +588,6 @@ connection.onCompletion(
 		return CompletionItemSuggestions;
 	}
 );
-
-connection.onCompletionResolve((item: CompletionItem): CompletionItem => item);
 
 // 悬浮
 connection.onHover(
