@@ -1,7 +1,14 @@
 import * as fs from "fs/promises";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import { Position, TextDocument } from "vscode-languageserver-textdocument";
+import { Position, Range } from "vscode-languageserver";
+import { TextDocument } from "vscode-languageserver-textdocument";
+import {
+	cleartGlobalMapAll,
+	getVariableTypeDesc,
+	GlobalMap,
+	IVToken
+} from "../utils/utils_novsc";
 
 /** 获取位置的指令单词 */
 export function getWordAtPosition(
@@ -213,5 +220,89 @@ export async function listPathCandidates(
 		return candidates;
 	} catch (err) {
 		return [];
+	}
+}
+
+//  获取补全上下文
+export function getStageCompletionContext(
+	document: TextDocument,
+	cursorPos: Position,
+	match: { text: string; start: number }
+): {
+	replaceRange: Range;
+	fullSegments: string[];
+	querySegments: string[];
+	prefix: string;
+} {
+	const cursorOffset = document.offsetAt(cursorPos);
+	const relCursor = Math.max(
+		0,
+		Math.min(cursorOffset - match.start, match.text.length)
+	);
+	const rawBeforeCursor = match.text.slice(0, relCursor);
+	const lastDotIndex = rawBeforeCursor.lastIndexOf(".");
+	const replaceStartOffset =
+		match.start + (lastDotIndex === -1 ? 0 : lastDotIndex + 1);
+	const replaceRange = Range.create(
+		document.positionAt(replaceStartOffset),
+		cursorPos
+	);
+
+	const normalizedBeforeCursor = rawBeforeCursor.startsWith("$")
+		? rawBeforeCursor.slice(1)
+		: rawBeforeCursor;
+	const rawSegments = normalizedBeforeCursor.split(".");
+	const fullSegments = rawSegments.filter((part) => part);
+	const hasTrailingDot = normalizedBeforeCursor.endsWith(".");
+	const prefix = hasTrailingDot
+		? ""
+		: rawSegments[rawSegments.length - 1] || "";
+	const querySegments = hasTrailingDot
+		? fullSegments
+		: fullSegments.slice(0, -1);
+
+	return { replaceRange, fullSegments, querySegments, prefix };
+}
+
+// 更新全局映射表
+export function updateGlobalMap(documentTextArray: string[]) {
+	// 生成全局映射表
+	cleartGlobalMapAll();
+	for (let index = 0; index < documentTextArray.length; index++) {
+		const currentLine = documentTextArray[index];
+		const setVarExec = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(
+			currentLine
+		);
+		const labelExec = /label:\s*(\S+);/g.exec(currentLine);
+		if (setVarExec != null) {
+			const currentVariablePool = (GlobalMap.setVar[setVarExec[1]] ??=
+				[]);
+			currentVariablePool.push({
+				word: setVarExec[1],
+				value: setVarExec[2],
+				input: setVarExec.input,
+				position: Position.create(index, setVarExec.index + 7)
+			} as IVToken);
+
+			/* 获取变量描述 */
+			const currentVariableLatest =
+				currentVariablePool[currentVariablePool.length - 1];
+			if (currentVariableLatest && currentVariableLatest?.position) {
+				const _v_pos = currentVariableLatest.position;
+				const _v_line = _v_pos?.line ? _v_pos.line : -1;
+				currentVariableLatest.desc = getVariableTypeDesc(
+					documentTextArray,
+					_v_line
+				);
+			}
+		}
+		if (labelExec !== null) {
+			(GlobalMap.label[labelExec[1]] ??= []).push({
+				word: labelExec[1],
+				value: labelExec.input,
+				input: labelExec.input,
+				position: Position.create(index, 6)
+			} as IVToken);
+		}
 	}
 }

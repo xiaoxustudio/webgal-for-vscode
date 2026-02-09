@@ -210,7 +210,7 @@
 		"@types/js-beautify": "^1.14.3",
 		"@types/vscode": "^1.87.0",
 		"@vscode/debugadapter": "^1.65.0",
-		"acorn": "^8.14.3",
+		"angular-expressions": "^1.5.1",
 		"js-beautify": "^1.15.3",
 		"vscode-debugadapter": "^1.51.0",
 		"vscode-debugprotocol": "^1.51.0",

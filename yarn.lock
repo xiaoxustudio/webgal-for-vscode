@@ -202,10 +202,10 @@ abbrev@^2.0.0:
   resolved "https://registry.npmmirror.com/abbrev/-/abbrev-2.0.0.tgz#cf59829b8b4f03f89dda2771cb7f3653828c89bf"
   integrity sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==
 
-acorn@^8.14.3:
-  version "8.15.0"
-  resolved "https://registry.npmmirror.com/acorn/-/acorn-8.15.0.tgz#a360898bc415edaac46c8241f6383975b930b816"
-  integrity sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==
+angular-expressions@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.npmmirror.com/angular-expressions/-/angular-expressions-1.5.1.tgz#32aa451c4bd4bc589efc031ed2aae9bf53d4e455"
+  integrity sha512-Ukcyuye0eb15zuvMFR7Kziuf7gV0gYAZXMevNI40rXF8f9k+/yk8+r5edFWRFOwnqSvAEFoP2bKNXaXgYa+Ayw==
 
 ansi-regex@^5.0.1:
   version "5.0.1"

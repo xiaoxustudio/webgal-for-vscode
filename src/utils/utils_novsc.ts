@@ -5,7 +5,7 @@
  * @WebSite: www.xiaoxustudio.top
  * @Description: By xuranXYS
  */
-import acorn from "acorn";
+import * as expressions from "angular-expressions";
 import { promises as fs } from "fs";
 
 export const source = "WebGal Script";
@@ -67,7 +67,6 @@ export interface IDebugMessage {
 
 export interface IVToken {
 	word: string; // 名称
-	type: string; // 类型
 	is_global?: boolean; // 是否是全局
 	position?: any; // 位置
 	input?: string; // 原始文本
@@ -118,75 +117,45 @@ export function getVariableTypeDesc(ALL_ARR: string[], _start_line: number) {
 	return _desc_arr.join("\n");
 }
 
-export function getVariableType(var_text: string): string {
-	let label;
-	if (["true", "false"].indexOf(var_text) !== -1) {
-		label = "布尔值";
-	} else {
-		try {
-			const __val_real = new Function("return " + var_text).bind(
-				GlobalMap.setVar
-			);
-			switch (typeof __val_real) {
-				case "number":
-					label = "数字";
-					break;
-				case "boolean":
-					label = "布尔值";
-					break;
-				default:
-					const _Res = (function () {
-						try {
-							acorn.parse(var_text, {
-								sourceType: "module",
-								ecmaVersion: 2020
-							});
-							return true;
-						} catch (error) {
-							return false;
-						}
-					})();
-					if (
-						var_text.indexOf("+") === -1 ||
-						var_text.indexOf("+") === -1 ||
-						var_text.indexOf("+") === -1 ||
-						var_text.indexOf("+") === -1
-					) {
-						label = "字符串";
-					} else if (_Res) {
-						label = "表达式";
-					} else {
-						label = "未知";
-					}
-					break;
+const runCode = (text: string, ops?: expressions.CompileFuncOptions) => {
+	return expressions.compile(text, ops);
+};
+
+function createProxy() {
+	// @ts-ignore
+	const zeroProxy = new Proxy(
+		{
+			[Symbol.toPrimitive]() {
+				return 0;
+			},
+			valueOf() {
+				return 0;
+			},
+			toString() {
+				return "0";
 			}
-		} catch {
-			const _Res = (function () {
-				try {
-					acorn.parse(var_text, {
-						sourceType: "module",
-						ecmaVersion: 2020
-					});
-					return true;
-				} catch (error) {
-					return false;
-				}
-			})();
-			if (
-				var_text.indexOf("+") === -1 ||
-				var_text.indexOf("+") === -1 ||
-				var_text.indexOf("+") === -1 ||
-				var_text.indexOf("+") === -15
-			) {
-				label = "字符串";
-			} else if (_Res) {
-				label = "表达式";
-			} else {
-				label = "未知";
+		},
+		{
+			get() {
+				return zeroProxy;
+			},
+
+			apply() {
+				return zeroProxy;
 			}
 		}
+	);
+	return zeroProxy;
+}
+
+export function getVariableType(expr: string): string {
+	if (expr.includes("$stage") || expr.includes("$userData")) {
+		return "expression";
 	}
-	return ` ${label} `;
+	const evaluatorFunc = runCode(expr);
+	const res = typeof evaluatorFunc();
+	console.log(expr, res);
+	return res;
 }
 
 export function is_JSON(_likely_josn: any) {

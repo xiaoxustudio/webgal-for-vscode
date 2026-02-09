@@ -50,17 +50,12 @@ import {
 import {
 	findTokenRange,
 	getPatternAtPosition,
-	getWordAtPosition
+	getStageCompletionContext,
+	getWordAtPosition,
+	updateGlobalMap
 } from "./utils";
 
-import {
-	cleartGlobalMapAll,
-	getVariableType,
-	getVariableTypeDesc,
-	GlobalMap,
-	IVToken,
-	source
-} from "../utils/utils_novsc";
+import { GlobalMap, source } from "../utils/utils_novsc";
 import { ServerSettings } from "./types";
 import { getTypeDirectory, resourcesMap } from "../utils/resources";
 import { StateMap } from "../utils/providerState";
@@ -98,7 +93,6 @@ connection.onInitialize((params: InitializeParams) => {
 				interFileDependencies: false,
 				workspaceDiagnostics: false
 			},
-			inlayHintProvider: true,
 			documentLinkProvider: {
 				resolveProvider: true
 			},
@@ -129,7 +123,7 @@ connection.onInitialized(() => {
 		});
 	}
 
-	connection.sendRequest("client/showTip", "WebGal LSP Started");
+	connection.sendRequest("client/showTip", "WebGal LSP Initialized");
 });
 
 const defaultSettings = {
@@ -141,47 +135,6 @@ const defaultSettings = {
 let globalSettings: ServerSettings = defaultSettings;
 
 const documentSettings: Map<string, Thenable<ServerSettings>> = new Map();
-
-//  获取补全上下文
-function getStageCompletionContext(
-	document: TextDocument,
-	cursorPos: Position,
-	match: { text: string; start: number }
-): {
-	replaceRange: Range;
-	fullSegments: string[];
-	querySegments: string[];
-	prefix: string;
-} {
-	const cursorOffset = document.offsetAt(cursorPos);
-	const relCursor = Math.max(
-		0,
-		Math.min(cursorOffset - match.start, match.text.length)
-	);
-	const rawBeforeCursor = match.text.slice(0, relCursor);
-	const lastDotIndex = rawBeforeCursor.lastIndexOf(".");
-	const replaceStartOffset =
-		match.start + (lastDotIndex === -1 ? 0 : lastDotIndex + 1);
-	const replaceRange = Range.create(
-		document.positionAt(replaceStartOffset),
-		cursorPos
-	);
-
-	const normalizedBeforeCursor = rawBeforeCursor.startsWith("$")
-		? rawBeforeCursor.slice(1)
-		: rawBeforeCursor;
-	const rawSegments = normalizedBeforeCursor.split(".");
-	const fullSegments = rawSegments.filter((part) => part);
-	const hasTrailingDot = normalizedBeforeCursor.endsWith(".");
-	const prefix = hasTrailingDot
-		? ""
-		: rawSegments[rawSegments.length - 1] || "";
-	const querySegments = hasTrailingDot
-		? fullSegments
-		: fullSegments.slice(0, -1);
-
-	return { replaceRange, fullSegments, querySegments, prefix };
-}
 
 // 获取文档设置
 function getDocumentSettings(url: string): Thenable<ServerSettings> {
@@ -197,51 +150,6 @@ function getDocumentSettings(url: string): Thenable<ServerSettings> {
 		documentSettings.set(url, result);
 	}
 	return result;
-}
-
-// 更新全局映射表
-function updateGlobalMap(documentTextArray: string[]) {
-	// 生成全局映射表
-	cleartGlobalMapAll();
-	for (let index = 0; index < documentTextArray.length; index++) {
-		const currentLine = documentTextArray[index];
-		const setVarExec = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(
-			currentLine
-		);
-		const labelExec = /label:\s*(\S+);/g.exec(currentLine);
-		if (setVarExec != null) {
-			const currentVariablePool = (GlobalMap.setVar[setVarExec[1]] ??=
-				[]);
-			currentVariablePool.push({
-				word: setVarExec[1],
-				value: setVarExec[2],
-				input: setVarExec.input,
-				position: Position.create(index, setVarExec.index + 7),
-				type: getVariableType(setVarExec[2])
-			} as IVToken);
-
-			/* 获取变量描述 */
-			const currentVariableLatest =
-				currentVariablePool[currentVariablePool.length - 1];
-			if (currentVariableLatest && currentVariableLatest?.position) {
-				const _v_pos = currentVariableLatest.position;
-				const _v_line = _v_pos?.line ? _v_pos.line : -1;
-				currentVariableLatest.desc = getVariableTypeDesc(
-					documentTextArray,
-					_v_line
-				);
-			}
-		}
-		if (labelExec !== null) {
-			(GlobalMap.label[labelExec[1]] ??= []).push({
-				word: labelExec[1],
-				value: labelExec.input,
-				input: labelExec.input,
-				position: Position.create(index, 6),
-				type: labelExec.input.substring(0, labelExec.input.indexOf(":"))
-			} as IVToken);
-		}
-	}
 }
 
 documents.onDidClose((e) => {
@@ -661,8 +569,6 @@ connection.onHover(
 			/\{([^}]*)\}/
 		);
 
-		console.log(findWordWithPattern);
-
 		/* 引用变量 hover */
 		if (
 			findWordWithPattern &&
@@ -671,23 +577,26 @@ connection.onHover(
 			const current = GlobalMap.setVar[findWord.word];
 			if (!current || current.length <= 0) return { contents: [] };
 			const currentVariable = current[current.length - 1];
-			let hoverContent = `### 变量 **${findWord.word}** `;
+			const hoverContent = [`### ${findWord.word}`];
 			if (!currentVariable) return { contents: [] };
 			if (currentVariable.desc.length > 0) {
-				hoverContent += ` \n <hr>  `;
-				hoverContent += ` \n\n ${currentVariable.desc} `;
+				hoverContent.push("<hr>");
+				hoverContent.push(currentVariable.desc);
 			}
-			hoverContent += ` \n <hr>  `;
+			hoverContent.push("<hr>");
 			if (findWord.word in GlobalMap.setVar) {
-				hoverContent += `\n\n\n  类型 : \`${currentVariable.type}\`  `;
-				hoverContent += `\n\n 位置 : 位于第${currentVariable.position?.line}行`;
-			} else {
-				hoverContent += ` \n 未定义变量`;
+				hoverContent.push(
+					`Position: ${currentVariable.position?.line + 1},${currentVariable.position?.character + 1}`
+				);
+				hoverContent.push(`\`\`\`webgal`);
+				hoverContent.push(
+					`${currentVariable.input?.replace(/\t\r\n/g, "")} \`\`\``
+				);
 			}
 			return {
 				contents: {
 					kind: MarkupKind.Markdown,
-					value: hoverContent
+					value: hoverContent.join("\n\n")
 				} as MarkupContent
 			};
 		}
@@ -722,59 +631,6 @@ connection.onHover(
 		}
 
 		return { contents: [] };
-	}
-);
-
-// 内嵌
-connection.onRequest(
-	"textDocument/inlayHint",
-	async (textDocumentPosition: TextDocumentPositionParams) => {
-		const uri: string = textDocumentPosition.textDocument.uri;
-		const doc = documents.get(uri);
-		if (!doc) return [];
-
-		const text = doc.getText();
-		const hints: InlayHint[] = [];
-		const settings = await getDocumentSettings(uri);
-		if (!settings || settings.isShowHint == "关闭") return hints;
-		const regex = /(?<!\;)(setVar)(\s*:\s*)([\w\d_]+)=(.*);/g;
-
-		let match: RegExpExecArray | null;
-		while ((match = regex.exec(text)) !== null) {
-			if (match[0].startsWith(";")) continue;
-			const index = match.index;
-			let offset: number;
-			const p1 = index; // 行前
-			const p2 =
-				index + match[1].length + match[2].length + match[3].length + 1; // 变量名后
-			const p3 = index + match[1].length + match[2].length; // 变量名前
-			const p4 = index + match[0].length; // 行后
-			switch (settings.isShowHint) {
-				case "最前面":
-					offset = p1 + 1;
-					break;
-				case "变量名前":
-					offset = p3;
-					break;
-				case "变量名后":
-					offset = p2;
-					break;
-				case "最后面":
-					offset = p4;
-					break;
-				default:
-					offset = p2;
-					break;
-			}
-			hints.push({
-				position: doc.positionAt(offset),
-				label: `${getVariableType(match[3])}`,
-				kind: InlayHintKind.Type,
-				paddingLeft: false,
-				paddingRight: true
-			});
-		}
-		return hints;
 	}
 );
 
