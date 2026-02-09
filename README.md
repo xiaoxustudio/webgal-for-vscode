@@ -15,7 +15,8 @@ webgal for VScode
 <img alt="VSX Downloads" src="https://img.shields.io/visual-studio-marketplace/d/Xuran1783558957.webgal-for-vscode.svg">
 </h5>
 
-
+> [!IMPORTANT]
+> The project is currently undergoing refactoring
 
 - [简体中文](./README_CN.md)
 - [English](./README.md)
