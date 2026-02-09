@@ -67,11 +67,11 @@
 		],
 		"commands": [
 			{
-				"title": "跳转到插值变量",
+				"title": "(webgal)跳转到插值变量",
 				"command": "extension.goToDefinition"
 			},
 			{
-				"title": "启动WebGal For VSCode",
+				"title": "(webgal)启动WebGal For VSCode",
 				"command": "extension.XRStartWFV"
 			},
 			{

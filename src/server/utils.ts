@@ -61,7 +61,7 @@ export function getPatternAtPosition(
 	for (let i = offset - 1; i >= lookBehindLimit; i--) {
 		const char = text[i];
 		// 如果遇到，则认为这很可能是单词的边界
-		if (/[\s\{\[\(\;\,\>]/.test(char)) {
+		if (/[\s\[\(\;\,\>]/.test(char)) {
 			startSearch = i + 1;
 			break;
 		}

@@ -667,6 +667,8 @@ connection.onHover(
 			/\{([^}]*)\}/
 		);
 
+		console.log(findWordWithPattern);
+
 		/* 引用变量 hover */
 		if (
 			findWordWithPattern &&
