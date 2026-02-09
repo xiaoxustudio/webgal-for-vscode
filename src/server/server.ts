@@ -314,6 +314,7 @@ connection.onCompletion(
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
 		if (!document) return [];
 		const file_name = document.uri;
+		const documentTextArray = document.getText().split("\n");
 
 		const { token } = findTokenRange(
 			document,
@@ -404,46 +405,26 @@ connection.onCompletion(
 			Position.create(_textDocumentPosition.position.line, 0)
 		); // 获得当前单词
 
-		/* 场景文件 */
-		if (wordMeta) {
-			for (const key in WebGALKeywords) {
-				const keyData = WebGALKeywords[key as CommandNames];
-				// 如果输入的文本以关键词开头，则匹配相应的参数
-				if (token.startsWith("-")) {
-					const data = [...keyData.args, ...globalArgs].map((arg) => {
-						return {
-							label: arg.arg,
-							kind: CompletionItemKind.Constant,
-							documentation: arg.desc,
-							detail: arg.desc
-						};
-					}) as CompletionItem[];
-					return data.filter((item, index, self) => {
-						return (
-							self.findIndex((t) => t.label === item.label) ===
-							index
-						);
-					});
-				}
-			}
-		}
-		const currentLine = document.getText().split("\n")[
-			_textDocumentPosition.position.line
-		];
+		const currentLine =
+			documentTextArray[_textDocumentPosition.position.line];
 		const commandType = currentLine.substring(
 			0,
 			currentLine.indexOf(":") !== -1
 				? currentLine.indexOf(":")
 				: currentLine.indexOf(";")
 		);
+		const isSayCommandType = !resourcesMap[commandType];
 
 		// 资源文件路径
 		if (
 			token.startsWith("./") ||
-			Object.keys(resourcesMap).includes(commandType)
+			Object.keys(resourcesMap).includes(commandType) ||
+			token.startsWith("-")
 		) {
-			if (resourcesMap[commandType]) {
-				const resourceBaseDir = resourcesMap[commandType];
+			const resourceBaseDir = isSayCommandType
+				? "vocal"
+				: resourcesMap[commandType];
+			if (resourceBaseDir) {
 				const dirs = await connection.sendRequest<any>(
 					"client/getResourceDirectory",
 					resourceBaseDir
@@ -459,14 +440,37 @@ connection.onCompletion(
 					}
 				}
 			}
+
+			if (wordMeta && token.startsWith("-")) {
+				// 如果输入的文本以关键词开头，则匹配相应的参数
+				let keyData =
+					WebGALKeywords[wordMeta.word] ?? WebGALKeywords["say"];
+
+				const data = [...keyData.args, ...globalArgs].map((arg) => {
+					return {
+						label: arg.arg,
+						kind: CompletionItemKind.Constant,
+						documentation: arg.desc,
+						detail: arg.desc
+					};
+				}) as CompletionItem[];
+
+				// 去除重复项
+				const uniqueData = data.filter(
+					(parentItem, index, self) =>
+						index ===
+						self.findIndex(
+							(item) => item.label === parentItem.label
+						)
+				);
+				CompletionItemSuggestions.push(...uniqueData);
+			}
 			return CompletionItemSuggestions;
 		}
 
 		// 变量
-
 		if (token) {
-			updateGlobalMap(document.getText().split("\n"));
-
+			updateGlobalMap(documentTextArray);
 			const currentPool = GlobalMap.setVar;
 			for (const key in currentPool) {
 				if (key.includes(token)) {
@@ -484,7 +488,7 @@ connection.onCompletion(
 		/* 新行无内容或直接输入 */
 		if (
 			(!wordMeta && _textDocumentPosition.position.character === 0) ||
-			token
+			(token && !~currentLine.indexOf(":"))
 		) {
 			CompletionItemSuggestions.push(...WebgGALKeywordsCompletionMap);
 		}
