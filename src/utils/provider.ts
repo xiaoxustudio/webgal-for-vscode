@@ -1,6 +1,7 @@
 import {
 	CompletionItem,
 	CompletionItemKind,
+	InsertTextFormat,
 	MarkupContent,
 	MarkupKind
 } from "vscode-languageserver";
@@ -399,7 +400,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		say:你好;
 		\`\`\``,
 		detail: `say:<content> [...args];`,
-		insertText: "say"
+		insertText: "say:$1;$2"
 	},
 	changeBg: {
 		type: commandType.changeBg,
@@ -420,7 +421,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		changeBg:testBG03.jpg -next;
 		\`\`\``,
 		detail: `changeBg:<fileName> [-next];`,
-		insertText: "changeBg"
+		insertText: "changeBg:$1;$2"
 	},
 	changeFigure: {
 		type: commandType.changeFigure,
@@ -453,7 +454,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		changeFigure:testFigure03.png -left -next;
 		\`\`\``,
 		detail: `changeFigure:<fileName> [-left] [-right] [id=figureId] [-next];`,
-		insertText: "changeFigure"
+		insertText: "changeFigure:$1;$2"
 	},
 	bgm: {
 		type: commandType.bgm,
@@ -471,7 +472,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		bgm:夏影.mp3;
 		\`\`\``,
 		detail: `bgm:<fileName>;`,
-		insertText: "bgm"
+		insertText: "bgm:$1;$2"
 	},
 	playVideo: {
 		type: commandType.video,
@@ -484,7 +485,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		playVideo:OP.mp4;
 		\`\`\``,
 		detail: `playVideo:<fileName>;`,
-		insertText: "playVideo"
+		insertText: "playVideo:$1;$2"
 	},
 	pixiPerform: {
 		type: commandType.pixi,
@@ -495,7 +496,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		documentation: `初始化 Pixi 特效
 		注意：特效作用后，如果没有初始化，特效会一直运行。`,
 		detail: `pixiPerform:<performName>;`,
-		insertText: "pixiPerform"
+		insertText: "pixiPerform:$1;$2"
 	},
 	pixiInit: {
 		type: commandType.pixiInit,
@@ -531,7 +532,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		intro:回忆不需要适合的剧本，|反正一说出口，|都成了戏言。;
 		\`\`\``,
 		detail: `intro:<text> [|<text of line 2>] ...;`,
-		insertText: "intro:"
+		insertText: "intro:$1;$2"
 	},
 	miniAvatar: {
 		type: commandType.miniAvatar,
@@ -561,7 +562,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		changeScene:Chapter-2.txt;
 		\`\`\``,
 		detail: `changeScene:<newSceneFileName>;`,
-		insertText: "changeScene"
+		insertText: "changeScene:$1;$2"
 	},
 	choose: {
 		type: commandType.choose,
@@ -576,7 +577,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		choose:叫住她:Chapter-2.txt|回家:Chapter-3.txt;
 		\`\`\``,
 		detail: `choose:<chooseText:newSceneName> [|<chooseText:newSceneName>] ...;`,
-		insertText: "choose: | ;"
+		insertText: "choose:$1|$2;"
 	},
 	end: {
 		type: commandType.end,
@@ -606,7 +607,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		setComplexAnimation:universalSoftIn -target=aaa -duration=1000;
 		\`\`\``,
 		detail: `setComplexAnimation:<name> [-target=...|-duration=...];`,
-		insertText: "setComplexAnimation:"
+		insertText: "setComplexAnimation:$1;$2"
 	},
 	label: {
 		type: commandType.label,
@@ -616,7 +617,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		kind: CompletionItemKind.Function,
 		documentation: `定义标签`,
 		detail: `label:<Name>;`,
-		insertText: "label:"
+		insertText: "label:$1;$2"
 	},
 	jumpLabel: {
 		type: commandType.jumpLabel,
@@ -626,7 +627,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		kind: CompletionItemKind.Function,
 		documentation: `跳转到指定标签`,
 		detail: `jumpLabel:<Laebl Name>;`,
-		insertText: "jumpLabel:"
+		insertText: "jumpLabel:$1;$2"
 	},
 	setVar: {
 		type: commandType.setVar,
@@ -641,7 +642,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		setVar:a=人物名称;可以设置字符串
 		\`\`\``,
 		detail: `setVar:<expression>;`,
-		insertText: "setVar:"
+		insertText: "setVar:$1;$2"
 	},
 	callScene: {
 		type: commandType.callScene,
@@ -655,7 +656,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		callScene:Chapter-2.txt;
 		\`\`\``,
 		detail: `callScene:<newSceneFileName>;`,
-		insertText: "callScene"
+		insertText: "callScene:$1;$2"
 	},
 	showVars: {
 		type: commandType.showVars,
@@ -668,7 +669,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		showVars;
 		\`\`\``,
 		detail: `showVars;`,
-		insertText: "showVars"
+		insertText: "showVars;"
 	},
 	unlockCg: {
 		type: commandType.unlockCg,
@@ -681,7 +682,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		unlockCg:xgmain.jpeg -name=星光咖啡馆与死神之蝶 -series=1;
 		\`\`\``,
 		detail: `unlockCg:<fileName> -name=cgName -series=serisId;`,
-		insertText: "unlockCg"
+		insertText: "unlockCg:$1;$2"
 	},
 	unlockBgm: {
 		type: commandType.unlockBgm,
@@ -694,7 +695,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		unlockBgm:s_Title.mp3 -name=Smiling-Swinging!!;
 		\`\`\``,
 		detail: `unlockBgm:<fileName> -name=bgmName;`,
-		insertText: "unlockBgm"
+		insertText: "unlockBgm:$1;$2"
 	},
 	filmMode: {
 		type: commandType.filmMode,
@@ -709,7 +710,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		filmMode:none;
 		\`\`\``,
 		detail: `filmMode:[on|none];`,
-		insertText: "filmMode:"
+		insertText: "filmMode:$1;$2"
 	},
 	setTextbox: {
 		type: commandType.setTextbox,
@@ -723,7 +724,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		setTextbox:on;开启文本框，可以是除 hide 以外的任意值。
 		\`\`\``,
 		detail: `setTextbox:[hide] [others];`,
-		insertText: "setTextbox"
+		insertText: "setTextbox:$1;$2"
 	},
 	setAnimation: {
 		type: commandType.setAnimation,
@@ -749,7 +750,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		playEffect:xxx.mp3;
 		\`\`\``,
 		detail: `playEffect:<fileName>;`,
-		insertText: "playEffect"
+		insertText: "playEffect:$1;$2"
 	},
 	setTempAnimation: {
 		type: commandType.setTempAnimation,
@@ -772,7 +773,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`
 		`,
 		detail: `setTempAnimation:<name>|<JSON> [-target=...|-writeDefault...|-keep=...];";`,
-		insertText: "setTempAnimation:"
+		insertText: "setTempAnimation:$1;$2"
 	},
 	setTransform: {
 		type: commandType.setTransform,
@@ -807,7 +808,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		角色A: 再见！
 		\`\`\``,
 		detail: `setTransition:[name] [-target=...|-enter=...|-exit=...];`,
-		insertText: "setTransition:"
+		insertText: "setTransition:$1;$2"
 	},
 	getUserInput: {
 		type: commandType.getUserInput,
@@ -824,7 +825,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		\`\`\`
 `,
 		detail: `getUserInput:[...args];`,
-		insertText: "getUserInput:"
+		insertText: "getUserInput:$1;$2"
 	},
 	applyStyle: {
 		type: commandType.applyStyle,
@@ -847,7 +848,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		applyStyle:原样式名->新样式名2;
 		\`\`\``,
 		detail: `applyStyle:<old_style_name>-><new_style_name>;`,
-		insertText: "applyStyle:"
+		insertText: "applyStyle:$1;$2"
 	},
 	wait: {
 		type: commandType.wait,
@@ -864,7 +865,7 @@ export const WebGALKeywords: WebGALKeyWords = {
 		角色A:想不出来，算了。;
 		\`\`\``,
 		detail: `wait:<number>;`,
-		insertText: "wait:"
+		insertText: "wait:$1;$2"
 	}
 };
 export const WebGALKeywordsKeys = Object.keys(WebGALKeywords);
@@ -883,7 +884,9 @@ export const WebgGALKeywordsCompletionMap = WebGALKeywordsKeys.map(
 						""
 					) || WebGALKeywords[v].desc
 			} as MarkupContent,
-			detail: WebGALKeywords[v]?.detail || WebGALKeywords[v].desc
+			detail: WebGALKeywords[v]?.detail || WebGALKeywords[v].desc,
+			insertText: WebGALKeywords[v]?.insertText || v,
+			insertTextFormat: InsertTextFormat.Snippet
 		}) satisfies CompletionItem
 );
 

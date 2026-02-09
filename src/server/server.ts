@@ -529,8 +529,11 @@ connection.onCompletion(
 				: currentLine.indexOf(";")
 		);
 
-		// 路径
-		if (token.startsWith("./")) {
+		// 资源文件路径
+		if (
+			token.startsWith("./") ||
+			Object.keys(resourcesMap).includes(commandType)
+		) {
 			if (resourcesMap[commandType]) {
 				const resourceBaseDir = resourcesMap[commandType];
 				const dirs = await connection.sendRequest<any>(
