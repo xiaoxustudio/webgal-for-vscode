@@ -499,7 +499,6 @@ connection.onCompletion(
 		if (wordMeta) {
 			for (const key in WebGALKeywords) {
 				const keyData = WebGALKeywords[key as CommandNames];
-				console.log("徐然", keyData);
 				// 如果输入的文本以关键词开头，则匹配相应的参数
 				if (token.startsWith("-")) {
 					const data = [...keyData.args, ...globalArgs].map((arg) => {
