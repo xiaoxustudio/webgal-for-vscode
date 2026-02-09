@@ -72,7 +72,10 @@ export const argsMap = {
 		label: "-when",
 		kind: CompletionItemKind.Constant,
 		documentation: `条件执行本句
-  changeScene:2.txt -when=a>1;a>1时跳转到场景2`,
+		\`\`\`webgal
+		changeScene:2.txt -when=a>1;
+		\`\`\`
+		a>1时跳转到场景2`,
 		detail: `option -when=<condition>`,
 		insertText: "when="
 	},
@@ -114,15 +117,30 @@ export const argsMap = {
 	},
 	title: {
 		arg: "title",
-		desc: "标题"
+		desc: "标题",
+		label: "-title",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置标题`,
+		detail: `option -title=<titleText>`,
+		insertText: "title="
 	},
 	buttonText: {
 		arg: "buttonText",
-		desc: "按钮文字"
+		desc: "按钮文字",
+		label: "-buttonText",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置按钮文字`,
+		detail: `option -buttonText=<text>`,
+		insertText: "buttonText="
 	},
 	defaultValue: {
 		arg: "defaultValue",
-		desc: "默认文字"
+		desc: "默认文字",
+		label: "-defaultValue",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置默认文字`,
+		detail: `option -defaultValue=<text>`,
+		insertText: "defaultValue="
 	},
 	left: {
 		arg: "left",
@@ -153,51 +171,111 @@ export const argsMap = {
 	},
 	zIndex: {
 		arg: "zIndex",
-		desc: "立绘层级"
+		desc: "立绘层级",
+		label: "-zIndex",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置立绘层级`,
+		detail: `option -zIndex=<number>`,
+		insertText: "zIndex="
 	},
 	none: {
 		arg: "none",
-		desc: "将语句内容替换为空字符串"
+		desc: "将语句内容替换为空字符串",
+		label: "-none",
+		kind: CompletionItemKind.Constant,
+		documentation: `将语句内容替换为空字符串`,
+		detail: `option -none`,
+		insertText: "none"
 	},
 	animationFlag: {
 		arg: "animationFlag",
-		desc: "动画标识"
+		desc: "动画标识",
+		label: "-animationFlag",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置动画标识`,
+		detail: `option -animationFlag=<flag>`,
+		insertText: "animationFlag="
 	},
 	mouthOpen: {
 		arg: "mouthOpen",
-		desc: "立绘张嘴立绘差分"
+		desc: "立绘张嘴立绘差分",
+		label: "-mouthOpen",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置立绘张嘴立绘差分`,
+		detail: `option -mouthOpen=<fileName>`,
+		insertText: "mouthOpen="
 	},
 	mouthHalfOpen: {
 		arg: "mouthHalfOpen",
-		desc: "立绘半张嘴立绘差分"
+		desc: "立绘半张嘴立绘差分",
+		label: "-mouthHalfOpen",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置立绘半张嘴立绘差分`,
+		detail: `option -mouthHalfOpen=<fileName>`,
+		insertText: "mouthHalfOpen="
 	},
 	mouthClose: {
 		arg: "mouthClose",
-		desc: "立绘闭嘴立绘差分"
+		desc: "立绘闭嘴立绘差分",
+		label: "-mouthClose",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置立绘闭嘴立绘差分`,
+		detail: `option -mouthClose=<fileName>`,
+		insertText: "mouthClose="
 	},
 	eyesOpen: {
 		arg: "eyesOpen",
-		desc: "立绘睁眼立绘差分"
+		desc: "立绘睁眼立绘差分",
+		label: "-eyesOpen",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置立绘睁眼立绘差分`,
+		detail: `option -eyesOpen=<fileName>`,
+		insertText: "eyesOpen="
 	},
 	eyesClose: {
 		arg: "eyesClose",
-		desc: "立绘闭眼立绘差分"
+		desc: "立绘闭眼立绘差分",
+		label: "-eyesClose",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置立绘闭眼立绘差分`,
+		detail: `option -eyesClose=<fileName>`,
+		insertText: "eyesClose="
 	},
 	motion: {
 		arg: "motion",
-		desc: "立绘动作"
+		desc: "立绘动作",
+		label: "-motion",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置立绘动作`,
+		detail: `option -motion=<motionName>`,
+		insertText: "motion="
 	},
 	expression: {
 		arg: "expression",
-		desc: "立绘表情"
+		desc: "立绘表情",
+		label: "-expression",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置立绘表情`,
+		detail: `option -expression=<expressionName>`,
+		insertText: "expression="
 	},
 	bounds: {
 		arg: "bounds",
-		desc: "拓展或收缩立绘的显示区域"
+		desc: "拓展或收缩立绘的显示区域",
+		label: "-bounds",
+		kind: CompletionItemKind.Constant,
+		documentation: `拓展或收缩立绘的显示区域`,
+		detail: `option -bounds=<boundsValue>`,
+		insertText: "bounds="
 	},
 	series: {
 		arg: "series",
-		desc: "收录到指定名称的系列中"
+		desc: "收录到指定名称的系列中",
+		label: "-series",
+		kind: CompletionItemKind.Constant,
+		documentation: `收录到指定名称的系列中`,
+		detail: `option -series=<seriesName>`,
+		insertText: "series="
 	},
 	transform: {
 		arg: "transform",
@@ -237,7 +315,12 @@ export const argsMap = {
 	},
 	enter: {
 		arg: "enter",
-		desc: "进行淡入播放"
+		desc: "进行淡入播放",
+		label: "-enter",
+		kind: CompletionItemKind.Constant,
+		documentation: `进行淡入播放`,
+		detail: `option -enter`,
+		insertText: "enter"
 	},
 	global: {
 		arg: "global",
@@ -250,27 +333,57 @@ export const argsMap = {
 	},
 	exit: {
 		arg: "exit",
-		desc: "进行淡出播放"
+		desc: "进行淡出播放",
+		label: "-exit",
+		kind: CompletionItemKind.Constant,
+		documentation: `进行淡出播放`,
+		detail: `option -exit`,
+		insertText: "exit"
 	},
 	ease: {
 		arg: "ease",
-		desc: "缓动类型"
+		desc: "缓动类型",
+		label: "-ease",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置缓动类型`,
+		detail: `option -ease=<easeType>`,
+		insertText: "ease="
 	},
 	unlockname: {
 		arg: "unlockname",
-		desc: "鉴赏将收录该音乐"
+		desc: "鉴赏将收录该音乐",
+		label: "-unlockname",
+		kind: CompletionItemKind.Constant,
+		documentation: `鉴赏将收录该音乐`,
+		detail: `option -unlockname=<name>`,
+		insertText: "unlockname="
 	},
 	speaker: {
 		arg: "speaker",
-		desc: "说话者"
+		desc: "说话者",
+		label: "-speaker",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置说话者`,
+		detail: `option -speaker=<speakerName>`,
+		insertText: "speaker="
 	},
 	clear: {
 		arg: "clear",
-		desc: "清除说话者"
+		desc: "清除说话者",
+		label: "-clear",
+		kind: CompletionItemKind.Constant,
+		documentation: `清除说话者`,
+		detail: `option -clear`,
+		insertText: "clear"
 	},
 	vocal: {
 		arg: "vocal",
-		desc: "说话时将播放该声音文件。"
+		desc: "说话时将播放该声音文件。",
+		label: "-vocal",
+		kind: CompletionItemKind.Constant,
+		documentation: `说话时将播放该声音文件`,
+		detail: `option -vocal=<audioFile>`,
+		insertText: "vocal="
 	},
 	fontSize: {
 		arg: "fontSize",
@@ -301,7 +414,12 @@ export const argsMap = {
 	},
 	backgroundImage: {
 		arg: "backgroundImage",
-		desc: "背景图片"
+		desc: "背景图片",
+		label: "-backgroundImage",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置背景图片`,
+		detail: `option -backgroundImage=<imageFile>`,
+		insertText: "backgroundImage="
 	},
 	animation: {
 		arg: "animation",
@@ -323,15 +441,30 @@ export const argsMap = {
 	},
 	useForward: {
 		arg: "useForward",
-		desc: "需要用户手动点击屏幕"
+		desc: "需要用户手动点击屏幕",
+		label: "-useForward",
+		kind: CompletionItemKind.Constant,
+		documentation: `需要用户手动点击屏幕`,
+		detail: `option -useForward`,
+		insertText: "useForward"
 	},
 	center: {
 		arg: "center",
-		desc: "驱动中间立绘张嘴说话"
+		desc: "驱动中间立绘张嘴说话",
+		label: "-center",
+		kind: CompletionItemKind.Constant,
+		documentation: `驱动中间立绘张嘴说话`,
+		detail: `option -center`,
+		insertText: "center"
 	},
 	figureId: {
 		arg: "figureId",
-		desc: "驱动对应 id 的立绘张嘴说话"
+		desc: "驱动对应 id 的立绘张嘴说话",
+		label: "-figureId",
+		kind: CompletionItemKind.Constant,
+		documentation: `驱动对应 id 的立绘张嘴说话`,
+		detail: `option -figureId=<id>`,
+		insertText: "figureId="
 	},
 	target: {
 		arg: "target",
@@ -353,13 +486,23 @@ export const argsMap = {
 	},
 	writeDefault: {
 		arg: "writeDefault",
-		desc: "变换与效果属性写入默认值"
+		desc: "变换与效果属性写入默认值",
+		label: "-writeDefault",
+		kind: CompletionItemKind.Constant,
+		documentation: `变换与效果属性写入默认值`,
+		detail: `option -writeDefault`,
+		insertText: "writeDefault"
 	},
 	keep: {
 		arg: "keep",
-		desc: "将该动画转换为跨语句动画"
+		desc: "将该动画转换为跨语句动画",
+		label: "-keep",
+		kind: CompletionItemKind.Constant,
+		documentation: `将该动画转换为跨语句动画`,
+		detail: `option -keep`,
+		insertText: "keep"
 	}
-} satisfies Record<string, IArgs & Partial<CompletionItem>>;
+} as Record<string, IArgs & Partial<CompletionItem>>;
 
 // 通用全局参数
 export const globalArgs = [

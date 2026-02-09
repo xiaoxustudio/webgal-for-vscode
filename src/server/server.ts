@@ -39,6 +39,7 @@ import {
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { Warning, message, getDiagnosticInformation } from "../utils/Warnings";
 import {
+	argsMap,
 	CommandNames,
 	globalArgs,
 	WebGALCommandPrefix,
@@ -507,7 +508,6 @@ connection.onHover(
 		const file_name = document.uri;
 		const text = document.getText();
 		const documentTextArray = text.split("\n");
-		const lineText = documentTextArray[_textDocumentPosition.position.line];
 		const currentLine =
 			documentTextArray[_textDocumentPosition.position.line];
 
@@ -523,6 +523,32 @@ connection.onHover(
 			_textDocumentPosition.position,
 			/\{([^}]*)\}/
 		);
+
+		/* 参数 hover */
+		findWordWithPattern = getPatternAtPosition(
+			document,
+			_textDocumentPosition.position,
+			/(?<=-)[\w]+/
+		);
+		if (findWordWithPattern) {
+			const argsData = argsMap[findWordWithPattern.text];
+			if (argsData) {
+				return {
+					contents: {
+						kind: MarkupKind.Markdown,
+						value: [
+							`### ${argsData.label}`,
+							`${argsData?.documentation}`,
+							`\`${argsData.detail}\``
+						].join("\n\n")
+					} as MarkupContent,
+					range: Range.create(
+						findWordWithPattern.startPos,
+						findWordWithPattern.endPos
+					)
+				};
+			}
+		}
 
 		/* 舞台状态 */
 		findWordWithPattern = getPatternAtPosition(
@@ -575,25 +601,24 @@ connection.onHover(
 			return { contents: [] };
 		}
 
-		updateGlobalMap(documentTextArray);
-
 		/* 指令 hover */
-		for (const key in WebGALKeywords) {
-			const keyData = WebGALKeywords[key as CommandNames];
-			if (findWord.word === key && commandType === key) {
-				return {
-					contents: {
-						kind: MarkupKind.Markdown,
-						value: [
-							`### ${key}`,
-							(keyData.documentation as string)?.replace(
-								/\t+/g,
-								""
-							) || keyData.desc,
-							`${WebGALCommandPrefix}${key}`
-						].join("\n\n")
-					} as MarkupContent
-				};
+		const maybeCommandMap = WebGALKeywords[commandType];
+		if (maybeCommandMap) {
+			for (const key in WebGALKeywords) {
+				if (findWord.word === key && commandType === key) {
+					return {
+						contents: {
+							kind: MarkupKind.Markdown,
+							value: [
+								`### ${key}`,
+								(
+									maybeCommandMap.documentation as string
+								)?.replace(/\t+/g, "") || maybeCommandMap.desc,
+								`${WebGALCommandPrefix}${key}`
+							].join("\n\n")
+						} as MarkupContent
+					};
+				}
 			}
 		}
 

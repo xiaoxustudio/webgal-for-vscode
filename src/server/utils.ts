@@ -264,7 +264,7 @@ export function getStageCompletionContext(
 	return { replaceRange, fullSegments, querySegments, prefix };
 }
 
-// 更新全局映射表
+/** 更新全局映射表 */
 export function updateGlobalMap(documentTextArray: string[]) {
 	// 生成全局映射表
 	cleartGlobalMapAll();
