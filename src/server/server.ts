@@ -406,6 +406,7 @@ connection.onCompletion(
 		const document = documents.get(_textDocumentPosition.textDocument.uri);
 		if (!document) return [];
 		const file_name = document.uri;
+
 		const { token } = findTokenRange(
 			document,
 			_textDocumentPosition.position
@@ -569,8 +570,11 @@ connection.onCompletion(
 			}
 		}
 
-		/* 新行无内容 */
-		if (!wordMeta && _textDocumentPosition.position.character === 0) {
+		/* 新行无内容或直接输入 */
+		if (
+			(!wordMeta && _textDocumentPosition.position.character === 0) ||
+			token
+		) {
 			CompletionItemSuggestions.push(...WebgGALKeywordsCompletionMap);
 		}
 
