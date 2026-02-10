@@ -81,12 +81,16 @@ type IMapValue = Record<string, IVToken[]>;
 export interface IDefinetionMap {
 	label: IMapValue;
 	setVar: IMapValue;
+	choose: IMapValue;
 }
+
 // 上一次全局映射表
 export const GlobalMap: IDefinetionMap = {
 	label: {},
-	setVar: {}
+	setVar: {},
+	choose: {}
 };
+
 export const cleartGlobalMapAll = () => {
 	GlobalMap.label = {};
 	GlobalMap.setVar = {};
@@ -122,40 +126,12 @@ const runCode = (text: string, ops?: expressions.CompileFuncOptions) => {
 	return expressions.compile(text, ops);
 };
 
-function createProxy() {
-	// @ts-ignore
-	const zeroProxy = new Proxy(
-		{
-			[Symbol.toPrimitive]() {
-				return 0;
-			},
-			valueOf() {
-				return 0;
-			},
-			toString() {
-				return "0";
-			}
-		},
-		{
-			get() {
-				return zeroProxy;
-			},
-
-			apply() {
-				return zeroProxy;
-			}
-		}
-	);
-	return zeroProxy;
-}
-
 export function getVariableType(expr: string): string {
 	if (expr.includes("$stage") || expr.includes("$userData")) {
 		return "expression";
 	}
 	const evaluatorFunc = runCode(expr);
 	const res = typeof evaluatorFunc();
-	console.log(expr, res);
 	return res;
 }
 

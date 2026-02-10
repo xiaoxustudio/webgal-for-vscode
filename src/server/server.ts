@@ -754,6 +754,7 @@ connection.onDocumentLinks(
 
 connection.onDocumentLinkResolve((documentLink: DocumentLink) => documentLink);
 
+// 跳转定义
 connection.onDefinition(
 	async (textDocumentPosition: TextDocumentPositionParams) => {
 		const uri: string = textDocumentPosition.textDocument.uri;
