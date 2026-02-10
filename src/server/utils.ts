@@ -1,15 +1,24 @@
 import * as fs from "fs/promises";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import { Position, Range } from "vscode-languageserver";
+import {
+	Connection,
+	Diagnostic,
+	DiagnosticSeverity,
+	Position,
+	Range
+} from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
 	cleartGlobalMapAll,
 	getVariableTypeDesc,
 	GlobalMap,
 	IVChooseToken,
-	IVToken
+	IVToken,
+	source
 } from "../utils/utils_novsc";
+import { ServerSettings } from "./types";
+import { getDiagnosticInformation, message, Warning } from "../utils/Warnings";
 
 /** 获取位置的指令单词 */
 export function getWordAtPosition(
@@ -337,4 +346,167 @@ export function updateGlobalMap(documentTextArray: string[]) {
 			} as IVChooseToken;
 		}
 	}
+}
+
+export const defaultSettings = {
+	maxNumberOfProblems: 1000,
+	isShowWarning: true,
+	isShowHint: "变量名后"
+} satisfies ServerSettings;
+
+export const documentSettings: Map<
+	string,
+	Thenable<ServerSettings>
+> = new Map();
+
+export const StateConfig = {
+	hasConfigurationCapability: false, // 是否支持配置能力
+	hasWorkspaceFolderCapability: false, // 是否支持工作区文件夹能力
+	hasDiagnosticRelatedInformationCapability: false // 是否支持诊断相关信息的能力
+};
+
+export let globalSettings: ServerSettings = defaultSettings;
+export function setGlobalSettings(settings: ServerSettings) {
+	globalSettings = settings;
+}
+
+// 获取文档设置
+export function getDocumentSettings(
+	connection: Connection,
+	url: string
+): Thenable<ServerSettings> {
+	if (!StateConfig.hasConfigurationCapability) {
+		return Promise.resolve(globalSettings);
+	}
+	let result = documentSettings.get(url);
+	if (!result) {
+		result = connection.workspace.getConfiguration({
+			scopeUri: url,
+			section: "WEBGAL Language Server"
+		});
+		documentSettings.set(url, result);
+	}
+	return result;
+}
+
+// 校验内容
+export async function validateTextDocument(
+	connection: Connection,
+	textDocument: TextDocument
+): Promise<Diagnostic[]> {
+	const settings = await getDocumentSettings(connection, textDocument.uri);
+	if (!settings?.isShowWarning) {
+		return [];
+	}
+	const text = textDocument.getText();
+	let m: RegExpExecArray | null;
+	let problems = 0;
+	const diagnostics: Diagnostic[] = [];
+	let _sp = text.split(/\n|\t\n|\r\n/);
+	for (let i in Warning) {
+		const _token = Warning[i];
+		const _pattern = _token.pattern as RegExp;
+		if (_token.is_line) {
+			continue;
+		}
+		if (_token.customCheck && _token.customCheck instanceof Function) {
+			const _custom_res = _token.customCheck(textDocument, text);
+			if (typeof _custom_res === "object" && _custom_res !== null) {
+				diagnostics.push(_custom_res);
+			}
+			continue;
+		}
+		while (
+			(m = _pattern.exec(text)) &&
+			problems < settings.maxNumberOfProblems
+		) {
+			// enable
+			if (_token?.enable === false) {
+				continue;
+			}
+			// 通过
+			problems++;
+			const range = {
+				start: textDocument.positionAt(m.index),
+				end: textDocument.positionAt(m.index + m[0].length)
+			};
+			const diagnostic: Diagnostic = {
+				severity: DiagnosticSeverity.Warning,
+				range,
+				message: message(i, m[0].trim()),
+				source
+			};
+			if (StateConfig.hasDiagnosticRelatedInformationCapability) {
+				diagnostic.relatedInformation = [
+					{
+						location: {
+							uri: textDocument.uri,
+							range: Object.assign({}, diagnostic.range)
+						},
+						message: getDiagnosticInformation(i)
+					}
+				];
+			}
+			diagnostics.push(diagnostic);
+		}
+	}
+	for (let _line_index = 0; _line_index < _sp.length; _line_index++) {
+		const _line_text = _sp[_line_index];
+		for (let i in Warning) {
+			const _token = Warning[i];
+			const _pattern = _token.pattern as RegExp;
+			if (!_token.is_line) {
+				continue;
+			}
+			const _newarr = _sp.slice(0, _line_index).join();
+			if (_token.customCheck && _token.customCheck instanceof Function) {
+				const _custom_res = _token.customCheck(
+					textDocument,
+					_line_text,
+					_newarr.length,
+					_sp.slice(0, _line_index)
+				);
+				if (typeof _custom_res === "object" && _custom_res !== null) {
+					diagnostics.push(_custom_res);
+				}
+				continue;
+			}
+			while (
+				(m = _pattern.exec(_line_text)) &&
+				problems < settings.maxNumberOfProblems
+			) {
+				// enable
+				if (_token?.enable === false) {
+					continue;
+				}
+				// 通过
+				problems++;
+				const range = {
+					start: textDocument.positionAt(_newarr.length + 1),
+					end: textDocument.positionAt(
+						_newarr.length + m.input.length
+					)
+				};
+				const diagnostic: Diagnostic = {
+					severity: DiagnosticSeverity.Warning,
+					range,
+					message: message(i, m.input.trim()),
+					source: "WebGal Script"
+				};
+				if (StateConfig.hasDiagnosticRelatedInformationCapability) {
+					diagnostic.relatedInformation = [
+						{
+							location: {
+								uri: textDocument.uri,
+								range: Object.assign({}, diagnostic.range)
+							},
+							message: getDiagnosticInformation(i)
+						}
+					];
+				}
+				diagnostics.push(diagnostic);
+			}
+		}
+	}
+	return diagnostics;
 }
