@@ -21,4 +21,5 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 events(documents, connection);
 
 documents.listen(connection);
+
 connection.listen();

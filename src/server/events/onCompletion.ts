@@ -217,6 +217,17 @@ export default <ConnectionHandler>function (documents, connection) {
 				CompletionItemSuggestions.push(...WebgGALKeywordsCompletionMap);
 			}
 
+			// 全局变量(舞台状态)
+			CompletionItemSuggestions.push(
+				{
+					label: "$stage",
+					kind: CompletionItemKind.Variable
+				},
+				{
+					label: "$userData",
+					kind: CompletionItemKind.Variable
+				}
+			);
 			return CompletionItemSuggestions;
 		}
 	);
