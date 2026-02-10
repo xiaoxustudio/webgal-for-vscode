@@ -67,11 +67,12 @@ export interface IDebugMessage {
 
 export interface IVToken {
 	word: string; // 名称
-	is_global?: boolean; // 是否是全局
 	position?: any; // 位置
 	input?: string; // 原始文本
 	value?: string; // 值
 	desc: string; // 描述
+	isGlobal?: boolean; // 是否是全局
+	isGetUserInput?: boolean; // 是否是获取输入
 }
 
 type IMapValue = Record<string, IVToken[]>;

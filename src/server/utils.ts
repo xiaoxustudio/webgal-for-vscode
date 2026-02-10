@@ -274,13 +274,18 @@ export function updateGlobalMap(documentTextArray: string[]) {
 			currentLine
 		);
 		const labelExec = /label:\s*(\S+);/g.exec(currentLine);
+		const getUserInputExec = /getUserInput:\s*([^\s;]+)/g.exec(currentLine);
 		if (setVarExec != null) {
 			const currentVariablePool = (GlobalMap.setVar[setVarExec[1]] ??=
 				[]);
+			const isGlobal =
+				currentLine.indexOf("-global") == -1 ? false : true;
 			currentVariablePool.push({
 				word: setVarExec[1],
 				value: setVarExec[2],
 				input: setVarExec.input,
+				isGlobal,
+				isGetUserInput: false,
 				position: Position.create(index, setVarExec.index + 7)
 			} as IVToken);
 
@@ -295,13 +300,20 @@ export function updateGlobalMap(documentTextArray: string[]) {
 					_v_line
 				);
 			}
-		}
-		if (labelExec !== null) {
+		} else if (labelExec !== null) {
 			(GlobalMap.label[labelExec[1]] ??= []).push({
 				word: labelExec[1],
 				value: labelExec.input,
 				input: labelExec.input,
 				position: Position.create(index, 6)
+			} as IVToken);
+		} else if (getUserInputExec !== null) {
+			(GlobalMap.setVar[getUserInputExec[1]] ??= []).push({
+				word: getUserInputExec[1],
+				value: getUserInputExec.input,
+				input: getUserInputExec.input,
+				isGetUserInput: true,
+				position: Position.create(index, 13)
 			} as IVToken);
 		}
 	}

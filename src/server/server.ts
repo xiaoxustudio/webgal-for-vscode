@@ -625,16 +625,13 @@ connection.onHover(
 		updateGlobalMap(documentTextArray);
 
 		/* 引用变量 hover */
-		if (
-			findWordWithPattern &&
-			`{${findWord.word}}` === findWordWithPattern.text
-		) {
+		if (findWord && `{${findWord.word}}` !== "{}") {
 			const current = GlobalMap.setVar[findWord.word];
 			if (!current || current.length <= 0) return { contents: [] };
-			const currentVariable = current[current.length - 1];
+			const currentVariable = current[current.length - 1]; // 取最后一个变量用作hover
 			const hoverContent = [`### ${findWord.word}`];
 			if (!currentVariable) return { contents: [] };
-			if (currentVariable.desc.length > 0) {
+			if (currentVariable.desc && currentVariable.desc.length > 0) {
 				hoverContent.push("<hr>");
 				hoverContent.push(currentVariable.desc);
 			}
