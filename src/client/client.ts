@@ -12,7 +12,7 @@ import {
 	TransportKind
 } from "vscode-languageclient/node";
 import path from "path";
-import requests from "../requests";
+import requests from "./requests";
 import { ExtensionContext, workspace } from "vscode";
 import { selector, selectorConfig } from "../utils/utils";
 

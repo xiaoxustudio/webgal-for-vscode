@@ -1,5 +1,5 @@
 import { LanguageClient } from "vscode-languageclient/node";
-import { getState } from "../utils/providerState";
+import { getState } from "../../utils/providerState";
 
 const goPropertyDoc = (client: LanguageClient) => {
 	client.onRequest("client/goPropertyDoc", async (pathSegments: string[]) => {
