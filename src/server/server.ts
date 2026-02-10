@@ -40,7 +40,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { Warning, message, getDiagnosticInformation } from "../utils/Warnings";
 import {
 	argsMap,
-	CommandNames,
+	CommandNameSpecial,
 	globalArgs,
 	WebGALCommandPrefix,
 	WebGALConfigCompletionMap,
@@ -414,7 +414,8 @@ connection.onCompletion(
 				? currentLine.indexOf(":")
 				: currentLine.indexOf(";")
 		);
-		const isSayCommandType = !resourcesMap[commandType];
+		const isSayCommandType =
+			!resourcesMap[commandType as CommandNameSpecial];
 
 		// 资源文件路径
 		if (
@@ -445,7 +446,8 @@ connection.onCompletion(
 			if (wordMeta && token.startsWith("-")) {
 				// 如果输入的文本以关键词开头，则匹配相应的参数
 				let keyData =
-					WebGALKeywords[wordMeta.word] ?? WebGALKeywords["say"];
+					WebGALKeywords[wordMeta.word as CommandNameSpecial] ??
+					WebGALKeywords["say"];
 
 				const data = [...keyData.args, ...globalArgs].map((arg) => {
 					return {
@@ -602,7 +604,8 @@ connection.onHover(
 		}
 
 		/* 指令 hover */
-		const maybeCommandMap = WebGALKeywords[commandType];
+		const maybeCommandMap =
+			WebGALKeywords[commandType as CommandNameSpecial];
 		if (maybeCommandMap) {
 			for (const key in WebGALKeywords) {
 				if (findWord.word === key && commandType === key) {

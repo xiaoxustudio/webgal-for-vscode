@@ -6,6 +6,13 @@ import {
 	MarkupKind
 } from "vscode-languageserver";
 
+export const WebGALCommandPrefix =
+	"https://docs.openwebgal.com/script-reference/commands/";
+
+interface IArgs {
+	arg: string;
+	desc: string;
+}
 export enum commandType {
 	say, // 对话
 	changeBg, // 更改背景
@@ -43,21 +50,20 @@ export enum commandType {
 	wait
 }
 
-export const WebGALCommandPrefix =
-	"https://docs.openwebgal.com/script-reference/commands/";
-
-interface IArgs {
-	arg: string;
-	desc: string;
-}
-
-type GetEnumKeysAsString<T> = Extract<keyof T, string>;
-
-export type CommandNames = Extract<GetEnumKeysAsString<commandType>, "video"> &
-	"playVideo";
+export type CommandName = Extract<keyof typeof commandType, string>;
+export type CommandNameSpecial = Exclude<
+	CommandName,
+	| "playVideo"
+	| "video"
+	| "pixi"
+	| "setFilter"
+	| "chooseLabel"
+	| "if"
+	| "comment"
+>;
 
 export type WebGALKeyWords = Record<
-	keyof CommandNames,
+	CommandNameSpecial,
 	{
 		type: commandType;
 		desc: string;
@@ -519,7 +525,7 @@ export const commandURL =
 /**
  * @description: 关键字
  */
-export const WebGALKeywords: WebGALKeyWords = {
+export const WebGALKeywords = {
 	say: {
 		type: commandType.say,
 		desc: "对话命令。任何识别不了的命令，都将尝试作为对话命令执行。",
@@ -1011,7 +1017,9 @@ export const WebGALKeywords: WebGALKeyWords = {
 		insertText: "wait:$1;$2"
 	}
 };
-export const WebGALKeywordsKeys = Object.keys(WebGALKeywords);
+export const WebGALKeywordsKeys = Object.keys(
+	WebGALKeywords
+) as CommandNameSpecial[];
 
 /* server可用补全Map */
 export const WebgGALKeywordsCompletionMap = WebGALKeywordsKeys.map(
