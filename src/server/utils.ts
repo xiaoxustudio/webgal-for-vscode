@@ -7,6 +7,7 @@ import {
 	cleartGlobalMapAll,
 	getVariableTypeDesc,
 	GlobalMap,
+	IVChooseToken,
 	IVToken
 } from "../utils/utils_novsc";
 
@@ -268,13 +269,18 @@ export function getStageCompletionContext(
 export function updateGlobalMap(documentTextArray: string[]) {
 	// 生成全局映射表
 	cleartGlobalMapAll();
-	for (let index = 0; index < documentTextArray.length; index++) {
-		const currentLine = documentTextArray[index];
+	for (
+		let lineNumber = 0;
+		lineNumber < documentTextArray.length;
+		lineNumber++
+	) {
+		const currentLine = documentTextArray[lineNumber];
 		const setVarExec = /setVar:\s*(\w+)\s*=\s*([^;]*\S+);?/g.exec(
 			currentLine
 		);
 		const labelExec = /label:\s*(\S+);/g.exec(currentLine);
 		const getUserInputExec = /getUserInput:\s*([^\s;]+)/g.exec(currentLine);
+		const chooseExec = /choose:\s*([^\s;]+)/g.exec(currentLine);
 		if (setVarExec != null) {
 			const currentVariablePool = (GlobalMap.setVar[setVarExec[1]] ??=
 				[]);
@@ -286,7 +292,7 @@ export function updateGlobalMap(documentTextArray: string[]) {
 				input: setVarExec.input,
 				isGlobal,
 				isGetUserInput: false,
-				position: Position.create(index, setVarExec.index + 7)
+				position: Position.create(lineNumber, setVarExec.index + 7)
 			} as IVToken);
 
 			/* 获取变量描述 */
@@ -305,7 +311,7 @@ export function updateGlobalMap(documentTextArray: string[]) {
 				word: labelExec[1],
 				value: labelExec.input,
 				input: labelExec.input,
-				position: Position.create(index, 6)
+				position: Position.create(lineNumber, 6)
 			} as IVToken);
 		} else if (getUserInputExec !== null) {
 			(GlobalMap.setVar[getUserInputExec[1]] ??= []).push({
@@ -313,8 +319,22 @@ export function updateGlobalMap(documentTextArray: string[]) {
 				value: getUserInputExec.input,
 				input: getUserInputExec.input,
 				isGetUserInput: true,
-				position: Position.create(index, 13)
+				position: Position.create(lineNumber, 13)
 			} as IVToken);
+		} else if (chooseExec !== null) {
+			const options: IVChooseToken["options"] = [];
+			const text = chooseExec[1];
+			for (const machChooseOption of text.split("|")) {
+				const sliceArray = machChooseOption.split(":");
+				options.push({
+					text: sliceArray[0]?.trim(),
+					value: sliceArray[1]?.trim()
+				});
+			}
+			GlobalMap.choose[lineNumber] = {
+				options,
+				line: lineNumber
+			} as IVChooseToken;
 		}
 	}
 }

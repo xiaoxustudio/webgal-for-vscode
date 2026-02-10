@@ -70,18 +70,28 @@ export interface IVToken {
 	position?: any; // 位置
 	input?: string; // 原始文本
 	value?: string; // 值
-	desc: string; // 描述
+	desc?: string; // 描述
 	isGlobal?: boolean; // 是否是全局
 	isGetUserInput?: boolean; // 是否是获取输入
 }
 
+export interface IVChooseToken {
+	options: {
+		text: string; // 文本
+		value: string; // 值 (xxx.txt | <Label Name>)
+	}[];
+	line: number; // 行号
+}
+
 type IMapValue = Record<string, IVToken[]>;
+
+type IChooseMapValue = Record<number, IVChooseToken>; // 行号: 选择
 
 // 全局映射表
 export interface IDefinetionMap {
 	label: IMapValue;
 	setVar: IMapValue;
-	choose: IMapValue;
+	choose: IChooseMapValue;
 }
 
 // 上一次全局映射表
@@ -94,6 +104,7 @@ export const GlobalMap: IDefinetionMap = {
 export const cleartGlobalMapAll = () => {
 	GlobalMap.label = {};
 	GlobalMap.setVar = {};
+	GlobalMap.choose = {};
 };
 
 export const fsAccessor: FileAccessor = {

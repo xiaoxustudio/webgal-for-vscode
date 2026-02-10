@@ -779,8 +779,9 @@ connection.onDefinition(
 		const jumpLabelMap = GlobalMap.label;
 		const setVarMap = GlobalMap.setVar;
 
-		const targetPool =
-			commandType === "jumpLabel" ? jumpLabelMap : setVarMap;
+		const targetPool = ["jumpLabel", "choose"].includes(commandType)
+			? jumpLabelMap
+			: setVarMap;
 		if (!targetPool) return definitionLinks;
 		const targetPoolArray = targetPool[findWord.word];
 		// 变量未定义
