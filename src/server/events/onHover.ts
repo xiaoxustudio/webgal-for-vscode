@@ -88,14 +88,14 @@ export default <ConnectionHandler>function (documents, connection) {
 					"client/goPropertyDoc",
 					strArray
 				);
-				if (info)
+				if (info) {
 					return {
 						contents: {
 							kind: MarkupKind.Markdown,
 							value: [
-								`### ${info.key}`,
-								`\`${findWordWithPattern.text}\``,
-								`${info?.description}`
+								`### ${info.key ?? findWordWithPattern.text}`,
+								`\`${info.__WG$key ?? info.type?.key ?? ""}\``,
+								`${info?.description ?? info.__WG$description}`
 							].join("\n\n")
 						} as MarkupContent,
 						range: Range.create(
@@ -103,6 +103,7 @@ export default <ConnectionHandler>function (documents, connection) {
 							findWordWithPattern.endPos
 						)
 					};
+				}
 			}
 
 			const findWord = getWordAtPosition(

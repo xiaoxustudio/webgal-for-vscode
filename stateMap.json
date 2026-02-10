@@ -46,7 +46,9 @@
         "description": "参数值"
       },
       "value": "@U:string | boolean | number"
-    }
+    },
+    "__WG$key": "arg",
+    "__WG$description": "\n单个参数接口\n@interface arg\n/"
   },
   "IAsset": {
     "name": {
@@ -84,7 +86,9 @@
         "description": "触发资源语句的行号"
       },
       "value": "number"
-    }
+    },
+    "__WG$key": "IAsset",
+    "__WG$description": "\n资源接口\n@interface IAsset\n/"
   },
   "ISentence": {
     "command": {
@@ -149,7 +153,9 @@
         "description": "行内注释"
       },
       "value": "string"
-    }
+    },
+    "__WG$key": "ISentence",
+    "__WG$description": "\n单条语句接口\n@interface ISentence\n/"
   },
   "IScene": {
     "sceneName": {
@@ -196,7 +202,9 @@
         "description": "子场景的url列表"
       },
       "value": "Array<string>"
-    }
+    },
+    "__WG$key": "IScene",
+    "__WG$description": "\n场景接口\n@interface IScene\n/"
   },
   "ISceneData": {
     "currentSentenceId": {
@@ -271,7 +279,9 @@
           "value": "Array<string>"
         }
       }
-    }
+    },
+    "__WG$key": "ISceneData",
+    "__WG$description": "\n当前的场景数据\n@interface ISceneData\n/"
   },
   "parsedCommand": {
     "type": {
@@ -291,9 +301,14 @@
         "description": ""
       },
       "value": "Array<arg>"
-    }
+    },
+    "__WG$key": "parsedCommand",
+    "__WG$description": "\n处理后的命令接口\n@interface parsedCommand\n/"
   },
-  "IGameVar": {},
+  "IGameVar": {
+    "__WG$key": "IGameVar",
+    "__WG$description": "\n游戏内变量\n@interface IGameVar\n/"
+  },
   "ISetGameVar": {
     "key": {
       "key": "key",
@@ -341,7 +356,9 @@
         "description": "是否是子场景调用"
       },
       "value": "boolean"
-    }
+    },
+    "__WG$key": "IChooseItem",
+    "__WG$description": "\n单个选项\n@interface IChooseItem\n/"
   },
   "ITransform": {
     "alpha": {
@@ -890,7 +907,9 @@
           "value": "number"
         }
       }
-    }
+    },
+    "__WG$key": "IEffect",
+    "__WG$description": "\n基本效果接口\n@interface IEffect\n/"
   },
   "IStageAnimationSetting": {
     "target": {
@@ -1222,7 +1241,9 @@
           "value": "string"
         }
       }
-    }
+    },
+    "__WG$key": "IRunPerform",
+    "__WG$description": "\n启动演出接口\n@interface IRunPerform\n/"
   },
   "ILive2DMotion": {
     "target": {
@@ -1501,7 +1522,13 @@
         "description": ""
       },
       "value": "any"
-    }
+    },
+    "__WG$key": "ISetStagePayload",
+    "__WG$description": "\n@interface ISetStagePayload 设置舞台状态的Action的Payload的数据接口\n/"
+  },
+  "playSpeed": {
+    "__WG$key": "playSpeed",
+    "__WG$description": "\n播放速度的枚举类型\n/"
   },
   "IOptionData": {
     "volumeMain": {
@@ -1629,7 +1656,9 @@
         "description": ""
       },
       "value": "fullScreenOption"
-    }
+    },
+    "__WG$key": "IOptionData",
+    "__WG$description": "\n@interface IOptionData 用户设置数据接口\n/"
   },
   "ISaveScene": {
     "currentSentenceId": {
@@ -1667,7 +1696,9 @@
         "description": "场景url"
       },
       "value": "string"
-    }
+    },
+    "__WG$key": "ISaveScene",
+    "__WG$description": "\n场景存档接口\n@interface ISaveScene\n/"
   },
   "IBacklogItem": {
     "currentStageState": {
@@ -2487,7 +2518,9 @@
         "description": ""
       },
       "value": "string"
-    }
+    },
+    "__WG$key": "ISaveData",
+    "__WG$description": "\n@interface ISaveData 存档文件接口\n/"
   },
   "IAppreciationAsset": {
     "name": {
@@ -2872,7 +2905,9 @@
         "description": ""
       },
       "value": "@N"
-    }
+    },
+    "__WG$key": "IStageState",
+    "__WG$description": "\n@interface IStageState 游戏舞台数据接口\n/"
   },
   "userData": {
     "scriptManagedGlobalVar": {
@@ -3065,6 +3100,8 @@
         "description": ""
       },
       "value": {}
-    }
+    },
+    "__WG$key": "IUserData",
+    "__WG$description": "\n@interface IUserData 用户数据接口\n/"
   }
 }

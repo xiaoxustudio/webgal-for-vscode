@@ -92,7 +92,7 @@ function main() {
 		if (!prop.name || !prop.type) return null;
 
 		const key = prop.name.getText();
-		const description = getNodeDescription(prop);
+		let description = getNodeDescription(prop);
 		const typeNode = prop.type;
 
 		let typeKey = typeNode.getText();
@@ -142,7 +142,7 @@ function main() {
 			description,
 			type: {
 				key: typeKey,
-				description: description // 可以在这里加上类型的描述
+				description // 可以在这里加上类型的描述
 			},
 			value
 		};
@@ -201,11 +201,37 @@ function main() {
 		) {
 			finalResult[name] = parseInterfaceOrType(node);
 		}
+
+		/* 获取当前节点的注释 */
+		const commentRanges = ts.getJSDocCommentRanges(node, sourceFile.text);
+		if (commentRanges && commentRanges.length > 0) {
+			const range = commentRanges[0];
+			const fullComment = sourceFile.text
+				.substring(range.pos, range.end)
+				.trim();
+			let result = "";
+			const cleaned = fullComment
+				.split("\n")
+				.map((line) => {
+					return line
+						.replace(/^\s*\/\*\*/, "")
+						.replace(/^\s*\*/, "")
+						.replace(/\*\/\s*$/, "")
+						.trim();
+				})
+				.join("\n");
+			finalResult[name] = {
+				...finalResult[name],
+				__WG$key: name,
+				__WG$description: cleaned
+			};
+		}
 	});
 	finalResult["stage"] = finalResult["IStageState"];
 	finalResult["userData"] = finalResult["IUserData"];
 	delete finalResult["IStageState"];
 	delete finalResult["IUserData"];
+
 	// 5. 输出结果
 	fs.writeFileSync(
 		path.join(__dirname, "../stateMap.json"),

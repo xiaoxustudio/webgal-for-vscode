@@ -13,8 +13,10 @@ export interface StateMap {
 		description: string; // 描述
 	}; // 类型
 	value?: StateMap | Record<string, StateMap> | string; // 值
+	__WG$key?: string; // 父级键名
+	__WG$description?: string; // 父级描述
 }
-
+let index = 0;
 // 获取属性 xxxx.xxxx.xxx
 export const getState = (
 	propertiesArray: string[],
@@ -24,21 +26,21 @@ export const getState = (
 
 	for (const curr of propertiesArray) {
 		const result = prev[curr];
-		if (prev && result) {
-			if (typeof result.value === "object") {
+		if (result) {
+			if (
+				result.value &&
+				typeof result.value === "object" &&
+				Object.keys(result.value).length > 0
+			) {
 				prev = result.value as Record<string, StateMap>;
 			} else {
-				// 是否是嵌套
-				if (!("key" in result)) {
-					prev = result as Record<string, StateMap>;
-					continue;
-				}
-				return result;
+				prev = result as unknown as Record<string, StateMap>;
 			}
 		} else {
 			// 就没有这个属性
 			return undefined;
 		}
+		index++;
 	}
 
 	return prev;

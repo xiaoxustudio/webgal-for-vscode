@@ -78,7 +78,7 @@ export default <ConnectionHandler>function (documents, connection) {
 						_textDocumentPosition.position,
 						findWordWithPattern
 					);
-				const info = await connection.sendRequest<
+				let info = await connection.sendRequest<
 					StateMap | Record<string, StateMap>
 				>(
 					"client/goPropertyDoc",
@@ -86,6 +86,9 @@ export default <ConnectionHandler>function (documents, connection) {
 				);
 
 				if (info) {
+					// 删除多余的属性
+					delete info.__WG$key;
+					delete info.__WG$description;
 					if (!isStateMap(info)) {
 						for (const key in info) {
 							if (prefix && !key.includes(prefix)) continue;
