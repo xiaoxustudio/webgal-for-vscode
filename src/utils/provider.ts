@@ -47,7 +47,8 @@ export enum commandType {
 	setTransition,
 	getUserInput,
 	applyStyle,
-	wait
+	wait,
+	callSteam
 }
 
 export type CommandName = Extract<keyof typeof commandType, string>;
@@ -488,7 +489,7 @@ export const argsMap = {
 		kind: CompletionItemKind.Constant,
 		documentation: `设置名称`,
 		detail: `option -name`,
-		insertText: "name"
+		insertText: "name="
 	},
 	writeDefault: {
 		arg: "writeDefault",
@@ -507,6 +508,15 @@ export const argsMap = {
 		documentation: `将该动画转换为跨语句动画`,
 		detail: `option -keep`,
 		insertText: "keep"
+	},
+	achievementId: {
+		arg: "achievementId",
+		desc: "成就ID",
+		label: "-achievementId",
+		kind: CompletionItemKind.Constant,
+		documentation: `设置成就ID`,
+		detail: `option -achievementId=<achievementId>`,
+		insertText: "achievementId="
 	}
 } as Record<string, IArgs & Partial<CompletionItem>>;
 
@@ -1015,6 +1025,19 @@ export const WebGALKeywords = {
 		\`\`\``,
 		detail: `wait:<number>;`,
 		insertText: "wait:$1;$2"
+	},
+	callSteam: {
+		type: commandType.callSteam,
+		desc: "调用 Steam 命令。",
+		args: [argsMap.achievementId],
+		label: "callSteam",
+		kind: CompletionItemKind.Function,
+		documentation: `调用 Steam 命令。
+		\`\`\`webgal
+		callSteam:xxx;
+		\`\`\``,
+		detail: `callSteam: <...arguments>;`,
+		insertText: "callSteam:$1;$2"
 	}
 };
 export const WebGALKeywordsKeys = Object.keys(
