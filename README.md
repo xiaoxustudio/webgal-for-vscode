@@ -16,7 +16,8 @@ webgal for VScode
 </h5>
 
 > [!IMPORTANT]
-> The project is currently undergoing refactoring
+> The project has been migrated to [webgal-language-tools](https://github.com/xiaoxustudio/webgal-language-tools)
+> This warehouse is no longer under maintenance
 
 - [简体中文](./README_CN.md)
 - [English](./README.md)
