@@ -1,5 +1,5 @@
 import { Connection } from "vscode-languageserver";
-import { ConnectionDocumentsType, ConnectionHandler } from "../types";
+import { ConnectionDocumentsType, ConnectionHandler } from "@/server/types";
 
 // handlers
 import onCompletion from "./onCompletion";

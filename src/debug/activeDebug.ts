@@ -6,8 +6,8 @@
  * @Description: By xuranXYS
  */
 import * as vscode from "vscode";
-import { fsAccessor } from "../utils/utils_novsc";
 import { XRDebugSession } from "./DebugSession";
+import { fsAccessor } from "@/core";
 export class XRDebugAdapterDescriptorFactory
 	implements vscode.DebugAdapterDescriptorFactory
 {

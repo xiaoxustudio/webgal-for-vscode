@@ -14,7 +14,7 @@ import {
 import path from "path";
 import requests from "./requests";
 import { ExtensionContext, workspace } from "vscode";
-import { selector, selectorConfig } from "../utils/utils";
+import { selector, selectorConfig } from "@/utils/utils";
 
 export function create_client(context: ExtensionContext): LanguageClient {
 	const serverModule = context.asAbsolutePath(

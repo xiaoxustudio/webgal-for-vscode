@@ -3,7 +3,7 @@ import {
 	FoldingRangeKind,
 	FoldingRangeParams
 } from "vscode-languageserver";
-import { ConnectionHandler } from "../types";
+import { ConnectionHandler } from "@/server/types";
 
 // 折叠
 export default <ConnectionHandler>function (documents, connection) {

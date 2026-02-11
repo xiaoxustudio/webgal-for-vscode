@@ -1,6 +1,6 @@
 import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { source } from "./utils_novsc";
+import { source } from "@/core";
 
 /*
  * @Author: xuranXYS
@@ -25,7 +25,7 @@ function remove_space(_text: string) {
 	});
 	return _text;
 }
-export const Warning: { [key: string]: WarningToken } = {
+export const warningConfig: { [key: string]: WarningToken } = {
 	"0001": {
 		id: "0001",
 		message: (...args: any[]) => {
@@ -168,7 +168,7 @@ export const Warning: { [key: string]: WarningToken } = {
  * @return {*}
  */
 export function message(id: string, ...args: any[]): any {
-	const _data = Warning[id];
+	const _data = warningConfig[id];
 	if (!_data) {
 		return false;
 	}
@@ -181,7 +181,7 @@ export function message(id: string, ...args: any[]): any {
  * @return {*}
  */
 export function getDiagnosticInformation(id: string): any {
-	const _data = Warning[id];
+	const _data = warningConfig[id];
 	if (!_data) {
 		return "未知错误类型";
 	}

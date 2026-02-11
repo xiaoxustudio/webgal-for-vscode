@@ -1,6 +1,6 @@
-import { ConnectionHandler } from "../types";
-import { GlobalMap } from "../../utils/utils_novsc";
-import { getWordAtPosition, updateGlobalMap } from "../utils";
+import { GlobalMap } from "@/core";
+import { ConnectionHandler } from "@/server/types";
+import { getWordAtPosition, updateGlobalMap } from "@/server/utils";
 import {
 	DefinitionLink,
 	LocationLink,

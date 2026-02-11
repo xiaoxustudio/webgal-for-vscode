@@ -15,13 +15,13 @@ import {
 } from "vscode";
 import fs from "fs";
 import path from "path";
-import GoDocumentFormatter from "./utils/Format";
 import { getWS, selector } from "./utils/utils";
 import { create_client } from "./client/client";
 import { LanguageClient } from "vscode-languageclient/node";
 import { XRDebugAdapterDescriptorFactory } from "./debug/activeDebug";
 import { XRDebugConfigurationProvider } from "./ws/config";
-import { IDebugMessage, DebugCommand, SCHEME } from "./utils/utils_novsc";
+import { SCHEME, IDebugMessage, DebugCommand } from "./core";
+import GoDocumentFormatter from "./utils/format";
 
 let client: LanguageClient;
 let run_Skip_Check = false;
@@ -41,7 +41,6 @@ function InitPlugin(context: ExtensionContext) {
 			}
 		})
 	);
-
 	context.subscriptions.push(
 		languages.registerDocumentFormattingEditProvider(
 			selector,

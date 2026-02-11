@@ -1,5 +1,5 @@
-import { ConnectionHandler } from "../types";
-import { getTypeDirectory } from "../../utils/resources";
+import { ConnectionHandler } from "@/server/types";
+import { getTypeDirectory } from "@/utils/resources";
 import {
 	DocumentLink,
 	DocumentLinkParams,

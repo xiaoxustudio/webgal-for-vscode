@@ -2,8 +2,8 @@ import {
 	DocumentDiagnosticReport,
 	DocumentDiagnosticReportKind
 } from "vscode-languageserver";
-import { ConnectionHandler } from "../types";
-import { validateTextDocument } from "../utils";
+import { ConnectionHandler } from "@/server/types";
+import { validateTextDocument } from "@/server/utils";
 
 export default <ConnectionHandler>function (documents, connection) {
 	connection.languages.diagnostics.on(async (params) => {

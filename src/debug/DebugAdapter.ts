@@ -7,8 +7,8 @@
  */
 import * as Net from "net";
 import * as vscode from "vscode";
-import { fsAccessor } from "../utils/utils_novsc";
 import { XRDebugSession } from "./DebugSession";
+import { fsAccessor } from "@/core";
 
 let port = 0;
 const args = process.argv.slice(2);

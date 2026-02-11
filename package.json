@@ -190,8 +190,8 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
+		"compile": "tsx ./scripts/compile.ts",
+		"watch": "tsx ./scripts/watch.ts",
 		"pretest": "npm run compile && npm run lint",
 		"lint": "eslint src --ext ts",
 		"format": "prettier --write \"src/**/*.ts\"",
@@ -200,14 +200,18 @@
 		"gen": "tsx ./scripts/gen.ts"
 	},
 	"devDependencies": {
+		"@types/js-beautify": "^1.14.3",
 		"@types/node": "^25.2.2",
 		"@types/vscode": "^1.87.0",
-		"@types/js-beautify": "^1.14.3",
 		"@types/ws": "^8.5.10",
+		"@typescript-eslint/eslint-plugin": "^7.18.0",
+		"@typescript-eslint/parser": "^7.18.0",
+		"concurrently": "^9.2.1",
+		"eslint": "^8.56.0",
 		"prettier": "^3.8.1",
+		"tsc-alias": "^1.8.16",
 		"tsx": "^4.21.0",
-		"typescript": "^5.9.3",
-		"eslint": "^8.56.0"
+		"typescript": "^5.9.3"
 	},
 	"dependencies": {
 		"@vscode/debugadapter": "^1.65.0",

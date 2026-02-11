@@ -3,16 +3,16 @@ import {
 	disableGameStatus,
 	enableGameStatus,
 	setGameData
-} from "../utils/utils";
+} from "@/utils/utils";
 import EventEmitter from "events";
 import WebSocket, { WebSocket as WS } from "ws";
+import { is_JSON } from "@/utils/utils_novsc";
 import {
 	DebugCommand,
 	FileAccessor,
 	IDebugMessage,
-	is_JSON,
 	RuntimeVariable
-} from "../utils/utils_novsc";
+} from "@/core";
 
 export function timeout(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));

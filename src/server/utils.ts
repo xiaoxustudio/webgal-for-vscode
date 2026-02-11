@@ -9,16 +9,16 @@ import {
 	Range
 } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { getVariableTypeDesc } from "@/utils/utils_novsc";
+import { ServerSettings } from "./types";
 import {
 	cleartGlobalMapAll,
-	getVariableTypeDesc,
 	GlobalMap,
 	IVChooseToken,
 	IVToken,
 	source
-} from "../utils/utils_novsc";
-import { ServerSettings } from "./types";
-import { getDiagnosticInformation, message, Warning } from "../utils/Warnings";
+} from "@/core";
+import { warningConfig, getDiagnosticInformation } from "@/utils/warnings";
 
 /** 获取位置的指令单词 */
 export function getWordAtPosition(
@@ -403,8 +403,8 @@ export async function validateTextDocument(
 	let problems = 0;
 	const diagnostics: Diagnostic[] = [];
 	let _sp = text.split(/\n|\t\n|\r\n/);
-	for (let i in Warning) {
-		const _token = Warning[i];
+	for (let i in warningConfig) {
+		const _token = warningConfig[i];
 		const _pattern = _token.pattern as RegExp;
 		if (_token.is_line) {
 			continue;
@@ -452,8 +452,8 @@ export async function validateTextDocument(
 	}
 	for (let _line_index = 0; _line_index < _sp.length; _line_index++) {
 		const _line_text = _sp[_line_index];
-		for (let i in Warning) {
-			const _token = Warning[i];
+		for (let i in warningConfig) {
+			const _token = warningConfig[i];
 			const _pattern = _token.pattern as RegExp;
 			if (!_token.is_line) {
 				continue;
@@ -509,4 +509,7 @@ export async function validateTextDocument(
 		}
 	}
 	return diagnostics;
+}
+function message(i: string, arg1: string): string {
+	throw new Error("Function not implemented.");
 }

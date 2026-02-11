@@ -1,6 +1,6 @@
 import { DidChangeConfigurationNotification } from "vscode-languageserver";
-import { ConnectionHandler } from "../types";
-import { StateConfig } from "../utils";
+import { ConnectionHandler } from "@/server/types";
+import { StateConfig } from "@/server/utils";
 
 export default <ConnectionHandler>function (documents, connection) {
 	connection.onInitialized(() => {

@@ -11,15 +11,15 @@ import {
 	WebGALKeywords,
 	CommandNameSpecial,
 	WebGALCommandPrefix
-} from "../../utils/provider";
-import { StateMap } from "../../utils/providerState";
-import { GlobalMap } from "../../utils/utils_novsc";
-import { ConnectionHandler } from "../types";
+} from "@/utils/provider";
+import { StateMap } from "@/utils/providerState";
+import { ConnectionHandler } from "@/server/types";
 import {
 	getPatternAtPosition,
 	getWordAtPosition,
 	updateGlobalMap
-} from "../utils";
+} from "@/server/utils";
+import { GlobalMap } from "@/core";
 
 // 悬浮
 export default <ConnectionHandler>function (documents, connection) {
@@ -30,7 +30,9 @@ export default <ConnectionHandler>function (documents, connection) {
 			const document = documents.get(
 				_textDocumentPosition.textDocument.uri
 			);
-			if (!document) return { contents: [] };
+			if (!document) {
+				return { contents: [] };
+			}
 			const file_name = document.uri;
 			const text = document.getText();
 			const documentTextArray = text.split("\n");
@@ -111,7 +113,9 @@ export default <ConnectionHandler>function (documents, connection) {
 				_textDocumentPosition.position
 			);
 
-			if (!findWord) return { contents: [] };
+			if (!findWord) {
+				return { contents: [] };
+			}
 			// 配置文件 hover
 			if (file_name.endsWith("/game/config.txt")) {
 				for (const i in WebGALConfigMap) {
@@ -158,10 +162,14 @@ export default <ConnectionHandler>function (documents, connection) {
 			/* 引用变量 hover */
 			if (findWord && `{${findWord.word}}` !== "{}") {
 				const current = GlobalMap.setVar[findWord.word];
-				if (!current || current.length <= 0) return { contents: [] };
+				if (!current || current.length <= 0) {
+					return { contents: [] };
+				}
 				const currentVariable = current[current.length - 1]; // 取最后一个变量用作hover
 				const hoverContent = [`### ${findWord.word}`];
-				if (!currentVariable) return { contents: [] };
+				if (!currentVariable) {
+					return { contents: [] };
+				}
 				if (currentVariable.desc && currentVariable.desc.length > 0) {
 					hoverContent.push("<hr>");
 					hoverContent.push(currentVariable.desc);

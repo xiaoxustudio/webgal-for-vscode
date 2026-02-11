@@ -10,18 +10,18 @@ import {
 	WebGALKeywords,
 	globalArgs,
 	WebgGALKeywordsCompletionMap
-} from "../../utils/provider";
-import { StateMap } from "../../utils/providerState";
-import { resourcesMap } from "../../utils/resources";
-import { GlobalMap } from "../../utils/utils_novsc";
-import { ConnectionHandler } from "../types";
+} from "@/utils/provider";
+import { StateMap } from "@/utils/providerState";
+import { resourcesMap } from "@/utils/resources";
+import { ConnectionHandler } from "@/server/types";
 import {
 	findTokenRange,
 	getPatternAtPosition,
 	getStageCompletionContext,
 	getWordAtPosition,
 	updateGlobalMap
-} from "../utils";
+} from "@/server/utils";
+import { GlobalMap } from "@/core";
 
 // 补全
 export default <ConnectionHandler>function (documents, connection) {

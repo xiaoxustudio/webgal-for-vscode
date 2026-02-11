@@ -17,12 +17,12 @@ import {
 	StoppedEvent,
 	Thread
 } from "@vscode/debugadapter";
-import { getGameData } from "../utils/utils";
+import { getGameData } from "@/utils/utils";
 import { debug, DebugSession } from "vscode";
 import { WebSocket } from "ws";
-import XRRuntime from "../ws";
-import { FileAccessor, RuntimeVariable } from "../utils/utils_novsc";
+import XRRuntime from "@/ws";
 import { DebugProtocol } from "vscode-debugprotocol";
+import { FileAccessor, RuntimeVariable } from "@/core";
 
 interface IAttachRequestArguments extends ILaunchRequestArguments {}
 interface ILaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
