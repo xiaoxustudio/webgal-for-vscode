@@ -142,6 +142,7 @@ export default <ConnectionHandler>function (documents, connection) {
 			// 资源文件路径
 			if (
 				token.startsWith("./") ||
+				!!~token.indexOf("/") ||
 				Object.keys(resourcesMap).includes(commandType) ||
 				token.startsWith("-")
 			) {
@@ -151,7 +152,7 @@ export default <ConnectionHandler>function (documents, connection) {
 				if (resourceBaseDir) {
 					const dirs = await connection.sendRequest<any>(
 						"client/getResourceDirectory",
-						resourceBaseDir
+						[resourceBaseDir, token]
 					);
 					if (dirs) {
 						for (const dir of dirs) {
